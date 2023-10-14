@@ -1,0 +1,76 @@
+{
+	"folders": [
+		{
+			"name": "Servo Test",
+			"path": "Oefeningen/Servo Test"
+		},
+		{
+			"path": "Oefeningen/Potentiometer LEDS"
+		},
+		{
+			"name": "Time Tests",
+			"path": "Oefeningen/Time Tests"
+		},
+		{
+			"name": "Temperatuur Test",
+			"path": "Oefeningen/Temperatuur Test"
+		},
+		{
+			"name": "RGB Led with Potentiometer",
+			"path": "Oefeningen/RGB Led with Potentiometer"
+		},
+		{
+			"path": "Oefeningen/Button Pull Up"
+		},
+		{
+			"path": "Oefeningen/Led Scorebord"
+		},
+		{
+			"name": "ezButton Test",
+			"path": "Oefeningen/ezButton Test"
+		},
+		{
+			"name": "Temperatuur LED",
+			"path": "Oefeningen/Temperatuur LED"
+		},
+		{
+			"name": "Millis projects",
+			"path": "Oefeningen/Millis projects"
+		},
+		{
+			"name": "Rotary Encoder Test",
+			"path": "Oefeningen/Rotary Encoder Test"
+		},
+		{
+			"name": "LED Millis",
+			"path": "Oefeningen/LED Millis"
+		},
+		{
+			"name": "ScoreBoard Millis",
+			"path": "Oefeningen/ScoreBoard Millis"
+		},
+		{
+			"name": "LM35 Temp Sensor",
+			"path": "Oefeningen/LM35 Temp Sensor"
+		},
+		{
+			"name": "PIR sensor Test",
+			"path": "Oefeningen/PIR sensor Test"
+		},
+		{
+			"path": "Oefeningen/BuzzerTest"
+		},
+		{
+			"path": "Oefeningen/Buzzer Song"
+		},
+		{
+			"name": "Buzzer",
+			"path": "Oefeningen/Buzzer"
+		},
+		{
+			"name": "Mini Huis Project",
+			"path": "Oefeningen/Mini Huis Project"
+		}
+	],
+	"settings": {}
+}
