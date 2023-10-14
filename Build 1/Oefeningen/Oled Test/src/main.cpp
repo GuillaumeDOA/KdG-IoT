@@ -8,19 +8,18 @@
 #include <Wire.h>
 #endif
 
-
-U8G2_SSD1306_128X64_NONAME_F_HW_I2C u8g2(U8G2_R0, /* clock=*/ SCL, /* data=*/ SDA, /* reset=*/ U8X8_PIN_NONE);  // High speed I2C
-
-// U8G2_SSD1306_128X64_NONAME_F_SW_I2C u8g2(U8G2_R0, /* clock=*/ SCL, /* data=*/ SDA, /* reset=*/ U8X8_PIN_NONE);    //Low spped I2C
+U8G2_SSD1306_128X64_NONAME_F_SW_I2C u8g2(U8G2_R0, /* clock=*/ 12, /* data=*/ 11, /* reset=*/ U8X8_PIN_NONE);    //Software I2C
 
 void setup(void) {
   u8g2.begin();
 }
-
+ 
 void loop(void) {
   u8g2.clearBuffer();                   // clear the internal memory
-  u8g2.setFont(u8g2_font_ncenB08_tr);   // choose a suitable font
-  u8g2.drawStr(0,10,"Itsa me Mario!");    // write something to the internal memory
+  u8g2.setFont(u8g2_font_luBIS08_tf);   // choose a suitable font
+  u8g2.drawStr(0,10,"Hello Seeed!");    // write something to the internal memory
+  u8g2.drawStr(0,30,"Hello Studio!");    // write something to the internal memory
+  u8g2.drawStr(0,50,"Hello World!");    // write something to the internal memory
   u8g2.sendBuffer();                    // transfer internal memory to the display
-  delay(1000);  
+  delay(100);  
 }
