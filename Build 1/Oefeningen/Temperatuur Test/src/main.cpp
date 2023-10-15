@@ -7,7 +7,6 @@ int DHTPin = 2;
 DHT dht(DHTPin, DHTTYPE);
 float Temp;
 float Humidity;
-long delayTime;
 
 long startMillis;
 long currentMillis;
