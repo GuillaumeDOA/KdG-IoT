@@ -39,6 +39,9 @@ float Temp;
 float Humidity;
 float lastTemp;
 float lastHumidity;
+float currentMillis;
+float startMillis;
+int DHTDelay = 2000;
 int motionState = LOW;   // by default, no motion detected
 int motionVal = 0;       // variable to store the sensor status (value)
 bool RGB_Status = false; // TRue = ON; False = OFF
@@ -65,21 +68,28 @@ void setup()
   analogWrite(RGB_RED, 255); // Turn off led on startup
   analogWrite(RGB_GREEN, 255);
   analogWrite(RGB_BLUE, 255);
+  startMillis = millis();
 }
 
 void ReadTemp()
 {
+  currentMillis = millis();
   Temp = dht.readTemperature();
   Humidity = dht.readHumidity();
 
-  if (lastTemp == Temp || lastHumidity == Humidity)
-    return;
-  else
+  if (currentMillis - startMillis >= DHTDelay)
   {
-    lastTemp = Temp;
-    lastHumidity = Humidity;
-
+    startMillis += DHTDelay;
     Display.clearBuffer();
+
+    if (isnan(Humidity) || isnan(Temp))
+    {
+      Display.setCursor(0, 10);
+      Display.print("Failed to read from DHT");
+      Display.sendBuffer();
+      return;
+    }
+
     Display.setCursor(0, 10);
     Display.print("Temp: ");
     Display.print(Temp);
@@ -120,7 +130,7 @@ void ChangeRGB()
     analogWrite(RGB_BLUE, 255);
   }
 
-  if (whiteButton.isPressed())  //RGB Value for white = 255 255 255
+  if (whiteButton.isPressed()) // RGB Value for white = 255 255 255
   {
     analogWrite(RGB_RED, 0);
     analogWrite(RGB_GREEN, 0);
@@ -128,14 +138,14 @@ void ChangeRGB()
     RGB_Status = true;
   }
 
-  if (yellowButton.isPressed()) //RGB Value for yellow = 255 255 0
+  if (yellowButton.isPressed()) // RGB Value for yellow = 255 255 0
   {
     analogWrite(RGB_RED, 0);
     analogWrite(RGB_GREEN, 0);
     analogWrite(RGB_BLUE, 255);
     RGB_Status = true;
   }
-  if (redButton.isPressed())  //RGB Value for red = 255 0 0
+  if (redButton.isPressed()) // RGB Value for red = 255 0 0
   {
     analogWrite(RGB_RED, 0);
     analogWrite(RGB_GREEN, 255);
