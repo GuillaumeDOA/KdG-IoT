@@ -39,8 +39,9 @@ float Temp;
 float Humidity;
 float lastTemp;
 float lastHumidity;
-int motionState = LOW; // by default, no motion detected
-int motionVal = 0;     // variable to store the sensor status (value)
+int motionState = LOW;   // by default, no motion detected
+int motionVal = 0;       // variable to store the sensor status (value)
+bool RGB_Status = false; // TRue = ON; False = OFF
 
 void setup()
 {
@@ -60,9 +61,13 @@ void setup()
   redButton.setDebounceTime(100);
   yellowButton.setDebounceTime(100);
   whiteButton.setDebounceTime(50);
+
+  analogWrite(RGB_RED, 255); // Turn off led on startup
+  analogWrite(RGB_GREEN, 255);
+  analogWrite(RGB_BLUE, 255);
 }
 
-void readTemp()
+void ReadTemp()
 {
   Temp = dht.readTemperature();
   Humidity = dht.readHumidity();
@@ -85,7 +90,7 @@ void readTemp()
   }
 }
 
-void readMotion()
+void ReadMotion()
 {
   motionVal = digitalRead(MOTIONSENSOR); // read sensor motionValue
   if (motionVal == HIGH)
@@ -106,22 +111,46 @@ void readMotion()
   }
 }
 
-void buttonTest()
+void ChangeRGB()
 {
-  if (whiteButton.isPressed())
-    digitalWrite(LED_BUILTIN, !digitalRead(LED_BUILTIN));
+  if (RGB_Status)
+  {
+    analogWrite(RGB_RED, 255);
+    analogWrite(RGB_GREEN, 255);
+    analogWrite(RGB_BLUE, 255);
+  }
+
+  if (whiteButton.isPressed())  //RGB Value for white = 255 255 255
+  {
+    analogWrite(RGB_RED, 0);
+    analogWrite(RGB_GREEN, 0);
+    analogWrite(RGB_BLUE, 0);
+    RGB_Status = true;
+  }
+
+  if (yellowButton.isPressed()) //RGB Value for yellow = 255 255 0
+  {
+    analogWrite(RGB_RED, 0);
+    analogWrite(RGB_GREEN, 0);
+    analogWrite(RGB_BLUE, 255);
+    RGB_Status = true;
+  }
+  if (redButton.isPressed())  //RGB Value for red = 255 0 0
+  {
+    analogWrite(RGB_RED, 0);
+    analogWrite(RGB_GREEN, 255);
+    analogWrite(RGB_BLUE, 255);
+    RGB_Status = true;
+  }
 }
 
 void loop()
 {
-  // Display.clearBuffer();
   redButton.loop();
   whiteButton.loop();
   yellowButton.loop();
 
-  readTemp();
-  readMotion();
-  buttonTest();
-
-  // Display.sendBuffer();
+  ReadTemp();
+  ReadMotion();
+  ChangeRGB();
 }
