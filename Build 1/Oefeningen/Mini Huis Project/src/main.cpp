@@ -46,8 +46,8 @@ float Temp;
 float Humidity;
 float lastTemp;
 float lastHumidity;
-long currentMillis;
-long startMillis;
+long startTimeTemp;
+long startTimeDoor;
 long lastRotaryPress = 0;
 int DHTDelay = 2000;
 int motionState = LOW;   // by default, no motion detected
@@ -59,13 +59,10 @@ int frequency = 500;
 
 void setup()
 {
-  Serial.begin(9600);
-
   Door.attach(SERVO); // attach servo
 
   Display.begin(); // Start OLED display
   Display.setFont(u8g2_font_luBIS08_tf);
-  Display.clearBuffer();
 
   pinMode(ROTORY_CLOCK, INPUT); // Setup rotary encoder as INPUT
   pinMode(ROTORY_DATA, INPUT);
@@ -86,40 +83,65 @@ void setup()
   analogWrite(RGB_RED, 255); // Turn off led on startup
   analogWrite(RGB_GREEN, 255);
   analogWrite(RGB_BLUE, 255);
-  startMillis = millis();
+  startTimeTemp = startTimeDoor = millis();
 }
 
 void ReadTemp()
 {
-  currentMillis = millis();
-  Temp = dht.readTemperature();
-  Humidity = dht.readHumidity();
-
-  if (currentMillis - startMillis >= DHTDelay)
+  if (millis() - startTimeTemp >= DHTDelay)
   {
-    startMillis += DHTDelay;
-    Display.clearBuffer();
+    Temp = dht.readTemperature();
+    Humidity = dht.readHumidity();
 
-    if (isnan(Humidity) || isnan(Temp))
+    Display.firstPage();
+    Display.setCursor(0, 10);
+
+    do
     {
       Display.setCursor(0, 10);
-      Display.print("Failed to read from DHT");
-      Display.sendBuffer();
-      return;
-    }
-
-    Display.setCursor(0, 10);
-    Display.print("Temp: ");
-    Display.print(Temp);
-    Display.setCursor(0, 30);
-    Display.print("Humidity: ");
-    Display.print(Humidity);
-    Display.sendBuffer();
+      Display.print("Temp: ");
+      Display.print(Temp);
+      Display.setCursor(0, 30);
+      Display.print("Humidity: ");
+      Display.print(Humidity);
+      // Display.sendBuffer();
+    } while (Display.nextPage());
+    startTimeTemp += DHTDelay;
   }
 }
+// {
+//   currentMillis = millis();
+//   Temp = dht.readTemperature();
+//   Humidity = dht.readHumidity();
+
+//   if (currentMillis - startMillis >= DHTDelay)
+//   {
+//     startMillis += DHTDelay;
+//     Display.clearBuffer();
+
+//     if (isnan(Humidity) || isnan(Temp))
+//     {
+//       Display.setCursor(0, 10);
+//       Display.print("Failed to read from DHT");
+//       Display.sendBuffer();
+//       return;
+//     }
+
+//     Display.setCursor(0, 10);
+//     Display.print("Temp: ");
+//     Display.print(Temp);
+//     Display.setCursor(0, 30);
+//     Display.print("Humidity: ");
+//     Display.print(Humidity);
+//     Display.sendBuffer();
+//   }
+// }
 
 void ReadMotion()
 {
+  if (millis() - startTimeDoor < 3000)
+    return;
+
   motionVal = digitalRead(MOTIONSENSOR); // read sensor motionValue
   if (motionVal == HIGH)
   { // check if the sensor is HIGH
@@ -176,41 +198,30 @@ void ChangeRGB()
 
 void ReadDoorbell()
 {
-  // Serial.println("Test");
-
-  //   // Read the current state of CLK
   currentStateCLK = digitalRead(ROTORY_CLOCK);
 
-  //   // If last and current state of CLK are different, then pulse occurred
-  //   // React to only 1 state change to avoid double count
   if (currentStateCLK != lastStateCLK && currentStateCLK == 1)
   {
-    //     // If the DT state is different than the CLK state then
-    //     // the encoder is rotating CCW so decrement
-    if (digitalRead(ROTORY_DATA) != currentStateCLK)
+    if (digitalRead(ROTORY_DATA) == currentStateCLK)
     {
-      frequency -= 50;
-      Serial.println("Links");
+      if (frequency != 0)
+        frequency -= 50;
     }
     else
     {
-      frequency += 50;
-      Serial.println("Rechts");
+      if (frequency != 20000)
+        frequency += 50;
     }
-    Serial.println(frequency);
-
-    //     // Display.setCursor(0, 50);
-    //     // Display.print("Frequency: ");
-    //     // Display.sendBuffer();
+    Display.setCursor(0, 50);
+    Display.print("Frequency");
+    Display.print(frequency);
   }
 
-  //   // Remember last CLK state
   lastStateCLK = currentStateCLK;
-  
 
   if (rotarySwitch.isPressed())
   {
-    tone(DOORBELL, frequency, 300);
+    tone(DOORBELL, frequency, 500);
   }
 }
 
@@ -221,8 +232,8 @@ void loop()
   yellowButton.loop();
   rotarySwitch.loop();
 
-  // ReadTemp();
-  // ReadMotion();
-  // ChangeRGB();
   ReadDoorbell();
+  ReadTemp();
+  ReadMotion();
+  ChangeRGB();
 }
