@@ -73,6 +73,10 @@
 		},
 		{
 			"path": "Oefeningen/Oled Test"
+		},
+		{
+			"name": "Opdracht Sensoren Actuatoren",
+			"path": "Oefeningen/Opdracht Sensoren Actuatoren"
 		}
 	],
 	"settings": {}
