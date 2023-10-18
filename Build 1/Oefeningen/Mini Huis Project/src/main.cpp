@@ -18,9 +18,15 @@
 #define BUTTON_YELLOW A2
 #define DHTPIN 2
 #define MOTIONSENSOR 9
+#define OLED_CLOCK 12 // YELLOW WIRE
+#define OLED_DATA 11  // WHITE WIRE
+#define DOORBELL 4
+#define ROTORY_CLOCK 7
+#define ROTORY_DATA 8
+#define ROTORY_SWITCH A3
 
 // Initialise OLED display
-U8G2_SSD1306_128X64_NONAME_F_SW_I2C Display(U8G2_R0, /* clock=*/12, /* data=*/11, /* reset=*/U8X8_PIN_NONE); // Software I2C
+U8G2_SSD1306_128X64_NONAME_F_SW_I2C Display(U8G2_R0, OLED_CLOCK, OLED_DATA, /* reset=*/U8X8_PIN_NONE); // Software I2C
 
 // Initialise Temp sensor
 #define DHTTYPE DHT22
@@ -33,26 +39,37 @@ Servo Door;
 ezButton redButton(BUTTON_RED);
 ezButton whiteButton(BUTTON_WHITE);
 ezButton yellowButton(BUTTON_YELLOW);
+ezButton rotarySwitch(ROTORY_SWITCH);
 
 // Initialise variables
 float Temp;
 float Humidity;
 float lastTemp;
 float lastHumidity;
-float currentMillis;
-float startMillis;
+long currentMillis;
+long startMillis;
+long lastRotaryPress = 0;
 int DHTDelay = 2000;
 int motionState = LOW;   // by default, no motion detected
 int motionVal = 0;       // variable to store the sensor status (value)
 bool RGB_Status = false; // TRue = ON; False = OFF
+int currentStateCLK;
+int lastStateCLK;
+int frequency = 500;
 
 void setup()
 {
+  Serial.begin(9600);
+
   Door.attach(SERVO); // attach servo
 
   Display.begin(); // Start OLED display
   Display.setFont(u8g2_font_luBIS08_tf);
   Display.clearBuffer();
+
+  pinMode(ROTORY_CLOCK, INPUT); // Setup rotary encoder as INPUT
+  pinMode(ROTORY_DATA, INPUT);
+  lastStateCLK = digitalRead(ROTORY_CLOCK);
 
   pinMode(LED_BUILTIN, OUTPUT); // Set built in LED as OUTPUT
 
@@ -63,7 +80,8 @@ void setup()
 
   redButton.setDebounceTime(100);
   yellowButton.setDebounceTime(100);
-  whiteButton.setDebounceTime(50);
+  whiteButton.setDebounceTime(100);
+  rotarySwitch.setDebounceTime(100);
 
   analogWrite(RGB_RED, 255); // Turn off led on startup
   analogWrite(RGB_GREEN, 255);
@@ -123,11 +141,13 @@ void ReadMotion()
 
 void ChangeRGB()
 {
-  if (RGB_Status)
+  if ((whiteButton.isPressed() || yellowButton.isPressed() || redButton.isPressed()) && RGB_Status)
   {
     analogWrite(RGB_RED, 255);
     analogWrite(RGB_GREEN, 255);
     analogWrite(RGB_BLUE, 255);
+    RGB_Status = false;
+    return;
   }
 
   if (whiteButton.isPressed()) // RGB Value for white = 255 255 255
@@ -154,13 +174,55 @@ void ChangeRGB()
   }
 }
 
+void ReadDoorbell()
+{
+  // Serial.println("Test");
+
+  //   // Read the current state of CLK
+  currentStateCLK = digitalRead(ROTORY_CLOCK);
+
+  //   // If last and current state of CLK are different, then pulse occurred
+  //   // React to only 1 state change to avoid double count
+  if (currentStateCLK != lastStateCLK && currentStateCLK == 1)
+  {
+    //     // If the DT state is different than the CLK state then
+    //     // the encoder is rotating CCW so decrement
+    if (digitalRead(ROTORY_DATA) != currentStateCLK)
+    {
+      frequency -= 50;
+      Serial.println("Links");
+    }
+    else
+    {
+      frequency += 50;
+      Serial.println("Rechts");
+    }
+    Serial.println(frequency);
+
+    //     // Display.setCursor(0, 50);
+    //     // Display.print("Frequency: ");
+    //     // Display.sendBuffer();
+  }
+
+  //   // Remember last CLK state
+  lastStateCLK = currentStateCLK;
+  
+
+  if (rotarySwitch.isPressed())
+  {
+    tone(DOORBELL, frequency, 300);
+  }
+}
+
 void loop()
 {
   redButton.loop();
   whiteButton.loop();
   yellowButton.loop();
+  rotarySwitch.loop();
 
-  ReadTemp();
-  ReadMotion();
-  ChangeRGB();
+  // ReadTemp();
+  // ReadMotion();
+  // ChangeRGB();
+  ReadDoorbell();
 }

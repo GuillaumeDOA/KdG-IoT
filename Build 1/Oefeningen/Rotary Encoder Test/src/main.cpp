@@ -2,8 +2,8 @@
 #include <Arduino.h>
 #include <Servo.h>
 
-#define CLK 2
-#define DT 3
+#define CLK 7
+#define DT 8
 // #define SW 4
 
 Servo myservo;
