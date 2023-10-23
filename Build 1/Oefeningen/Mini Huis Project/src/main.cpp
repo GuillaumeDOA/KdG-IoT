@@ -2,7 +2,7 @@
 
 // Include necessary libraries
 #include <Servo.h>
-#include "DHT.h"
+#include <DHT.h>
 #include <Adafruit_Sensor.h>
 #include <U8g2lib.h>
 #include <Wire.h>
@@ -18,13 +18,13 @@
 #define BUTTON_YELLOW A2
 #define DHTPIN 2
 #define MOTIONSENSOR 13
-#define OLED_CLOCK 12 // YELLOW WIRE
-#define OLED_DATA 11  // WHITE WIRE
+#define OLED_CLOCK 19 // YELLOW WIRE
+#define OLED_DATA 18  // WHITE WIRE
 #define BUZZER 4
 #define DOORBELL_BUTTON A3
 
 // Initialise OLED display
-U8G2_SSD1306_128X64_NONAME_F_SW_I2C Display(U8G2_R0, OLED_CLOCK, OLED_DATA, /* reset=*/U8X8_PIN_NONE); // Software I2C
+U8G2_SSD1306_128X64_NONAME_F_SW_I2C Display(U8G2_R0, OLED_CLOCK, OLED_DATA, /* reset=*/U8X8_PIN_NONE);
 
 // Initialise Temp sensor
 #define DHTTYPE DHT22
@@ -42,8 +42,8 @@ ezButton doorBell(DOORBELL_BUTTON);
 // Initialise variables
 float Temp;
 float Humidity;
-long startTimeTemp;
-int DHTDelay = 2000;
+unsigned long startTimeTemp;
+unsigned int DHTDelay = 2000;
 int motionState = LOW;   // by default, no motion detected
 int motionVal = 0;       // variable to store the sensor status (value)
 bool RGB_Status = false; // TRue = ON; False = OFF
@@ -83,8 +83,10 @@ void ReadTemp()
     Temp = dht.readTemperature();
     Humidity = dht.readHumidity();
 
+    if (isnan(Temp) || isnan(Humidity))
+      return;
+
     Display.firstPage();
-    Display.setCursor(0, 10);
 
     do
     {
