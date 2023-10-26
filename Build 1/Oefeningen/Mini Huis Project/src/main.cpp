@@ -7,7 +7,6 @@
 #include <U8g2lib.h>
 #include <Wire.h>
 #include <ezButton.h>
-#include <ezBuzzer.h>
 
 // Define pins
 #define SERVO 10
@@ -40,60 +39,61 @@ ezButton whiteButton(BUTTON_WHITE);
 ezButton yellowButton(BUTTON_YELLOW);
 ezButton doorBell(DOORBELL_BUTTON);
 
-// Initialise ezBuzzer
-ezBuzzer buzzer(BUZZER);
-
 // Initialise variables
 float Temp;
 float Humidity;
 unsigned long startTimeTemp;
 unsigned int DHTDelay = 2000;
-int motionState = LOW;   // by default, no motion detected
-int motionVal = 0;       // variable to store the sensor status (value)
-bool RGB_Status = false; // TRue = ON; False = OFF
+int motionState = LOW;   // Default = no motion detected
+int motionVal = 0;       // Variable to store the sensor status (value)
+bool RGB_Status = false; // True = ON; False = OFF
 
 void setup()
 {
   Door.attach(SERVO); // attach servo
 
-  Display.begin(); // Start OLED display
-  Display.setFont(u8g2_font_luBIS08_tf);
+  Display.begin();                       // Start OLED display
+  Display.setFont(u8g2_font_luBIS08_tf); // Set font
 
+  // Set correct pinmodes
   pinMode(MOTIONSENSOR, INPUT);
-
   pinMode(RGB_BLUE, OUTPUT);
   pinMode(RGB_RED, OUTPUT);
   pinMode(RGB_GREEN, OUTPUT);
-
   pinMode(DHTPIN, INPUT);
+
   dht.begin(); // Start Temp and Humid sensor
 
+  // Set debouncetimes for buttons
   redButton.setDebounceTime(100);
   yellowButton.setDebounceTime(100);
   whiteButton.setDebounceTime(100);
   doorBell.setDebounceTime(100);
 
-  analogWrite(RGB_RED, 255); // Turn off led on startup
+  // Turn off led on startup
+  analogWrite(RGB_RED, 255);
   analogWrite(RGB_GREEN, 255);
   analogWrite(RGB_BLUE, 255);
 
   startTimeTemp = millis();
+  Door.write(170); // Close door on startup
 }
 
 void ReadTemp()
-{
+{ // Only update display every couple seconds (DHTDelay)
   if (millis() - startTimeTemp >= DHTDelay)
   {
+    // Read sensor
     Temp = dht.readTemperature();
     Humidity = dht.readHumidity();
 
+    // If not a number return from function
     if (isnan(Temp) || isnan(Humidity))
       return;
 
     Display.firstPage();
-
     do
-    {
+    { // Write values to display
       Display.setCursor(0, 10);
       Display.print("Temp: ");
       Display.print(Temp);
@@ -101,27 +101,27 @@ void ReadTemp()
       Display.print("Humidity: ");
       Display.print(Humidity);
     } while (Display.nextPage());
-    startTimeTemp += DHTDelay;
+    startTimeTemp += DHTDelay; // Increment startTimeTemp
   }
 }
 
 void ReadMotion()
 {
-  motionVal = digitalRead(MOTIONSENSOR); // read sensor motionValue
+  motionVal = digitalRead(MOTIONSENSOR); // Read motionsensor
   if (motionVal == HIGH)
-  { // check if the sensor is HIGH
+  { // check if the sensor is HIGH and state is LOW
     if (motionState == LOW)
     {
-      motionState = HIGH; // update variable state to HIGH
-      Door.write(180);
+      motionState = HIGH; // Door is open
+      Door.write(30);
     }
   }
   else
-  {
+  { // If sensor is LOW and state is HIGH
     if (motionState == HIGH)
     {
-      motionState = LOW; // update variable state to LOW
-      Door.write(0);
+      motionState = LOW; // Door is closed
+      Door.write(170);
     }
   }
 }
@@ -129,7 +129,7 @@ void ReadMotion()
 void ChangeRGB()
 {
   if ((whiteButton.isPressed() || yellowButton.isPressed() || redButton.isPressed()) && RGB_Status)
-  {
+  { // If a button is pressed while LED is on -> turn off LED
     analogWrite(RGB_RED, 255);
     analogWrite(RGB_GREEN, 255);
     analogWrite(RGB_BLUE, 255);
@@ -164,13 +164,18 @@ void ChangeRGB()
 void DoorBell()
 {
   if (doorBell.isPressed())
-  {
-    tone(BUZZER, 329.6, 400); // tone(PIN#, FREQUENCY)
+  { // Sound doorbell when button is pressed
+    tone(BUZZER, 200, 300);
+    /*
+      Wou een liedje afspelen met de ezBuzzer library, maar vanaf dat ik deze code implementeerde werkte de
+      van het programma niet meer
+    */
   }
 }
 
 void loop()
 {
+  // Loop over buttons
   redButton.loop();
   whiteButton.loop();
   yellowButton.loop();
