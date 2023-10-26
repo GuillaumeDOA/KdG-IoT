@@ -7,6 +7,7 @@
 #include <U8g2lib.h>
 #include <Wire.h>
 #include <ezButton.h>
+#include <ezBuzzer.h>
 
 // Define pins
 #define SERVO 10
@@ -38,6 +39,9 @@ ezButton redButton(BUTTON_RED);
 ezButton whiteButton(BUTTON_WHITE);
 ezButton yellowButton(BUTTON_YELLOW);
 ezButton doorBell(DOORBELL_BUTTON);
+
+// Initialise ezBuzzer
+ezBuzzer buzzer(BUZZER);
 
 // Initialise variables
 float Temp;
