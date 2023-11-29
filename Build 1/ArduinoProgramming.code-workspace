@@ -77,6 +77,10 @@
 		{
 			"name": "Opdracht Sensoren Actuatoren",
 			"path": "Oefeningen/Opdracht Sensoren Actuatoren"
+		},
+		{
+			"name": "Relays",
+			"path": "Oefeningen/Relays"
 		}
 	],
 	"settings": {}
