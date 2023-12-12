@@ -81,6 +81,10 @@
 		{
 			"name": "Relays",
 			"path": "Oefeningen/Relays"
+		},
+		{
+			"name": "LED_Matrix",
+			"path": "Oefeningen/LED_Matrix"
 		}
 	],
 	"settings": {}
