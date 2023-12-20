@@ -4,9 +4,9 @@
 #include "Adafruit_PM25AQI.h"
 #include <WiFiS3.h>
 
-#define powerLED 3
-#define wifiLED 4
-#define dataLED 5
+#define POWERLED 3
+#define WIFILED 4
+#define DATALED 5
 
 Adafruit_PM25AQI aqi = Adafruit_PM25AQI();
 
@@ -14,8 +14,8 @@ Adafruit_PM25AQI aqi = Adafruit_PM25AQI();
 long startTime;
 long delayTime = 2000;
 
-char ssid[] = "Home de Oliveira - Haesaert";
-char pass[] = "0475212120";
+char ssid[] = "IoT";
+char pass[] = "KdGIoT84!";
 int status = WL_IDLE_STATUS;
 
 void printMacAddress(byte mac[]) {
@@ -91,10 +91,8 @@ void WifiSetup()
   }
 
   // you're connected now, so print out the data:
-  digitalWrite(wifiLED, HIGH);
+  digitalWrite(WIFILED, HIGH);
   Serial.print("You're connected to the network");
-  printCurrentNet();
-  printWifiData();
 }
 
 void SensorSetup(){
@@ -117,7 +115,7 @@ void readAQI(){
   if(millis() - startTime < delayTime)
     return;   // Read Sensor every 2 seconds
 
-  digitalWrite(dataLED, HIGH);
+  digitalWrite(DATALED, HIGH);
   PM25_AQI_Data data;
   
   if (! aqi.read(&data)) {
@@ -148,16 +146,16 @@ void readAQI(){
   Serial.println(F("---------------------------------------"));
   
   startTime = millis();
-  digitalWrite(dataLED, LOW);
+  digitalWrite(DATALED, LOW);
 }
 
 void setup() {
-  pinMode(powerLED, OUTPUT);
-  pinMode(wifiLED, OUTPUT);
-  pinMode(dataLED, OUTPUT);
+  pinMode(POWERLED, OUTPUT);
+  pinMode(WIFILED, OUTPUT);
+  pinMode(DATALED, OUTPUT);
 
   // Powerled high as soon as program starts
-  digitalWrite(powerLED, HIGH);
+  digitalWrite(POWERLED, HIGH);
 
 
   // Wait for serial monitor to open
@@ -166,6 +164,9 @@ void setup() {
 
   SensorSetup();
   WifiSetup();
+  //  Print Wifi and network data when connected to the internet
+  printCurrentNet();
+  printWifiData();
 
   startTime = millis();
 }
