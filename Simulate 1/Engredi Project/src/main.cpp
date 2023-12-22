@@ -4,6 +4,7 @@
 #include <Adafruit_PM25AQI.h>
 #include <WiFiS3.h>
 #include <secrets.h>
+#include <RTC.h>
 
 #define POWERLED 3
 #define WIFILED 4
@@ -11,10 +12,9 @@
 
 Adafruit_PM25AQI aqi = Adafruit_PM25AQI();
 
-long startTime;
-long delayTime = 2000;
-
 int status = WL_IDLE_STATUS;
+
+int previousSecond = 0;
 
 void WifiSetup()
 {
@@ -80,16 +80,12 @@ void SensorSetup()
 
 void readAQI()
 {
-  if (millis() - startTime < delayTime)
-    return; // Read Sensor every 2 seconds
-
   digitalWrite(DATALED, HIGH);
   PM25_AQI_Data data;
 
   if (!aqi.read(&data))
   {
     Serial.println("Could not read from AQI"); // Try again
-    startTime = millis();
     digitalWrite(DATALED, LOW);
     return;
   }
@@ -111,7 +107,6 @@ void readAQI()
   Serial.print(F("\t\tPM 10: "));
   Serial.println(data.pm100_env);
   Serial.println();
-  startTime = millis();
   digitalWrite(DATALED, LOW);
 }
 
@@ -132,10 +127,18 @@ void setup()
   SensorSetup();
   WifiSetup();
 
-  startTime = millis();
+  // Setup RTC (Real Time Clock)
+  RTC.begin();
+  RTCTime startTime(22, Month::DECEMBER, 2023, 12, 31, 00, DayOfWeek::FRIDAY, SaveLight::SAVING_TIME_ACTIVE);
+  RTC.setTime(startTime);
 }
 
 void loop()
 {
-  readAQI();
+  RTCTime currentTime;
+  RTC.getTime(currentTime);
+
+  if(currentTime.getSeconds() != previousSecond)
+    readAQI();
+  previousSecond = currentTime.getSeconds();
 }

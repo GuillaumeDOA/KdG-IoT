@@ -85,6 +85,9 @@
 		{
 			"name": "LED_Matrix",
 			"path": "Oefeningen/LED_Matrix"
+		},
+		{
+			"path": "Oefeningen/RTC Test"
 		}
 	],
 	"settings": {}
