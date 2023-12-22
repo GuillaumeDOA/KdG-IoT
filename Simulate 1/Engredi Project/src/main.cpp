@@ -40,6 +40,7 @@ void WifiSetup()
   // attempt to connect to WiFi network:
   for (int i = 0; i < sizeof(SSIDS); i++)
   {
+    //  Get SSID en passwords from secrets.h file
     char *ssid = SSIDS[i];
     char *pass = PASSWORDS[i];
 
@@ -56,7 +57,7 @@ void WifiSetup()
     Serial.println("Connection failed. Trying next SSID");
   }
 
-  // you're connected now, so print out the data:
+  // you're connected now
   digitalWrite(WIFILED, HIGH);
   Serial.println("You're connected to the network");
 }
@@ -68,11 +69,10 @@ void SensorSetup()
   // Wait one second for sensor to boot up!
   delay(2000);
 
-  if (!aqi.begin_I2C())
+  while (!aqi.begin_I2C())
   { // connect to the sensor over I2C
     Serial.println("Could not find PM 2.5 sensor!");
-    while (1)
-      delay(10);
+    delay(2000);
   }
 
   Serial.println("PM25 found!");
@@ -80,7 +80,6 @@ void SensorSetup()
 
 void readAQI()
 {
-
   if (millis() - startTime < delayTime)
     return; // Read Sensor every 2 seconds
 
@@ -90,6 +89,8 @@ void readAQI()
   if (!aqi.read(&data))
   {
     Serial.println("Could not read from AQI"); // Try again
+    startTime = millis();
+    digitalWrite(DATALED, LOW);
     return;
   }
   Serial.println("AQI reading success");
