@@ -14,7 +14,7 @@ Adafruit_PM25AQI aqi = Adafruit_PM25AQI();
 
 int status = WL_IDLE_STATUS;
 
-int previousQuarter = -1;
+int previousMinute = -1;
 
 void WifiSetup()
 {
@@ -129,7 +129,7 @@ void setup()
 
   // Setup RTC (Real Time Clock)
   RTC.begin();
-  RTCTime startTime(22, Month::DECEMBER, 2024, 1, 1, 00, DayOfWeek::MONDAY, SaveLight::SAVING_TIME_ACTIVE);
+  RTCTime startTime(22, Month::DECEMBER, 2024, 16, 59, 50, DayOfWeek::MONDAY, SaveLight::SAVING_TIME_ACTIVE);
   RTC.setTime(startTime);
 }
 
@@ -138,7 +138,13 @@ void loop()
   RTCTime currentTime;
   RTC.getTime(currentTime);
 
-  if(currentTime.getMinutes() != previousQuarter)
-    readAQI();
-  previousQuarter = currentTime.getMinutes();
+  if(currentTime.getMinutes() != previousMinute){
+    Serial.print(currentTime.getHour());
+    Serial.print(":");
+    Serial.print(currentTime.getMinutes());
+    Serial.println();
+    previousMinute = currentTime.getMinutes();
+    if(currentTime.getMinutes() % 15 == 0)
+      readAQI();
+  }
 }
