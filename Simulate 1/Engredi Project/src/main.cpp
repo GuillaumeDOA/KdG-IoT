@@ -30,13 +30,7 @@ void WifiSetup()
       delay(5000);
     }
   }
-
-  String fv = WiFi.firmwareVersion();
-  if (fv < WIFI_FIRMWARE_LATEST_VERSION)
-  {
-    Serial.println("Please upgrade the firmware");
-  }
-
+  
   // attempt to connect to WiFi network:
   for (int i = 0; i < sizeof(SSIDS); i++)
   {
