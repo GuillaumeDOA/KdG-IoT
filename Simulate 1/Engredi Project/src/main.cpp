@@ -32,7 +32,7 @@ void WifiSetup()
   }
   
   // attempt to connect to WiFi network:
-  for (int i = 0; i < sizeof(SSIDS); i++)
+  for (int i = 0; i < 2; i++)
   {
     //  Get SSID en passwords from secrets.h file
     char *ssid = SSIDS[i];
