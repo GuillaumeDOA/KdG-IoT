@@ -139,10 +139,6 @@ void loop()
   RTC.getTime(currentTime);
 
   if(currentTime.getMinutes() != previousMinute){
-    Serial.print(currentTime.getHour());
-    Serial.print(":");
-    Serial.print(currentTime.getMinutes());
-    Serial.println();
     previousMinute = currentTime.getMinutes();
     if(currentTime.getMinutes() % 15 == 0)
       readAQI();
