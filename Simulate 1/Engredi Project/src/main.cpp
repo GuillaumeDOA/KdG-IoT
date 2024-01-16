@@ -6,65 +6,72 @@
 #include <secrets.h>
 #include <RTC.h>
 
+// Define your WiFi credentials and Google Sheets information
+const char* ssid = SSID;
+const char* password = PASSWORD;
+const char* host = "script.google.com"; // This should be the URL to your Google Script
+const String googleScriptId = "AKfycbzUWHODQv99bVDpJnoXvvER0G7f7rHfaI5qfm-Heqk80830l6ODIHj1EjSpVfruiO92"; //EIGEN SCRIPT
+// const String googleScriptId = "AKfycbyDJRQMJTO4mATnP_clVqginRXG8mo5oiDkTfL9ZWqmMuuIBDmhrEiDDIqtQ6CLeJZu"; // TEST
+
+// Define sensor and LED pins
 #define POWERLED 3
 #define WIFILED 4
 #define DATALED 5
 
+// Initialize the PM2.5 sensor and WiFi client
 Adafruit_PM25AQI aqi = Adafruit_PM25AQI();
+PM25_AQI_Data data;
+
+WiFiSSLClient client;
 
 int status = WL_IDLE_STATUS;
-
 int previousMinute = -1;
 
-void WifiSetup()
-{
+
+void WifiSetup() {
   Serial.println("Wifi setup:");
   // check for the WiFi module:
-  if (WiFi.status() == WL_NO_MODULE)
-  {
+  if (WiFi.status() == WL_NO_MODULE) {
     Serial.println("Communication with WiFi module failed!");
     // don't continue
-    while (true)
-    {
-      Serial.println("Problem with Wifi module");
+    while (true) {
       delay(5000);
     }
   }
-  
-  // attempt to connect to WiFi network:
-  for (int i = 0; i < 2; i++)
-  {
-    //  Get SSID en passwords from secrets.h file
-    char *ssid = SSIDS[i];
-    char *pass = PASSWORDS[i];
 
-    Serial.print("Attempting to connect to WPA SSID: ");
+  String fv = WiFi.firmwareVersion();
+  if (fv < WIFI_FIRMWARE_LATEST_VERSION) {
+    Serial.println("Please upgrade the firmware");
+  }
+
+  // attempt to connect to WiFi network:
+  while (status != WL_CONNECTED) {
+    Serial.print("Attempting to connect to SSID: ");
     Serial.println(ssid);
     // Connect to WPA/WPA2 network:
-    status = WiFi.begin(ssid, pass);
+    status = WiFi.begin(ssid, password);
 
     // wait 10 seconds for connection:
     delay(10000);
 
-    if (status == WL_CONNECTED)
+    if (status == WL_CONNECTED) {
+      Serial.println("Connected to the network");
+      digitalWrite(WIFILED, HIGH);
       break;
-    Serial.println("Connection failed. Trying next SSID");
+    } else {
+      Serial.println("Connection failed, retrying...");
+    }
   }
-
-  // you're connected now
-  digitalWrite(WIFILED, HIGH);
-  Serial.println("You're connected to the network");
 }
 
-void SensorSetup()
-{
+void SensorSetup() {
   Serial.println("Adafruit PMSA003I Air Quality Sensor");
 
-  // Wait one second for sensor to boot up!
+  // Wait two seconds for the sensor to boot up
   delay(2000);
 
-  while (!aqi.begin_I2C())
-  { // connect to the sensor over I2C
+  // Attempt to connect to the sensor over I2C
+  while (!aqi.begin_I2C()) {
     Serial.println("Could not find PM 2.5 sensor!");
     delay(2000);
   }
@@ -72,48 +79,45 @@ void SensorSetup()
   Serial.println("PM25 found!");
 }
 
-void readAQI()
-{
+bool readAQI() {
   digitalWrite(DATALED, HIGH);
-  PM25_AQI_Data data;
-
-  if (!aqi.read(&data))
-  {
-    Serial.println("Could not read from AQI"); // Try again
+  if (!aqi.read(&data)) {
+    Serial.println("Could not read from AQI");
     digitalWrite(DATALED, LOW);
-    return;
+    delay(500);
+    return false;
   }
   Serial.println("AQI reading success");
-
-  Serial.println();
-  Serial.println(F("---------------------------------------"));
-  Serial.println(F("Concentration Units (standard)"));
-  Serial.println(F("---------------------------------------"));
-  Serial.print(F("PM 2.5: "));
-  Serial.print(data.pm25_standard);
-  Serial.print(F("\t\tPM 10: "));
-  Serial.println(data.pm100_standard);
-  Serial.println();
-  Serial.println(F("Concentration Units (environmental)"));
-  Serial.println(F("---------------------------------------"));
-  Serial.print(F("PM 2.5: "));
-  Serial.print(data.pm25_env);
-  Serial.print(F("\t\tPM 10: "));
+  Serial.println(data.pm25_env);
   Serial.println(data.pm100_env);
-  Serial.println();
+  Serial.println(data.pm25_standard);
+  Serial.println(data.pm100_standard);
   digitalWrite(DATALED, LOW);
+  return true;
 }
 
-void setup()
-{
+void sendToGoogleSheets() {
+  if (client.connect(host, 443)) {
+    String url = "/macros/s/" + googleScriptId + "/exec?";
+    url += "pm2=" + String(data.pm25_env);
+    url += "&pm10=" + String(data.pm100_env);
+    Serial.println(url);
+    
+    client.print(String("GET ") + url + " HTTP/1.1\r\n" +
+                 "Host: " + host + "\r\n" +
+                 "Connection: close\r\n\r\n");
+
+    
+    // Wait for server response and read it
+  }
+}
+
+void setup() {
   pinMode(POWERLED, OUTPUT);
   pinMode(WIFILED, OUTPUT);
   pinMode(DATALED, OUTPUT);
-
-  // Powerled high as soon as program starts
   digitalWrite(POWERLED, HIGH);
 
-  // Wait for serial monitor to open
   Serial.begin(115200);
   while (!Serial)
     delay(10);
@@ -123,18 +127,22 @@ void setup()
 
   // Setup RTC (Real Time Clock)
   RTC.begin();
+  // Set your desired start time here
   RTCTime startTime(22, Month::DECEMBER, 2024, 16, 59, 50, DayOfWeek::MONDAY, SaveLight::SAVING_TIME_ACTIVE);
   RTC.setTime(startTime);
 }
 
-void loop()
-{
+void loop() {
   RTCTime currentTime;
   RTC.getTime(currentTime);
-
-  if(currentTime.getMinutes() != previousMinute){
+  
+  if (currentTime.getMinutes() != previousMinute) {
     previousMinute = currentTime.getMinutes();
-    if(currentTime.getMinutes() % 15 == 0)
-      readAQI();
+    readAQI();
+    if (currentTime.getMinutes() % 15 == 0) {
+      if (readAQI()) {
+        sendToGoogleSheets();
+      }
+    }
   }
 }
