@@ -10,10 +10,9 @@
 const char* ssid = SSID;
 const char* password = PASSWORD;
 const char* host = "script.google.com"; // This should be the URL to your Google Script
-const String googleScriptId = "AKfycbzUWHODQv99bVDpJnoXvvER0G7f7rHfaI5qfm-Heqk80830l6ODIHj1EjSpVfruiO92"; //EIGEN SCRIPT
-// const String googleScriptId = "AKfycbyDJRQMJTO4mATnP_clVqginRXG8mo5oiDkTfL9ZWqmMuuIBDmhrEiDDIqtQ6CLeJZu"; // TEST
+const String googleScriptId = "AKfycbzs-YDE4Dnn6vaN3Xv3a1AXaMbwJzHwR1fbxS2ITaf6bE8rLDRSKXShrVSUrrTfS6bRtA"; //EIGEN SCRIPT
 
-// Define sensor and LED pins
+// Define LED pins
 #define POWERLED 3
 #define WIFILED 4
 #define DATALED 5
@@ -21,7 +20,6 @@ const String googleScriptId = "AKfycbzUWHODQv99bVDpJnoXvvER0G7f7rHfaI5qfm-Heqk80
 // Initialize the PM2.5 sensor and WiFi client
 Adafruit_PM25AQI aqi = Adafruit_PM25AQI();
 PM25_AQI_Data data;
-
 WiFiSSLClient client;
 
 int status = WL_IDLE_STATUS;
@@ -37,11 +35,6 @@ void WifiSetup() {
     while (true) {
       delay(5000);
     }
-  }
-
-  String fv = WiFi.firmwareVersion();
-  if (fv < WIFI_FIRMWARE_LATEST_VERSION) {
-    Serial.println("Please upgrade the firmware");
   }
 
   // attempt to connect to WiFi network:
