@@ -14,7 +14,7 @@ char server[] = "https://script.google.com/macros/s/AKfycbzpolrHRgbMzY2GmgDRXfAz
 // Initialize the Ethernet client library
 // with the IP address and port of the server
 // that you want to connect to (port 80 is default for HTTP):
-WiFiClient client;
+WiFiSSLClient client;
 
 /* -------------------------------------------------------------------------- */
 void setup()

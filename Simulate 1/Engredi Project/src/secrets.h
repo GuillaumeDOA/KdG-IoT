@@ -1,3 +1,3 @@
-char* SSID = "Home de Oliveira - Haesaert";
+char* SSID = "KdG-iDev";
 
-char* PASSWORD = "0475212120";
+char* PASSWORD = "AMWmARVhkrDHHVca";
