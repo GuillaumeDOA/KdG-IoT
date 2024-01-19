@@ -4,13 +4,12 @@
 #include <Adafruit_PM25AQI.h>
 #include <WiFiS3.h>
 #include <secrets.h>
-#include <RTC.h>
 
 // Define your WiFi credentials and Google Sheets information
 const char *ssid = SSID;
 const char *password = PASSWORD;
 const char *host = "script.google.com";                                                                     // This should be the URL to your Google Script
-const String googleScriptId = "AKfycbzs-YDE4Dnn6vaN3Xv3a1AXaMbwJzHwR1fbxS2ITaf6bE8rLDRSKXShrVSUrrTfS6bRtA"; // EIGEN SCRIPT
+const String googleScriptId = "AKfycbx6OLzjwRdO3pryYKfyD15jw_PQAdihov3ChnbnDKqyPrer2xs6rsyr7AwVs98RyxCLIQ"; // EIGEN SCRIPT
 
 // Define LED pins
 #define POWERLED 4
@@ -20,10 +19,10 @@ const String googleScriptId = "AKfycbzs-YDE4Dnn6vaN3Xv3a1AXaMbwJzHwR1fbxS2ITaf6b
 // Initialize the PM2.5 sensor and WiFi client
 Adafruit_PM25AQI aqi = Adafruit_PM25AQI();
 PM25_AQI_Data data;
-WiFiSSLClient client;
 
 int status = WL_IDLE_STATUS;
 int previousMinute = -1;
+int startTime;
 
 void WifiSetup()
 {
@@ -82,25 +81,23 @@ void SensorSetup()
 
 bool readAQI()
 {
-  digitalWrite(DATALED, HIGH);
   if (!aqi.read(&data))
   {
     Serial.println("Could not read from AQI");
-    digitalWrite(DATALED, LOW);
     delay(500);
     return false;
   }
   Serial.println("AQI reading success");
   Serial.println(data.pm25_env);
   Serial.println(data.pm100_env);
-  Serial.println(data.pm25_standard);
-  Serial.println(data.pm100_standard);
-  digitalWrite(DATALED, LOW);
   return true;
 }
 
 void sendToGoogleSheets()
 {
+  WiFiSSLClient client;
+
+  Serial.println("Attempting to connect to sheet");
   if (client.connect(host, 443))
   {
     String url = "/macros/s/" + googleScriptId + "/exec?";
@@ -112,7 +109,20 @@ void sendToGoogleSheets()
                  "Host: " + host + "\r\n" +
                  "Connection: close\r\n\r\n");
 
+
+    // Read and print the server's response
+    Serial.println("Server response:");
+    while (client.available() ||client.connected()) {
+      char c = client.read();
+      Serial.print(c);
+    }
+
     // Wait for server response and read it
+    client.stop();
+  }
+  else
+  {
+    Serial.println("Upload to Sheet failed");
   }
 }
 
@@ -130,11 +140,7 @@ void setup()
   SensorSetup();
   WifiSetup();
 
-  // Setup RTC (Real Time Clock)
-  RTC.begin();
-  // Set your desired start time here
-  RTCTime startTime(17, Month::JANUARY, 2024, 15, 59, 50, DayOfWeek::MONDAY, SaveLight::SAVING_TIME_ACTIVE);
-  RTC.setTime(startTime);
+  startTime = millis();
 }
 
 void loop()
@@ -160,19 +166,14 @@ void loop()
       Serial.println("Connection failed, retrying...");
   }
 
-  RTCTime currentTime;
-  RTC.getTime(currentTime);
-
-  if (currentTime.getMinutes() != previousMinute)
+  if (millis() - startTime >= 10000)
   {
-    previousMinute = currentTime.getMinutes();
-    readAQI();
-    if (currentTime.getMinutes() % 15 == 0)
+    digitalWrite(DATALED, HIGH);
+    startTime = millis();
+    if (readAQI())
     {
-      if (readAQI())
-      {
-        sendToGoogleSheets();
-      }
+      sendToGoogleSheets();
     }
+    digitalWrite(DATALED, LOW);
   }
 }
