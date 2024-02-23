@@ -6,6 +6,9 @@
 		{
 			"name": "Bodemvochtigheid test",
 			"path": "Oefeningen/Bodemvochtigheid test"
+		},
+		{
+			"path": "Oefeningen/Wifi Tests"
 		}
 	],
 	"settings": {}
