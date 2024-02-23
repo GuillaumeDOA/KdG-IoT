@@ -9,7 +9,6 @@ if url.status_code < 200 or url.status_code > 300:
 soup = BeautifulSoup(url.text, "html.parser")
 table = soup.find('tbody')
 
-#  Get ID, Name, Types, HP
 previousNumber = 0
 for row in table.find_all('tr'):
     cells = row.find_all('td')
