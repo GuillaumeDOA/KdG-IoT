@@ -5,6 +5,7 @@ url = requests.get("https://pokemondb.net/pokedex/all")
 
 if url.status_code < 200 or url.status_code > 300:
     print("Failed HTTP GET request. Response code: %d" % url.status_code)
+    exit()
 
 soup = BeautifulSoup(url.text, "html.parser")
 table = soup.find('tbody')
