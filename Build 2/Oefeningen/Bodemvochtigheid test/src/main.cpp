@@ -16,11 +16,13 @@ Moisture Sensor max (water): 2620
     nat: 2400 - 2600            2630
 */
 
+
 const int RESISTANCE_MIN = 1600;
 const int RESISTANCE_MAX = 2600;
 
 const int CAPACITANCE_MIN = 2700;
 const int CAPACITANCE_MAX = 1450;
+
 
 const int CAPACITIVE = A1;
 const int MOISTURE = A0;
@@ -47,11 +49,11 @@ void loop() {
   int resSensorValue = analogRead(MOISTURE);
   int resMoisturePercentage = calculateMoisturePercentage(resSensorValue, RESISTANCE_MIN, RESISTANCE_MAX); 
 
-  int capSensorValue = analogRead(CAPACITIVE);
-  int capMoisturePercentage = calculateMoisturePercentage(capSensorValue, CAPACITANCE_MIN, CAPACITANCE_MAX);
+  //int capSensorValue = analogRead(CAPACITIVE);
+  //int capMoisturePercentage = calculateMoisturePercentage(capSensorValue, CAPACITANCE_MIN, CAPACITANCE_MAX);
   
   outputSerialSoilValues("Moisture type ", resSensorValue, resMoisturePercentage);
-  outputSerialSoilValues("Capacitance type ", capSensorValue, capMoisturePercentage);
+  //outputSerialSoilValues("Capacitance type ", capSensorValue, capMoisturePercentage);
   Serial.println("--------");
 
   delay(5000);

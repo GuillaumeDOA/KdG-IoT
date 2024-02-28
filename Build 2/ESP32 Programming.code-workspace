@@ -9,6 +9,14 @@
 		},
 		{
 			"path": "Oefeningen/Wifi Tests"
+		},
+		{
+			"name": "Firebase Demo",
+			"path": "Oefeningen/Firebase Demo"
+		},
+		{
+			"name": "Plantwateringsysteem",
+			"path": "Oefeningen/Plantwateringsysteem"
 		}
 	],
 	"settings": {}
