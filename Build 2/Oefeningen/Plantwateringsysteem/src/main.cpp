@@ -34,14 +34,14 @@ unsigned long timerDelay = 5000;
 // Setup WiFi
 void setupWifi()
 {
-    WiFi.begin(SSID, PASSWORD);
+    WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
     Serial.print("Connecting to WiFi ..");
     while (WiFi.status() != WL_CONNECTED)
     {
         Serial.print('.');
         delay(1000);
     }
-    Serial.println("Wifi connected!");
+    Serial.println(" connected!");
 }
 
 // Gets current time in epoch format
@@ -56,6 +56,42 @@ unsigned long getTime()
     }
     time(&now);
     return now;
+}
+
+bool writeJson(String status, int capacitive, int resistive)
+{
+    // Get current timestamp
+    timestamp = getTime();
+
+    parentPath = databasePath + "/" + String(timestamp);
+
+    // Prepare json
+    json.set(resistivePath, resistive);
+    json.set(capacitivePath, capacitive);
+    json.set(statusPath, status);
+    json.set(timePath, timestamp);
+
+    // Send json and capture error
+    return Firebase.RTDB.setJSON(&fbdo, parentPath.c_str(), &json) ? "ok" : fbdo.errorReason().c_str();
+}
+
+String getStatus(int resisitve, int capacitive)
+{
+    // Logic that decides current moisture status
+    // "Droog" - "Vochitg" - " Nat"
+    return "";
+}
+
+void readSensors(int *resistive, int *capacitive)
+{
+    // Logic that reads moisture sensors
+}
+
+void activatePump(String status)
+{
+    if (status == "Nat")
+        return;
+    // Activate pump based on if ground is "Droog" or "Vochtig"
 }
 
 void setup()
@@ -74,6 +110,8 @@ void setup()
     // Setup Firebase RTDB
     config.api_key = API_KEY;
     config.database_url = DATABASE_URL;
+    auth.user.email = USER_EMAIL;
+    auth.user.password = USER_PASSWORD;
     Firebase.reconnectWiFi(true);
     fbdo.setResponseSize(4096);
     config.token_status_callback = tokenStatusCallback;
@@ -85,21 +123,18 @@ void setup()
 void loop()
 {
     if (Firebase.ready() && (millis() - startTime > timerDelay))
-    {   
-        // Get current timestamp
-        timestamp = getTime();
-
-        parentPath = databasePath + "/" + String(timestamp);
-
-        // Prepare json
-        json.set(resistivePath, "TESTING RESISTIVE");
-        json.set(capacitivePath, "TESTING CAPACITIVE");
-        json.set(statusPath, "TESTING STATUS");
-        json.set(timePath, timestamp);
-
-        // Send json and capture error
-        Serial.printf("Set json %s\n", Firebase.RTDB.setJSON(&fbdo, parentPath.c_str(), &json) ? "ok" : fbdo.errorReason().c_str());
-
+    {
         startTime = millis();
+        
+        // Read and store Sensor values
+        int resistiveSensorVal, capacitiveSensorVal;
+        readSensors(&resistiveSensorVal, &capacitiveSensorVal);
+        
+        // Get status based on Sensor values and active pump
+        String moistureStatus = getStatus(resistiveSensorVal, capacitiveSensorVal);
+        activatePump(moistureStatus);
+
+        // Finally send data to Firebase RTDB
+        Serial.printf("Set json %s\n", writeJson(moistureStatus, capacitiveSensorVal, resistiveSensorVal) ? "ok" : fbdo.errorReason().c_str());
     }
 }
