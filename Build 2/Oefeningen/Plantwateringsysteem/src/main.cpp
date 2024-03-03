@@ -9,6 +9,7 @@
 
 #define RESISTIVE_SENSOR A0
 #define CAPACITIVE_SENSOR A1
+#define PUMP_RELAY D13
 
 // Setup ntp time server
 const char *ntpServer = "pool.ntp.org";
@@ -79,19 +80,38 @@ String getStatus(int resisitve, int capacitive)
 {
     // Logic that decides current moisture status
     // "Droog" - "Vochitg" - " Nat"
-    return "";
+    return "Under Development";
 }
 
 void readSensors(int *resistive, int *capacitive)
 {
     // Logic that reads moisture sensors
+    *resistive = analogRead(RESISTIVE_SENSOR);
+    *capacitive = analogRead(CAPACITIVE_SENSOR);
 }
 
 void activatePump(String status)
 {
     if (status == "Nat")
         return;
+
     // Activate pump based on if ground is "Droog" or "Vochtig"
+    unsigned long pumpTime;
+    if (status == "Droog")
+        pumpTime = 4000;
+    else
+        pumpTime = 2000;
+
+    unsigned long pumpStartTime = millis();
+    Serial.print("Pumping water");
+    do
+    {
+        digitalWrite(PUMP_RELAY, HIGH);
+        Serial.print(".");
+
+    } while (millis() - pumpStartTime < pumpTime);
+    digitalWrite(PUMP_RELAY, LOW);
+    Serial.println("\nWater done pumping");
 }
 
 void setup()
@@ -101,6 +121,7 @@ void setup()
     // Setup Sensors
     pinMode(RESISTIVE_SENSOR, INPUT);
     pinMode(CAPACITIVE_SENSOR, INPUT);
+    pinMode(PUMP_RELAY, OUTPUT);
 
     setupWifi();
 
@@ -125,14 +146,14 @@ void loop()
     if (Firebase.ready() && (millis() - startTime > timerDelay))
     {
         startTime = millis();
-        
+
         // Read and store Sensor values
         int resistiveSensorVal, capacitiveSensorVal;
         readSensors(&resistiveSensorVal, &capacitiveSensorVal);
-        
+
         // Get status based on Sensor values and active pump
         String moistureStatus = getStatus(resistiveSensorVal, capacitiveSensorVal);
-        activatePump(moistureStatus);
+        // activatePump(moistureStatus);
 
         // Finally send data to Firebase RTDB
         Serial.printf("Set json %s\n", writeJson(moistureStatus, capacitiveSensorVal, resistiveSensorVal) ? "ok" : fbdo.errorReason().c_str());
