@@ -9,6 +9,7 @@
 
 #define RESISTIVE_SENSOR A0
 #define CAPACITIVE_SENSOR A1
+#define TEMPARETURE_SENSOR A2
 #define PUMP_RELAY D13
 
 // Setup ntp time server
@@ -73,7 +74,7 @@ bool writeJson(String status, int capacitive, int resistive)
     json.set(timePath, timestamp);
 
     // Send json and capture error
-    return Firebase.RTDB.setJSON(&fbdo, parentPath.c_str(), &json) ? "ok" : fbdo.errorReason().c_str();
+    return Firebase.RTDB.setJSON(&fbdo, parentPath.c_str(), &json);
 }
 
 String getStatus(int resisitve, int capacitive)
@@ -114,14 +115,21 @@ void activatePump(String status)
     Serial.println("\nWater done pumping");
 }
 
+int readTemperature()
+{
+    // Temparature sensor logic
+    return 0;
+}
+
 void setup()
 {
     Serial.begin(115200);
 
-    // Setup Sensors
+    // Setup Sensors and Relay
     pinMode(RESISTIVE_SENSOR, INPUT);
     pinMode(CAPACITIVE_SENSOR, INPUT);
     pinMode(PUMP_RELAY, OUTPUT);
+    pinMode(TEMPARETURE_SENSOR, INPUT);
 
     setupWifi();
 
@@ -138,6 +146,7 @@ void setup()
     config.token_status_callback = tokenStatusCallback;
     config.max_token_generation_retry = 5;
 
+    // Start firebase connection
     Firebase.begin(&config, &auth);
 }
 
@@ -146,6 +155,9 @@ void loop()
     if (Firebase.ready() && (millis() - startTime > timerDelay))
     {
         startTime = millis();
+
+        if (readTemperature() < MINIMUM_TEMPERATUUR)
+            return;
 
         // Read and store Sensor values
         int resistiveSensorVal, capacitiveSensorVal;
