@@ -28,10 +28,11 @@ String timePath = "/timestamp";
 String resistivePath = "/resistive";
 String capacitivePath = "/capacitive";
 String statusPath = "/status";
+String temperaturePath = "/temperature";
 
 int timestamp;
 unsigned long startTime;
-unsigned long timerDelay = 5000;
+unsigned long timerDelay = 10000;
 
 // Setup WiFi
 void setupWifi()
@@ -44,6 +45,31 @@ void setupWifi()
         delay(1000);
     }
     Serial.println(" connected!");
+}
+
+// Check Current wiFi status
+bool checkWifi()
+{
+    Serial.println("Checking WiFi Status") unsigned long wifiReconnectTime = millis();
+    unsigned long tryInterval = millis();
+    while (millis() - wifiReconnectTime < 10000)
+    {
+        if (millis() - tryInterval < 1000)
+            continue;
+
+        tryInterval = millis();
+
+        if (WiFi.status() == WL_CONNECTED)
+        {
+            Serial.println("WiFi Connected");
+            return true;
+        }
+
+        Serial.prinln("Trying to reconnect to WiFi");
+        WiFi.disconnect();
+        WiFi.reconnect();
+    }
+    return false;
 }
 
 // Gets current time in epoch format
@@ -60,7 +86,8 @@ unsigned long getTime()
     return now;
 }
 
-bool writeJson(String status, int capacitive, int resistive)
+// Write json data to Firebase RTDB
+bool writeJson(String status, int capacitive, int resistive, float temperature)
 {
     // Get current timestamp
     timestamp = getTime();
@@ -72,18 +99,46 @@ bool writeJson(String status, int capacitive, int resistive)
     json.set(capacitivePath, capacitive);
     json.set(statusPath, status);
     json.set(timePath, timestamp);
+    json.set(temperaturePath, temperature);
 
     // Send json and capture error
     return Firebase.RTDB.setJSON(&fbdo, parentPath.c_str(), &json);
 }
 
+// Get status based on sensor values
 String getStatus(int resisitve, int capacitive)
 {
     // Logic that decides current moisture status
     // "Droog" - "Vochitg" - " Nat"
-    return "Under Development";
+
+    String calibratedResistive;
+    String calibratedCapacitive;
+
+    if (resisitve >= RESISTIEF_DROOG_INTERVAL_MIN && resisitve <= RESISTIEF_DROOG_INTERVAL_MAX)
+        calibratedResistive = "Droog";
+    else if (resisitve >= RESISTIEF_VOCHTIG_INTERVAL_MIN && resisitve <= RESISTIEF_VOCHTIG_INTERVAL_MAX)
+        calibratedResistive = "Vochtig";
+    else if (resisitve >= RESISTIEF_NAT_INTERVAL_MIN && resisitve <= RESISTIEF_NAT_INTERVAL_MAX)
+        calibratedResistive = "Nat";
+
+    if (capacitive >= CAPACITIEF_DROOG_INTERVAL_MIN && capacitive <= CAPACITIEF_DROOG_INTERVAL_MAX)
+        calibratedCapacitive = "Droog";
+    else if (capacitive >= CAPACITIEF_VOCHTIG_INTERVAL_MIN && capacitive <= CAPACITIEF_VOCHTIG_INTERVAL_MAX)
+        calibratedCapacitive = "Vochtig";
+    else if (capacitive >= CAPACITIEF_NAT_INTERVAL_MIN && capacitive <= CAPACITIEF_NAT_INTERVAL_MAX)
+        calibratedCapacitive = "Nat";
+
+    if (calibratedCapacitive == "Droog" || calibratedResistive == "Droog")
+        return "Droog";
+    if (calibratedCapacitive == "Vochtig" || calibratedResistive == "Vochtig")
+        return "Vochtig";
+    if (calibratedCapacitive == "Nat" || calibratedResistive == "Nat")
+        return "Nat";
+
+    return "Vochtig";
 }
 
+// Read moisture sensors values
 void readSensors(int *resistive, int *capacitive)
 {
     // Logic that reads moisture sensors
@@ -91,6 +146,7 @@ void readSensors(int *resistive, int *capacitive)
     *capacitive = analogRead(CAPACITIVE_SENSOR);
 }
 
+// Activate water pump for a duration based in soilstatus
 void activatePump(String status)
 {
     if (status == "Nat")
@@ -108,17 +164,22 @@ void activatePump(String status)
     do
     {
         digitalWrite(PUMP_RELAY, HIGH);
-        Serial.print(".");
-
     } while (millis() - pumpStartTime < pumpTime);
     digitalWrite(PUMP_RELAY, LOW);
     Serial.println("\nWater done pumping");
 }
 
-int readTemperature()
+// Read and return temperature sensor
+float readTemperature()
 {
-    // Temparature sensor logic
-    return 0;
+    // Read the analog value from LM35
+    int sensorValue = analogRead(TEMPARETURE_SENSOR);
+
+    // Convert analog value to voltage (0-3.3V)
+    float voltage = sensorValue * (3.3 / 4095.0);
+
+    // Convert voltage to temperature in Celsius
+    return voltage * 100.0;
 }
 
 void setup()
@@ -156,8 +217,8 @@ void loop()
     {
         startTime = millis();
 
-        if (readTemperature() < MINIMUM_TEMPERATUUR)
-            return;
+        // Read temperature tensor
+        int temperatureValue = readTemperature();
 
         // Read and store Sensor values
         int resistiveSensorVal, capacitiveSensorVal;
@@ -165,9 +226,15 @@ void loop()
 
         // Get status based on Sensor values and active pump
         String moistureStatus = getStatus(resistiveSensorVal, capacitiveSensorVal);
-        // activatePump(moistureStatus);
+
+        // Acticate pump if temperature is not below minimum
+        if (temperatureValue > MINIMUM_TEMPERATUUR)
+            activatePump("Vochtig");
 
         // Finally send data to Firebase RTDB
-        Serial.printf("Set json %s\n", writeJson(moistureStatus, capacitiveSensorVal, resistiveSensorVal) ? "ok" : fbdo.errorReason().c_str());
+        if (checkWifi())
+            Serial.printf("Set json %s\n", writeJson(moistureStatus, capacitiveSensorVal, resistiveSensorVal, temperatureValue) ? "ok" : fbdo.errorReason().c_str());
+        else
+            Serial.println("Failed to send json.\nNot connected to WiFi") :
     }
 }

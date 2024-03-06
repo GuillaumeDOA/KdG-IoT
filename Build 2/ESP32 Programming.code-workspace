@@ -17,6 +17,14 @@
 		{
 			"name": "Plantwateringsysteem",
 			"path": "Oefeningen/Plantwateringsysteem"
+		},
+		{
+			"name": "Leds Millis Oef",
+			"path": "Oefeningen/Leds Millis Oef"
+		},
+		{
+			"name": "Dashboard Demo",
+			"path": "Oefeningen/Dashboard Demo"
 		}
 	],
 	"settings": {}
