@@ -4,6 +4,7 @@
 #include <Firebase_ESP_Client.h>
 #include <addons/RTDBHelper.h>
 #include <addons/TokenHelper.h>
+#include <ESPAsyncWebServer.h>
 #include "secrets.h"
 #include "config.h"
 
@@ -12,8 +13,13 @@
 #define TEMPARETURE_SENSOR A2
 #define PUMP_RELAY D13
 
+int resistiveSensorVal, capacitiveSensorVal;
+
 // Setup ntp time server
 const char *ntpServer = "pool.ntp.org";
+
+// Create Async Webserver object on port 80
+AsyncWebServer server(80);
 
 // Firebase config variables
 FirebaseData fbdo;
@@ -27,12 +33,12 @@ String databasePath = "/readings";
 String timePath = "/timestamp";
 String resistivePath = "/resistive";
 String capacitivePath = "/capacitive";
-String statusPath = "/status";
+String capacitiveStatusPath = "/capacitiveStatus";
+String resistiveStatusPath = "/resistiveStatus";
 String temperaturePath = "/temperature";
 
 int timestamp;
 unsigned long startTime;
-unsigned long timerDelay = 10000;
 
 // Setup WiFi
 void setupWifi()
@@ -47,10 +53,49 @@ void setupWifi()
     Serial.println(" connected!");
 }
 
+// Setup Access Point
+void setupWifiAccessPoint()
+{
+    // Set Wifi mode to both standard connection and AP
+    WiFi.mode(WIFI_AP_STA);
+
+    // Make sure the password is at least 8 characters long
+    Serial.println("Setting up soft access point...");
+    WiFi.softAP(AP_SSID, AP_PASSWORD);
+
+    // Display IP address to use for webserver
+    IPAddress IP = WiFi.softAPIP();
+    Serial.print("AP IP address: ");
+    Serial.println(IP);
+}
+
+// Return Moisturelevel in percentage
+String moistureLevel()
+{
+    int val = map(resistiveSensorVal, RESISTIEF_DROOG_INTERVAL_MIN, RESISTIEF_NAT_INTERVAL_MAX, 0, 100);
+    return String(val);
+}
+
+// Replaces placeholders with buttons or value section in your web page
+String replacePlaceholdersInHtml(const String &var)
+{
+    if (var == "BUTTONPLACEHOLDER")
+    {
+        String buttons = "<input type=\"button\" value=\"Plant bewateren\" onclick=\"clickButton(this)\" >";
+        return buttons;
+    }
+    else if (var == "BODEMVOCHTIGHEID")
+    {
+        return moistureLevel();
+    }
+    return String();
+}
+
 // Check Current wiFi status
 bool checkWifi()
 {
-    Serial.println("Checking WiFi Status") unsigned long wifiReconnectTime = millis();
+    Serial.println("Checking WiFi Status");
+    unsigned long wifiReconnectTime = millis();
     unsigned long tryInterval = millis();
     while (millis() - wifiReconnectTime < 10000)
     {
@@ -65,7 +110,7 @@ bool checkWifi()
             return true;
         }
 
-        Serial.prinln("Trying to reconnect to WiFi");
+        Serial.println("Trying to reconnect to WiFi");
         WiFi.disconnect();
         WiFi.reconnect();
     }
@@ -87,7 +132,7 @@ unsigned long getTime()
 }
 
 // Write json data to Firebase RTDB
-bool writeJson(String status, int capacitive, int resistive, float temperature)
+bool writeJson(String resStatus, String capStatus, int capacitive, int resistive, float temperature)
 {
     // Get current timestamp
     timestamp = getTime();
@@ -97,7 +142,8 @@ bool writeJson(String status, int capacitive, int resistive, float temperature)
     // Prepare json
     json.set(resistivePath, resistive);
     json.set(capacitivePath, capacitive);
-    json.set(statusPath, status);
+    json.set(capacitiveStatusPath, capStatus);
+    json.set(resistiveStatusPath, resStatus);
     json.set(timePath, timestamp);
     json.set(temperaturePath, temperature);
 
@@ -106,36 +152,24 @@ bool writeJson(String status, int capacitive, int resistive, float temperature)
 }
 
 // Get status based on sensor values
-String getStatus(int resisitve, int capacitive)
+void getStatus(int resisitve, int capacitive, String *resStatus, String *capStatus)
 {
     // Logic that decides current moisture status
     // "Droog" - "Vochitg" - " Nat"
 
-    String calibratedResistive;
-    String calibratedCapacitive;
-
     if (resisitve >= RESISTIEF_DROOG_INTERVAL_MIN && resisitve <= RESISTIEF_DROOG_INTERVAL_MAX)
-        calibratedResistive = "Droog";
+        *resStatus = "Droog";
     else if (resisitve >= RESISTIEF_VOCHTIG_INTERVAL_MIN && resisitve <= RESISTIEF_VOCHTIG_INTERVAL_MAX)
-        calibratedResistive = "Vochtig";
+        *resStatus = "Vochtig";
     else if (resisitve >= RESISTIEF_NAT_INTERVAL_MIN && resisitve <= RESISTIEF_NAT_INTERVAL_MAX)
-        calibratedResistive = "Nat";
+        *resStatus = "Nat";
 
-    if (capacitive >= CAPACITIEF_DROOG_INTERVAL_MIN && capacitive <= CAPACITIEF_DROOG_INTERVAL_MAX)
-        calibratedCapacitive = "Droog";
-    else if (capacitive >= CAPACITIEF_VOCHTIG_INTERVAL_MIN && capacitive <= CAPACITIEF_VOCHTIG_INTERVAL_MAX)
-        calibratedCapacitive = "Vochtig";
-    else if (capacitive >= CAPACITIEF_NAT_INTERVAL_MIN && capacitive <= CAPACITIEF_NAT_INTERVAL_MAX)
-        calibratedCapacitive = "Nat";
-
-    if (calibratedCapacitive == "Droog" || calibratedResistive == "Droog")
-        return "Droog";
-    if (calibratedCapacitive == "Vochtig" || calibratedResistive == "Vochtig")
-        return "Vochtig";
-    if (calibratedCapacitive == "Nat" || calibratedResistive == "Nat")
-        return "Nat";
-
-    return "Vochtig";
+    if (capacitive <= CAPACITIEF_DROOG_INTERVAL_MIN && capacitive >= CAPACITIEF_DROOG_INTERVAL_MAX)
+        *capStatus = "Droog";
+    else if (capacitive <= CAPACITIEF_VOCHTIG_INTERVAL_MIN && capacitive >= CAPACITIEF_VOCHTIG_INTERVAL_MAX)
+        *capStatus = "Vochtig";
+    else if (capacitive <= CAPACITIEF_NAT_INTERVAL_MIN && capacitive >= CAPACITIEF_NAT_INTERVAL_MAX)
+        *capStatus = "Nat";
 }
 
 // Read moisture sensors values
@@ -147,17 +181,17 @@ void readSensors(int *resistive, int *capacitive)
 }
 
 // Activate water pump for a duration based in soilstatus
-void activatePump(String status)
+void activatePump(String resStatus, String capStatus)
 {
-    if (status == "Nat")
+    if (resStatus == "Nat" || capStatus == "Nat")
         return;
 
     // Activate pump based on if ground is "Droog" or "Vochtig"
     unsigned long pumpTime;
-    if (status == "Droog")
-        pumpTime = 4000;
-    else
+    if (resStatus == "Droog" || capStatus == "Droog")
         pumpTime = 2000;
+    else
+        pumpTime = 1000;
 
     unsigned long pumpStartTime = millis();
     Serial.print("Pumping water");
@@ -172,14 +206,13 @@ void activatePump(String status)
 // Read and return temperature sensor
 float readTemperature()
 {
-    // Read the analog value from LM35
-    int sensorValue = analogRead(TEMPARETURE_SENSOR);
-
-    // Convert analog value to voltage (0-3.3V)
-    float voltage = sensorValue * (3.3 / 4095.0);
-
-    // Convert voltage to temperature in Celsius
-    return voltage * 100.0;
+    // get the ADC value from the temperature sensor
+    int adcVal = analogRead(TEMPARETURE_SENSOR);
+    // convert the ADC value to voltage in millivolt
+    float milliVolt = adcVal * (5000.0 / 4095.0);
+    // convert the voltage to the temperature in Celsius
+    float tempC = milliVolt / 10;
+    return tempC;
 }
 
 void setup()
@@ -193,6 +226,27 @@ void setup()
     pinMode(TEMPARETURE_SENSOR, INPUT);
 
     setupWifi();
+
+    // Setup Wifi access point
+    setupWifiAccessPoint();
+
+    // Route for root / web page
+    server.on("/", HTTP_GET, [](AsyncWebServerRequest *request)
+              { request->send_P(200, "text/html", INDEX_HTML, replacePlaceholdersInHtml); });
+
+    // Send a GET request to <ESP_IP>/update?output=<pinNumber>
+    server.on("/update", HTTP_GET, [](AsyncWebServerRequest *request)
+              {
+    if (request->hasParam(BUTTON_PARAM)) {
+      Serial.println("Button Pressed");
+      activatePump("Vochtig", "Vochtig");
+    } else {
+      Serial.println("No pinNumber parameter found.");
+    }
+    
+    request->send(200, "text/plain", "OK"); });
+
+    server.begin();
 
     // Setup time server
     configTime(0, 0, ntpServer);
@@ -213,7 +267,7 @@ void setup()
 
 void loop()
 {
-    if (Firebase.ready() && (millis() - startTime > timerDelay))
+    if (Firebase.ready() && (millis() - startTime > TIMER_DELAY))
     {
         startTime = millis();
 
@@ -221,20 +275,20 @@ void loop()
         int temperatureValue = readTemperature();
 
         // Read and store Sensor values
-        int resistiveSensorVal, capacitiveSensorVal;
         readSensors(&resistiveSensorVal, &capacitiveSensorVal);
 
         // Get status based on Sensor values and active pump
-        String moistureStatus = getStatus(resistiveSensorVal, capacitiveSensorVal);
+        String resistiveStatus, capacitiveStatus;
+        getStatus(resistiveSensorVal, capacitiveSensorVal, &resistiveStatus, &capacitiveStatus);
 
         // Acticate pump if temperature is not below minimum
         if (temperatureValue > MINIMUM_TEMPERATUUR)
-            activatePump("Vochtig");
+            activatePump(resistiveStatus, capacitiveStatus);
 
         // Finally send data to Firebase RTDB
         if (checkWifi())
-            Serial.printf("Set json %s\n", writeJson(moistureStatus, capacitiveSensorVal, resistiveSensorVal, temperatureValue) ? "ok" : fbdo.errorReason().c_str());
+            Serial.printf("Set json %s\n", writeJson(resistiveStatus, capacitiveStatus, capacitiveSensorVal, resistiveSensorVal, temperatureValue) ? "ok" : fbdo.errorReason().c_str());
         else
-            Serial.println("Failed to send json.\nNot connected to WiFi") :
+            Serial.println("Failed to send json.\nNot connected to WiFi");
     }
 }
