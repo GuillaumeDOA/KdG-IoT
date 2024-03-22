@@ -25,6 +25,18 @@
 		{
 			"name": "Dashboard Demo",
 			"path": "Oefeningen/Dashboard Demo"
+		},
+		{
+			"name": "GPS Demo",
+			"path": "Oefeningen/GPS Demo"
+		},
+		{
+			"name": "TinyGPS Demo",
+			"path": "Oefeningen/TinyGPS Demo"
+		},
+		{
+			"name": "Adafruit IO",
+			"path": "Oefeningen/Adafruit IO"
 		}
 	],
 	"settings": {}
