@@ -38,7 +38,7 @@ String resistiveStatusPath = "/resistiveStatus";
 String temperaturePath = "/temperature";
 
 int timestamp;
-unsigned long startTime;
+unsigned long startTime, pumpStartTime = 0, pumpTime = 0;
 
 // Setup WiFi
 void setupWifi()
@@ -186,21 +186,13 @@ void activatePump(String resStatus, String capStatus)
     if (resStatus == "Nat" || capStatus == "Nat")
         return;
 
+    pumpStartTime = millis();
+
     // Activate pump based on if ground is "Droog" or "Vochtig"
-    unsigned long pumpTime;
     if (resStatus == "Droog" || capStatus == "Droog")
         pumpTime = 2000;
     else
         pumpTime = 1000;
-
-    unsigned long pumpStartTime = millis();
-    Serial.print("Pumping water");
-    do
-    {
-        digitalWrite(PUMP_RELAY, HIGH);
-    } while (millis() - pumpStartTime < pumpTime);
-    digitalWrite(PUMP_RELAY, LOW);
-    Serial.println("\nWater done pumping");
 }
 
 // Read and return temperature sensor
@@ -267,7 +259,7 @@ void setup()
 
 void loop()
 {
-    if (Firebase.ready() && (millis() - startTime > TIMER_DELAY))
+    if (millis() - startTime > TIMER_DELAY)
     {
         startTime = millis();
 
@@ -286,9 +278,20 @@ void loop()
             activatePump(resistiveStatus, capacitiveStatus);
 
         // Finally send data to Firebase RTDB
-        if (checkWifi())
+        if (checkWifi() && Firebase.ready())
             Serial.printf("Set json %s\n", writeJson(resistiveStatus, capacitiveStatus, capacitiveSensorVal, resistiveSensorVal, temperatureValue) ? "ok" : fbdo.errorReason().c_str());
         else
             Serial.println("Failed to send json.\nNot connected to WiFi");
+    }
+
+    if (millis() - pumpStartTime < pumpTime)
+    {
+        Serial.println("Pumping water");
+        digitalWrite(PUMP_RELAY, HIGH);
+    }
+    else
+    {
+        Serial.println("Done pumping water");
+        digitalWrite(PUMP_RELAY, LOW);
     }
 }
