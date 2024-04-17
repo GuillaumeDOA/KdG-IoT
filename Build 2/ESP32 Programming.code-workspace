@@ -37,6 +37,14 @@
 		{
 			"name": "Adafruit IO",
 			"path": "Oefeningen/Adafruit IO"
+		},
+		{
+			"name": "Accelerometer Demo",
+			"path": "Oefeningen/Accelerometer Demo"
+		},
+		{
+			"name": "Deepsleep Demo",
+			"path": "Oefeningen/Deepsleep Demo"
 		}
 	],
 	"settings": {}
