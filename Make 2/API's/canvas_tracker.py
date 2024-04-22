@@ -52,5 +52,5 @@ for courseName in courses.keys():
             if any(substring in grades for substring in ["Bijna goed","Nog niet goed", "Niet ingediend"]):
                 print(f"{assignment['name']} ({assignment['id']}) --> NOG NIET OK!")
             else:
-                 print(f"{assignment['name']} ({assignment['id']}) --> OK!")
+                print(f"{assignment['name']} ({assignment['id']}) --> OK!")
     print()
