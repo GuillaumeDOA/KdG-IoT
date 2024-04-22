@@ -49,6 +49,10 @@
 		{
 			"name": "Google Sheets Demo",
 			"path": "Oefeningen/Google Sheets Demo"
+		},
+		{
+			"name": "Connected_Bikes",
+			"path": "Oefeningen/Connected_Bikes"
 		}
 	],
 	"settings": {}

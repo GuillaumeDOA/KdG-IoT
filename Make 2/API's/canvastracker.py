@@ -25,7 +25,7 @@ def getUserID():
     return result.json()["id"]
 
 def getAssignments(courseID):
-    result = requests.get(f"{base}/api/v1/courses/{courseID}/assignments?access_token={token}&bucket=past")
+    result = requests.get(f"{base}/api/v1/courses/{courseID}/assignments?access_token={token}")
     checkError(result)
     return result.json()
 
@@ -50,7 +50,7 @@ for courseName in courses.keys():
             for grade in submission['full_rubric_assessment']["data"]:
                 grades.append(grade['description'])
             if any(substring in grades for substring in ["Bijna goed","Nog niet goed", "Niet ingediend"]):
-                print(f"{assignment['name']} ({assignment["id"]}) --> NIET OK!")
-            # else:
-            #     print(f"{assignment['name']} ({assignment["id"]}) --> OK!")
+                print(f"{assignment['name']} ({assignment['id']}) --> NOG NIET OK!")
+            else:
+                 print(f"{assignment['name']} ({assignment['id']}) --> OK!")
     print()
