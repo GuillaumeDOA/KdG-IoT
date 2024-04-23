@@ -33,9 +33,9 @@
 
 //   - Adafruit AirLift FeatherWing -> https://www.adafruit.com/product/4264
 
-#define WIFI_SSID "guillaumeEsp"
+#define WIFI_SSID "Home de Oliveira - Haesaert"
 
-#define WIFI_PASS "esp32build"
+#define WIFI_PASS "0475212120"
 
 // uncomment the following line if you are using airlift
 
