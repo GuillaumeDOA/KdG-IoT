@@ -12,7 +12,7 @@ const int   DAYLIGHT_OFFSET_SEC = 0;
 
 // Google Apps Script URL
 const String GOOGLE_APPS_SCRIPT_URL = "https://script.google.com/macros/s/";
-String GOOGLE_SCRIPT_ID = "AKfycbxYQBIy4BuX0rEhBo5lS5jH-2B2oZHyXcNNSkGDXJTBCHUndhvsGnazicU-8er_EwrV";
+String GOOGLE_SCRIPT_ID = "AKfycbxQMWK_TAYRBz-5lSWmGRl2NjbExDdMIsDX9S-ymY6R9W7p8GJRgNuAK3jEntS27OSJ";
 
 // Keep track of number of requests
 int requestCounter = 0;
@@ -54,7 +54,7 @@ String getCurrentDateAndTime() {
   }
   
   char timeStringBuff[50]; //50 chars should be enough
-  strftime(timeStringBuff, sizeof(timeStringBuff), "%A, %B %d %Y %H:%M:%S", &timeinfo);
+  strftime(timeStringBuff, sizeof(timeStringBuff), "%d/%m/%Y %H:%M", &timeinfo);
   
   String asString(timeStringBuff);
   asString.replace(" ", "-");
@@ -70,7 +70,13 @@ void loop() {
     Serial.println(currentDateAndTime);
 
     // Create URL with parameters to call Google Apps Script
-    String urlFinal = GOOGLE_APPS_SCRIPT_URL + GOOGLE_SCRIPT_ID + "/exec?tijdstip=" + currentDateAndTime + "&longitude=4.34992&latitude=51.1775732&putdiepte=" + String(requestCounter);
+    String status ="";
+    if(requestCounter%3 == 0)
+      status = "DIEP";
+    else
+      status = "ONDIEP";
+
+    String urlFinal = GOOGLE_APPS_SCRIPT_URL + GOOGLE_SCRIPT_ID + "/exec?longitude=4.4161392444414345&latitude=51.24622103637487&putdiepte=" + status+"&putvalue="+requestCounter;
     Serial.print("POST data to spreadsheet: ");
     Serial.println(urlFinal);
     

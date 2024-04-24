@@ -34,29 +34,50 @@ db = requests.get(
 )
 db_keys = db.json()["properties"].keys()
 
-page = {
-    "parent": {"database_id": {db_id}},
-    "properties": {
-        "Value": {"title": [
-            {
-                "text": {
-                    "content": adafruit["Value"]
-                    }
-                }
-            ]
-        },
-        "Time": {
-            "rich_text": [
-                {
-                    "text": {
-                        "content": adafruit["Time"]
-                        }
-                    }
-                ]
-        },
-    },
-}
+new_page =  {
+         "object":"page",
+         "created_by":{
+            "object":"user",
+            "id":"023db579-ce0a-4a52-802f-1df0ed250902"
+         },
+         "last_edited_by":{
+            "object":"user",
+            "id":"023db579-ce0a-4a52-802f-1df0ed250902"
+         },
+         "parent":{
+            "type":"database_id",
+            "database_id":"7d243326-9d5d-4a0c-bf1b-8566eeac0922"
+         },
+         "properties":{
+            "Date":{
+               "id":"%5DXRj",
+               "type":"date",
+               "date":{
+                  "start":"2024-04-24T15:30:00.000+02:00",
+                  "end":None,
+                  "time_zone":None
+               }
+            },
+            "Sensor_Value":{
+               "id":"title",
+               "type":"title",
+               "title":[
+                  {
+                     "type":"text",
+                     "text":{
+                        "content":"2000"
+                     },
+                     "plain_text":"2000"
+                  }
+               ]
+            }
+         },
+         "url":"https://www.notion.so/1500-3def25c4813748cebdfb72652c014686",
+         "public_url":"None"
+      }
 
-page_created = requests.post("https://api.notion.com/v1/pages", headers=NOTION_HEADERS, json=page)
+new_page_result = requests.post("https://api.notion.com/v1/pages", headers=NOTION_HEADERS, json=new_page)
 
-print(page_created.json())
+print()
+
+
