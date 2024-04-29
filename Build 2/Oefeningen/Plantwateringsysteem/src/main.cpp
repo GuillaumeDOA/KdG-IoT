@@ -186,13 +186,13 @@ void activatePump(String resStatus, String capStatus)
     if (resStatus == "Nat" || capStatus == "Nat")
         return;
 
-    pumpStartTime = millis();
-
     // Activate pump based on if ground is "Droog" or "Vochtig"
     if (resStatus == "Droog" || capStatus == "Droog")
         pumpTime = 2000;
     else
         pumpTime = 1000;
+
+    pumpStartTime = millis();
 }
 
 // Read and return temperature sensor
@@ -291,7 +291,6 @@ void loop()
     }
     else
     {
-        Serial.println("Done pumping water");
         digitalWrite(PUMP_RELAY, LOW);
     }
 }
