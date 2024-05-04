@@ -14,21 +14,27 @@ TinyGPSPlus gps;
 
 unsigned long startTime;
 
-bool detectHole()
+bool detectHole(int *putDiepte)
 {
     // Accelerometer logic here
-    return true;
-}
+    int x = abs(acce.readAccX());
+    int y = abs(acce.readAccY());
+    int z = abs(acce.readAccZ());
 
-int getPutdiepte(){
-    // Putdiepte logic hier
-    return 20;
+    printf("Measuring hole: x: %d mg, y: %d mg, z: %d mg\n", x, y, z);
+    if (x >= ACCELEROMETER_THRESHOLD || y >= ACCELEROMETER_THRESHOLD || z >= ACCELEROMETER_THRESHOLD)
+    {
+        *putDiepte = map(max(max(x, y), z), 5000, 14000, 1, 20);
+        return true;
+    }
+    
+    return false;
 }
 
 void initWifi()
 {
     Serial.print("Connecting to WiFi: ");
-    Serial.println(WIFI_SSID);
+    Serial.print(WIFI_SSID);
     Serial.flush();
 
     WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
@@ -37,6 +43,7 @@ void initWifi()
         delay(500);
         Serial.print(".");
     }
+    Serial.println(" Connected!");
 }
 
 bool checkWifi()
@@ -64,10 +71,9 @@ bool sendToGoogleSheet(double lat, double lng, int putDiepte)
 
     Serial.printf("HTTP Status Code: %d\n", httpCode);
 
-
     http.end();
 
-    if(httpCode >= 200 && httpCode < 300)
+    if (httpCode >= 200 && httpCode < 300)
         return true;
     return false;
 }
@@ -86,9 +92,35 @@ bool gpsValid()
     return true;
 }
 
+void initAccelerometer()
+{
+    while (!acce.begin())
+    {
+        Serial.println("Communication with accelerometer failed... ");
+        delay(1000);
+    }
+    Serial.println("Accelerometer connected");
+    // Software reset
+    acce.softReset();
+    acce.setRange(DFRobot_LIS2DW12::e16_g);
+    acce.setFilterPath(DFRobot_LIS2DW12::eLPF);
+    acce.setFilterBandwidth(DFRobot_LIS2DW12::eRateDiv_4);
+    acce.setWakeUpDur(/*dur = */ 3);
+    acce.setWakeUpThreshold(/*threshold = */ 0.3);
+    acce.setPowerMode(DFRobot_LIS2DW12::eContLowPwrLowNoise1_12bit);
+    acce.setActMode(DFRobot_LIS2DW12::eDetectAct);
+    acce.setInt1Event(DFRobot_LIS2DW12::eWakeUp);
+    acce.setDataRate(DFRobot_LIS2DW12::eRate_200hz);
+    delay(100);
+}
+
 void setup()
 {
-    Serial.begin(9600);
+    delay(500);
+    Serial.begin(115200);
+
+    // Initialise Accelerometer
+    initAccelerometer();
 
     // Initialise gpsSerial
     gpsSerial.begin(9600, SERIAL_8N1, GPS_RX, GPS_TX);
@@ -101,6 +133,8 @@ void setup()
 
 void loop()
 {
+    int putDiepte;
+
     // als de wachttijd nog niet verstreken is -> doe niets
     if (millis() - startTime < TIMER_DELAY)
         return;
@@ -110,15 +144,19 @@ void loop()
         return;
 
     // lees accelerometer en als er geen put gedetecteerd werd -> doe niets
-    if (!detectHole())
+    if (!detectHole(&putDiepte))
         return;
 
-    // lees gps waardes uit
+    Serial.println("Put diep genoeg");
+
+    /* // lees gps waardes uit
     if (!gpsValid())
         return;
+     */
+    Serial.println("GPS locatie valid");
 
-    double latitude = gps.location.lat();
-    double longitude = gps.location.lng();
+    double latitude = 30;  // gps.location.lat();
+    double longitude = 50; // gps.location.lng();
 
     // als er geen wifi connectie is -> reconnect wifi en doe niets
     if (!checkWifi())
@@ -128,5 +166,6 @@ void loop()
     }
 
     // Stuur data door naar Google Sheets
-    Serial.printf("Sending Data to Google Sheets... %s \n", sendToGoogleSheet(latitude, longitude, getPutdiepte()) ? "Succesful" : " Failed");
+    Serial.printf("Sending Data to Google Sheets... %s \n\n", sendToGoogleSheet(latitude, longitude, putDiepte) ? "Succesful" : " Failed");
+    startTime = millis();
 }
