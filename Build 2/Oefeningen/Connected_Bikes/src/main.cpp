@@ -27,7 +27,7 @@ bool detectHole(int *putDiepte)
         *putDiepte = map(max(max(x, y), z), 5000, 14000, 1, 20);
         return true;
     }
-    
+
     return false;
 }
 
@@ -78,18 +78,27 @@ bool sendToGoogleSheet(double lat, double lng, int putDiepte)
     return false;
 }
 
-bool gpsValid()
+void readGPS(double *lat, double *lng)
 {
-    if (!(gpsSerial.available() > 0))
-        return false;
-
-    if (!gps.encode(gpsSerial.read()))
-        return false;
-
-    if (!gps.location.isValid())
-        return false;
-
-    return true;
+    /*
+        Wou absoluut geen while loop gebruiken in de main functie, maar dit is de enige manier
+        waarop ik de GPS kon laten werken. Heb meerdere uren problemen hiermee gehad, 
+        forums gelezen maar niets wou werken. Vandaar de while.
+     */
+    bool reading = true;
+    while (reading)
+        while (gpsSerial.available() > 0)
+        {
+            if (gps.encode(gpsSerial.read()))
+            {
+                if (gps.location.isValid())
+                {
+                    *lat = gps.location.lat();
+                    *lng = gps.location.lng();
+                    reading = false;
+                }
+            }
+        }
 }
 
 void initAccelerometer()
@@ -149,14 +158,12 @@ void loop()
 
     Serial.println("Put diep genoeg");
 
-    /* // lees gps waardes uit
-    if (!gpsValid())
-        return;
-     */
-    Serial.println("GPS locatie valid");
+    // lees gps waardes uit
+    double latitude = 0;
+    double longitude = 0;
+    readGPS(&latitude, &longitude);
 
-    double latitude = 30;  // gps.location.lat();
-    double longitude = 50; // gps.location.lng();
+    Serial.printf("Latitude: %f, Longitutde: %f\n", latitude, longitude);
 
     // als er geen wifi connectie is -> reconnect wifi en doe niets
     if (!checkWifi())
@@ -164,6 +171,7 @@ void loop()
         reconnectWifi();
         return;
     }
+    Serial.println("Sending to Google Sheets");
 
     // Stuur data door naar Google Sheets
     Serial.printf("Sending Data to Google Sheets... %s \n\n", sendToGoogleSheet(latitude, longitude, putDiepte) ? "Succesful" : " Failed");
