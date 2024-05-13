@@ -5,6 +5,7 @@
 #include <DFRobot_LIS2DW12.h>
 #include <TinyGPS++.h>
 #include <HardwareSerial.h>
+#include <time.h>
 #include "secrets.h"
 #include "config.h"
 
@@ -13,6 +14,29 @@ HardwareSerial gpsSerial(1);
 TinyGPSPlus gps;
 
 unsigned long startTime;
+
+void setTimezone(String timezone){
+    Serial.printf("Setting Timezone to %s\n", timezone.c_str());
+    setenv("TZ", timezone.c_str(), 1);  //  Now adjust the TZ.  Clock settings are adjusted to show the new local time
+    tzset();
+}
+
+String getCurrentDateAndTime() {
+    struct tm timeinfo;
+    if (!getLocalTime(&timeinfo)) {
+        Serial.println("Failed to obtain time");
+        return "";
+    }
+    
+    char timeStringBuff[50]; //50 chars should be enough
+    strftime(timeStringBuff, sizeof(timeStringBuff), "%A, %B %d %Y %H:%M:%S", &timeinfo);
+    
+    String asString(timeStringBuff);
+    asString.replace(" ", "-");
+
+    return asString;
+}
+
 
 bool detectHole(int *putDiepte)
 {
@@ -62,9 +86,9 @@ void reconnectWifi()
     WiFi.reconnect();
 }
 
-bool sendToGoogleSheet(double lat, double lng, int putDiepte)
+bool sendToGoogleSheet(String timestamp, double lat, double lng, int putDiepte)
 {
-    String urlFinal = GOOGLE_APPS_SCRIPT_URL + GOOGLE_SCRIPT_ID + "/exec?latitude=" + lat + "&longitude=" + lng + "&putdiepte=" + putDiepte;
+    String urlFinal = GOOGLE_APPS_SCRIPT_URL + GOOGLE_SCRIPT_ID + "/exec?time=" + timestamp + "&latitude=" + lat + "&longitude=" + lng + "&putdiepte=" + putDiepte;
     HTTPClient http;
     http.begin(urlFinal.c_str());
     int httpCode = http.GET();
@@ -128,6 +152,10 @@ void setup()
     delay(500);
     Serial.begin(115200);
 
+    // Setup NTP
+    configTime(GMT_OFFSET_SEC, DAYLIGHT_OFFSET_SEC, NTP_SERVER);
+    setTimezone("CET-1CEST,M3.5.0,M10.5.0/3");  
+
     // Initialise Accelerometer
     initAccelerometer();
 
@@ -142,6 +170,13 @@ void setup()
 
 void loop()
 {
+    /* 
+        Heb de feedback over de If-Else structuren gelezen en heb besloten om ze zo te houden.
+        Dit is voor mij duidelijker dan maar steeds dieper te gaan nesten.
+        #NeverNester -> https://www.youtube.com/watch?v=CFRhGnuXG-4 (zeer interessant als u nog niet overtuigt bent)
+     */
+
+
     int putDiepte;
 
     // als de wachttijd nog niet verstreken is -> doe niets
@@ -171,9 +206,11 @@ void loop()
         reconnectWifi();
         return;
     }
-    Serial.println("Sending to Google Sheets");
+
+    // Get Time
+    String timeStamp = getCurrentDateAndTime();
 
     // Stuur data door naar Google Sheets
-    Serial.printf("Sending Data to Google Sheets... %s \n\n", sendToGoogleSheet(latitude, longitude, putDiepte) ? "Succesful" : " Failed");
+    Serial.printf("Sending Data to Google Sheets... %s \n\n", sendToGoogleSheet(timeStamp, latitude, longitude, putDiepte) ? "Succesful" : " Failed");
     startTime = millis();
 }
