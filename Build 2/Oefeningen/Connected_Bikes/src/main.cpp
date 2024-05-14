@@ -88,7 +88,8 @@ void reconnectWifi()
 
 bool sendToGoogleSheet(String timestamp, double lat, double lng, int putDiepte)
 {
-    String urlFinal = GOOGLE_APPS_SCRIPT_URL + GOOGLE_SCRIPT_ID + "/exec?time=" + timestamp + "&latitude=" + lat + "&longitude=" + lng + "&putdiepte=" + putDiepte;
+    String urlFinal = GOOGLE_APPS_SCRIPT_URL + GOOGLE_SCRIPT_ID + "/exec?time=" + timestamp + "&latitude=" + String(lat,6) + "&longitude=" + String(lng,6) + "&putdiepte=" + putDiepte;
+
     HTTPClient http;
     http.begin(urlFinal.c_str());
     int httpCode = http.GET();
@@ -194,6 +195,7 @@ void loop()
     Serial.println("Put diep genoeg");
 
     // lees gps waardes uit
+
     double latitude = 0;
     double longitude = 0;
     readGPS(&latitude, &longitude);
