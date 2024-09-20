@@ -6,6 +6,14 @@
 		{
 			"name": "Motor Demo R3",
 			"path": "Motor Oefeningen/Motor Demo R3"
+		},
+		{
+			"name": "PinOut Demo",
+			"path": "Motor Oefeningen/PinOut Demo"
+		},
+		{
+			"name": "Faulhaber Motor",
+			"path": "Motor Oefeningen/Faulhaber Motor"
 		}
 	],
 	"settings": {}
