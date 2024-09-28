@@ -44,19 +44,19 @@ void loop()
   }
 
   if (Temp > 24)
-  {
+  { // rood
     analogWrite(RED, 0);
     analogWrite(GREEN, 255);
     analogWrite(BLUE, 255);
   }
   else if (Temp >= 22 && Temp <= 24)
-  {
+  { // geel
     analogWrite(RED, 0);
     analogWrite(GREEN, 0);
     analogWrite(BLUE, 255);
   }
   else if (Temp < 22)
-  {
+  { // groen
     analogWrite(RED, 255);
     analogWrite(GREEN, 0);
     analogWrite(BLUE, 255);
