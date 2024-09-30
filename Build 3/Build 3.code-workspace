@@ -6,6 +6,18 @@
 		{
 			"name": "Project 1",
 			"path": "Oefeningen/Project 1"
+		},
+		{
+			"name": "Client-server BT",
+			"path": "Oefeningen/Client-server BT"
+		},
+		{
+			"name": "ESP-Phone",
+			"path": "Oefeningen/ESP-Phone"
+		},
+		{
+			"name": "Bluetooth_LED",
+			"path": "Oefeningen/Bluetooth_LED"
 		}
 	],
 	"settings": {}
