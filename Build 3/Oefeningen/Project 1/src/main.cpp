@@ -1,9 +1,12 @@
+/*  Voor deze opdracht heb ik gebruik gemaakt van ChatGPT voor het aanmaken van de html pagina
+Bronnen:
+- OpenAI (2022)- ChatGPT - https://chat.openai.com
+ */
 #include <Arduino.h>
 #include <ezButton.h>
 
 #define RED D6
 #define GREEN D5
-
 #define TEMPSENSOR A1
 
 ezButton button(D2);
@@ -26,9 +29,7 @@ void setup()
 float ReadTempSensor()
 {
   int analogValue = analogRead(TEMPSENSOR);
-
-  float voltage = (analogValue / 4095.0) * 3.3 * 1.1; // 12-bit ADC has a range of 0-4095
-
+  float voltage = (analogValue / 4095.0) * 3.3 * 1.1;
   float temp = voltage * 100.0 + 5.0;
 
   return temp;

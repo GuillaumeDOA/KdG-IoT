@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ESP32 Control Panel</title>
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="temperature-display" id="tempDisplay">22°C</div>
+        <button class="control-btn" onclick="toggleControl()">Toggle Device</button>
+    </div>
+
+    <script>
+        // Simulate temperature data
+        let temperature = 22;
+        const tempDisplay = document.getElementById('tempDisplay');
+
+        // Function to toggle a device (e.g., turn on/off something)
+        function toggleControl() {
+            alert('Device toggled!');
+        }
+
+        // Simulate live temperature update (for demo purposes)
+        setInterval(() => {
+            temperature = (Math.random() * 10 + 20).toFixed(1); // Random temp between 20 and 30°C
+            tempDisplay.textContent = `${temperature}°C`;
+        }, 3000); // Update temperature every 3 seconds
+    </script>
+
+</body>
+
+</html>
