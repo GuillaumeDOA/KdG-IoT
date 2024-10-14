@@ -18,6 +18,18 @@
 		{
 			"name": "Bluetooth_LED",
 			"path": "Oefeningen/Bluetooth_LED"
+		},
+		{
+			"name": "LED over HTML",
+			"path": "Oefeningen/LED over HTML"
+		},
+		{
+			"name": "Observatie Opdracht",
+			"path": "Oefeningen/Observatie Opdracht"
+		},
+		{
+			"name": "Wifi_Tests",
+			"path": "Oefeningen/Wifi_Tests"
 		}
 	],
 	"settings": {}

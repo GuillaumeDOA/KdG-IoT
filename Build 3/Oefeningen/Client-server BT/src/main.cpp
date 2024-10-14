@@ -46,39 +46,58 @@ void loop() {
 #include <BLEUtils.h>
 #include <BLEServer.h>
 
-// See the following for generating UUIDs:
-// https://www.uuidgenerator.net/
-
+// UUIDs for service and characteristic
 #define SERVICE_UUID "0af115cc-3a36-4a2d-ae32-9e57bfeb2a0d"
 #define CHARACTERISTIC_UUID "272b9c5c-3264-4622-a5d3-5b068b3bb5ee"
+
+BLECharacteristic *pCharacteristic;
+unsigned long startTime;
+int characteristicValue = 23; // Starting value for characteristic
 
 void setup()
 {
   Serial.begin(115200);
   Serial.println("Starting BLE work!");
 
+  // Initialize BLE device and server
   BLEDevice::init("ESP-Guillaume");
   BLEServer *pServer = BLEDevice::createServer();
   BLEService *pService = pServer->createService(SERVICE_UUID);
-  BLECharacteristic *pCharacteristic = pService->createCharacteristic(
-      CHARACTERISTIC_UUID,
-      BLECharacteristic::PROPERTY_READ |
-          BLECharacteristic::PROPERTY_WRITE);
 
-  pCharacteristic->setValue("Hello World says Guillaume");
+  // Create BLE characteristic with read/write properties
+  pCharacteristic = pService->createCharacteristic(
+      CHARACTERISTIC_UUID,
+      BLECharacteristic::PROPERTY_READ);
+
+  // Set initial value of the characteristic
+  pCharacteristic->setValue(String(characteristicValue).c_str());
   pService->start();
-  // BLEAdvertising *pAdvertising = pServer->getAdvertising();  // this still is working for backward compatibility
+
+  // Start advertising the BLE service
   BLEAdvertising *pAdvertising = BLEDevice::getAdvertising();
   pAdvertising->addServiceUUID(SERVICE_UUID);
   pAdvertising->setScanResponse(true);
-  pAdvertising->setMinPreferred(0x06); // functions that help with iPhone connections issue
+  pAdvertising->setMinPreferred(0x06); // Helps with iPhone connection issues
   pAdvertising->setMinPreferred(0x12);
   BLEDevice::startAdvertising();
-  Serial.println("Characteristic defined! Now you can read it in your phone!");
+  
+  Serial.println("Characteristic defined! Now you can read it on your phone!");
+  
+  startTime = millis();
 }
 
 void loop()
 {
-  // put your main code here, to run repeatedly:
-  delay(2000);
+  // Check if 5 seconds have passed
+  if (millis() - startTime >= 5000)
+  {
+    startTime = millis(); // Reset the timer
+
+    // Update characteristic value
+    characteristicValue += 1; // Increment the value
+    pCharacteristic->setValue(String(characteristicValue).c_str()); // Set new value as string
+    
+    Serial.print("Characteristic updated to: ");
+    Serial.println(characteristicValue);
+  }
 }
