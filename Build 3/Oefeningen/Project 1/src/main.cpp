@@ -1,4 +1,4 @@
-/*  Voor deze opdracht heb ik gebruik gemaakt van ChatGPT voor het aanmaken van de html pagina
+/*  Voor deze opdracht heb ik gebruik gemaakt van ChatGPT voor het aanmaken van de html pagina en de Tempsensorlogic
 Bronnen:
 - OpenAI (2022)- ChatGPT - https://chat.openai.com
  */
