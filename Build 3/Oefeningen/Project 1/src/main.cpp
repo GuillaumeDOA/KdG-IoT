@@ -5,6 +5,7 @@ Bronnen:
 #include <Arduino.h>
 #include <ezButton.h>
 
+
 #define RED D6
 #define GREEN D5
 #define TEMPSENSOR A1

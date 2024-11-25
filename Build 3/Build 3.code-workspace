@@ -30,6 +30,22 @@
 		{
 			"name": "Wifi_Tests",
 			"path": "Oefeningen/Wifi_Tests"
+		},
+		{
+			"name": "Wifi_Mesh",
+			"path": "Oefeningen/Wifi_Mesh"
+		},
+		{
+			"name": "OTA_Test",
+			"path": "Oefeningen/OTA_Test"
+		},
+		{
+			"name": "WiFi Casus",
+			"path": "Oefeningen/WiFi Casus"
+		},
+		{
+			"name": "Project MQTT",
+			"path": "Oefeningen/Project MQTT"
 		}
 	],
 	"settings": {}
