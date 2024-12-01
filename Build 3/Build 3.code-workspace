@@ -46,6 +46,10 @@
 		{
 			"name": "Project MQTT",
 			"path": "Oefeningen/Project MQTT"
+		},
+		{
+			"name": "Project Final",
+			"path": "Oefeningen/Project Final"
 		}
 	],
 	"settings": {}
