@@ -1,0 +1,5 @@
+Vragen Pieter
+
+1. Op welke manier wordt er data gestuurd naar het Blockbax platform en is er een geprefereerde manier
+2. Is er limiet voor het aantal requests naar het Blockbax platform
+3. 
