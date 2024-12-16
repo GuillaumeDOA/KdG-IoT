@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(135deg, #6a11cb, #2575fc);
+            color: white;
+            text-align: center;
+        }
+
+        .welcome-container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px 40px;
+            border-radius: 10px;
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .welcome-container h1 {
+            font-size: 30px;
+            margin-bottom: 20px;
+        }
+
+        .welcome-container p {
+            font-size: 18px;
+            margin-bottom: 30px;
+            color: #e0e0e0;
+        }
+
+        .welcome-button {
+            background: #fff;
+            color: #6a11cb;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        .welcome-button:hover {
+            background: #6a11cb;
+            color: #fff;
+        }
+
+        .welcome-button:focus {
+            outline: none;
+        }
+
+        .name-display {
+            font-size: 24px;
+            font-weight: bold;
+            color: #fff;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="welcome-container">
+        <h1>Welcome to Your Dashboard!</h1>
+        <p>We are excited to have you here, {{ user }}!</p>
+        <button class="welcome-button" onclick="logout()">Logout</button>
+    </div>
+
+    <script>
+        function logout() {
+            alert("You have logged out.");
+            location.href = "/"
+        }
+    </script>
+</body>
+
+</html>

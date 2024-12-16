@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login Page</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: linear-gradient(135deg, #6a11cb, #2575fc);
+      color: white;
+    }
+
+    .login-container {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 30px 40px;
+      border-radius: 10px;
+      box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+      text-align: center;
+      width: 100%;
+      max-width: 400px;
+    }
+
+    .login-container h1 {
+      margin-bottom: 20px;
+      font-size: 24px;
+    }
+
+    .login-container p {
+      margin-bottom: 30px;
+      font-size: 16px;
+      color: #e0e0e0;
+    }
+
+    .login-button {
+      background: #fff;
+      color: #6a11cb;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: 0.3s, color 0.3s;
+      width: 100%;
+      margin-bottom: 10px;
+    }
+
+    .login-button:hover {
+      background: #6a11cb;
+      color: #fff;
+    }
+
+    .login-button:focus {
+      outline: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <h1>Welcome to Our App!</h1>
+    <button class="login-button">Login with Email</button>
+    <button id="login" class="login-button">Login with Notion</button>
+  </div>
+
+  <script type="text/javascript">
+    document.getElementById("login").onclick = function () {
+        location.href = "https://api.notion.com/v1/oauth/authorize?owner=user&client_id={{ client_id }}&redirect_uri={{ redirect_uri }}&response_type=code";
+    };
+</script>
+
+</body>
+</html>

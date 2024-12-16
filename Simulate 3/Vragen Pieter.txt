@@ -1,5 +1,12 @@
 Vragen Pieter
 
 1. Op welke manier wordt er data gestuurd naar het Blockbax platform en is er een geprefereerde manier
+	Wijde range, Blockbax API mqqt
+
+
 2. Is er limiet voor het aantal requests naar het Blockbax platform
-3. 
+	
+	Hij ging erop terugkomen
+
+3. Wat zijn de belangrijkste criteria?
+	Innovatie belangrijk, leven makkelijker maken.
