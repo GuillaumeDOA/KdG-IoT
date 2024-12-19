@@ -12,28 +12,39 @@ extern "C"
 #include "freertos/timers.h"
 }
 
+// NFC Config Variables
 #define BLOCK_SIZE 16
 #define PN532_IRQ 2
 #define POLLING 0
-#define ACTectionRange 20; // set Non-invasive AC Current Sensor tection range (5A,10A,20A)
+
+// Set Currentsensor Variables
+#define ACTectionRange 20
 #define VREF 3.3
 
+// Sensor pinout
 #define PIR D12
 #define CURRENTSENSOR A3
 
 // The block to be read
 #define READ_BLOCK_NO 2
 
+// WiFi and MQTT Client objects
 WiFiClient espClient;
 PubSubClient mqttClient(espClient);
 
+// NFC Module object
 DFRobot_PN532_IIC nfc(PN532_IRQ, POLLING);
 uint8_t dataRead[16] = {0};
 
+// SCD4X Sensor object and variables
 SensirionI2CScd4x scd4x;
 uint16_t error;
 char errorMessage[256];
+
+// Timer variables
 unsigned long nfcDelay, sensorDelay;
+
+// Servo setup
 Servo door;
 
 void printUint16Hex(uint16_t value)
@@ -53,6 +64,7 @@ void printSerialNumber(uint16_t serial0, uint16_t serial1, uint16_t serial2)
   Serial.println();
 }
 
+// Initialise SCD4X sensor
 void initSCD4X()
 {
   Serial.print("Inittializing SCD4X\n");
@@ -93,6 +105,7 @@ void initSCD4X()
   }
 }
 
+// Initialise NFC module
 void initNFC()
 {
   Serial.print("Initializiing NFC\n");
@@ -104,6 +117,7 @@ void initNFC()
   Serial.println(" NFC ready to accept cards");
 }
 
+// Function to read NFC module
 void readNFC()
 {
   if (nfc.scan())
@@ -122,6 +136,7 @@ void readNFC()
   }
 }
 
+// Function to read SCD4X sensor
 void readSCD4X()
 {
   uint16_t co2;
@@ -167,6 +182,7 @@ void readSCD4X()
   door.write(0);
 }
 
+// Function to read AC current sensor
 void readACCurrent()
 {
   float ACCurrtntValue = 0;
@@ -188,6 +204,7 @@ void readACCurrent()
   Serial.println(ACCurrtntValue);
 }
 
+// Function to read PIR sensor
 void readPIRSensor()
 {
   int motion = digitalRead(PIR); // Read PIR sensor state
@@ -200,6 +217,7 @@ void readPIRSensor()
   }
 }
 
+// Initialise WiFi
 void initWiFi()
 {
   Serial.println("Starting WiFi Connection");
@@ -214,10 +232,13 @@ void initWiFi()
   Serial.println(" WiFi connected!");
 }
 
+// MQTT Callback funtion
 void callback(char *topic, byte *payload, unsigned int length)
 {
   Serial.print("Message arrived on topic: ");
   Serial.println(topic);
+
+  String topicStr = (String)topic;
 
   char message[length + 1];
   for (int i = 0; i < length; i++)
@@ -229,14 +250,12 @@ void callback(char *topic, byte *payload, unsigned int length)
   String receivedMsg = String(message);
   Serial.println(receivedMsg);
 
-  if (receivedMsg == "HIGH")
-    digitalWrite(LED_BUILTIN, HIGH);
-  else
-    digitalWrite(LED_BUILTIN, LOW);
+  //TODO
+  // Logic for what topic receives a update
 
-  Serial.println();
 }
 
+// MQTT Reconnect funtion
 void reconnect()
 {
   // Loop until we're reconnected
@@ -275,12 +294,13 @@ void setup()
   initSCD4X();
   initNFC();
   initWiFi();
-  const char *server = "10.6.121.207";
-  mqttClient.setServer(server, 1883);
+
+  mqttClient.setServer(RPI_ADDRESS, 1883);
   mqttClient.setCallback(callback);
+
   door.attach(D10);
+
   nfcDelay, sensorDelay = millis();
-  Serial.println("Enterling Loop");
 }
 
 void loop()
