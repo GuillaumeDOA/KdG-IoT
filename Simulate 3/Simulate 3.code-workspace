@@ -1,0 +1,24 @@
+{
+	"folders": [
+		{
+			"path": "Code/NFC Test"
+		},
+		{
+			"name": "SCD4X Test",
+			"path": "Code/SCD4X Test"
+		},
+		{
+			"name": "NFC SCD4X Test",
+			"path": "Code/NFC SCD4X Test"
+		},
+		{
+			"name": "AC Test",
+			"path": "Code/AC Test"
+		},
+		{
+			"name": "Final Project",
+			"path": "Code/Final Project"
+		}
+	],
+	"settings": {}
+}
