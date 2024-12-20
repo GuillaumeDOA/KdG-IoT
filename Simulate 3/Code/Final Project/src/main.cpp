@@ -322,4 +322,7 @@ void loop()
     readACCurrent();
     sensorDelay = millis();
   }
+
+  //TODO
+  // PIR Sensor reading
 }
