@@ -204,6 +204,10 @@ void readACCurrent()
   ACCurrtntValue = voltageVirtualValue * ACTectionRange;
   Serial.print("Currentsensor Value: ");
   Serial.println(ACCurrtntValue);
+
+  char msgStr[50];
+  itoa(ACCurrtntValue, msgStr, 10);
+  mqttClient.publish(MQTT_CURRENT, msgStr);
 }
 
 // Function to read PIR sensor
