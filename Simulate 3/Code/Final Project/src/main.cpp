@@ -130,6 +130,7 @@ void readNFC()
     {
       Serial.print("NFC string: ");
       Serial.println((char *)dataRead);
+      // Send data to MQTT Broker
       mqttClient.publish(MQTT_NFC, (char *)dataRead);
     }
     nfcDelay = millis();
@@ -170,6 +171,7 @@ void readSCD4X()
 
     char msgStr[50];
 
+    //Send Data to MQTT Broker
     itoa(co2, msgStr, 10);
     mqttClient.publish(MQTT_CO2, msgStr);
 
@@ -266,7 +268,7 @@ void reconnect()
     if (mqttClient.connect("ESP-IntelliHome"))
     {
       Serial.println("connected");
-      mqttClient.subscribe("test/led");
+      //mqttClient.subscribe("test/led");
     }
     else
     {
