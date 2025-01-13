@@ -28,6 +28,10 @@ extern "C"
 // The block to be read
 #define READ_BLOCK_NO 2
 
+// PIR State
+int state = LOW;
+int val = 0; 
+
 // WiFi and MQTT Client objects
 WiFiClient espClient;
 PubSubClient mqttClient(espClient);
@@ -47,6 +51,7 @@ bool openDoor = false;
 
 // Servo setup
 Servo door;
+Servo window;
 
 void printUint16Hex(uint16_t value)
 {
@@ -214,13 +219,20 @@ void readACCurrent()
 // Function to read PIR sensor
 void readPIRSensor()
 {
-  int motion = digitalRead(PIR); // Read PIR sensor state
-  if (motion == HIGH)
-  { // Motion detected
-    Serial.println("Motion detected!");
-  }
-  else
-  {
+ val = digitalRead(PIR);   // read sensor value
+  if (val == HIGH) {           // check if the sensor is HIGH
+    if (state == LOW) {
+      Serial.println("Motion detected!"); 
+      // Turn Leds on
+      mqttClient.publish(MQTT_MOTION, "Motion Detected");
+    }
+  } 
+  else {
+      if (state == HIGH){
+        Serial.println("Motion stopped!");
+        // Turn Leds off
+        mqttClient.publish(MQTT_MOTION, "No Motion Detected");
+    }
   }
 }
 
@@ -257,7 +269,6 @@ void callback(char *topic, byte *payload, unsigned int length)
   String receivedMsg = String(message);
   Serial.println("Received message: " + receivedMsg);
 
-
   if (topicStr.compareTo((String)MQTT_DOORRESPONSE) == 0)
   {
     door.write(180);
@@ -265,16 +276,14 @@ void callback(char *topic, byte *payload, unsigned int length)
   }
   else if (topicStr.compareTo((String)MQTT_WINDOWRESPOSNE) == 0)
   {
-     if(receivedMsg.compareTo("true") == 0){
+    if (receivedMsg.compareTo("true") == 0)
+    {
       // Set window servo open
-     }
-     else {
+    }
+    else
+    {
       // Set window servo closed
-     }
-  }
-  else if (topicStr.compareTo((String)MQTT_MOTIONRESPONSE) == 0)
-  {
-    
+    }
   }
   else
   {
@@ -321,8 +330,8 @@ void setup()
 
   Serial.println("Initializing System\n");
 
-  // initSCD4X();
-  // initNFC();
+  initSCD4X();
+  initNFC();
   initWiFi();
 
   mqttClient.setServer(RPI_ADDRESS, 1883);
@@ -345,21 +354,21 @@ void loop()
 
   if (millis() - nfcDelay >= 2000)
   {
-    //readNFC();
+    readNFC();
   }
 
   if (millis() - sensorDelay >= 5000)
   {
-    /* readSCD4X();
-    readACCurrent(); */
+    readSCD4X();
+    readACCurrent();
     sensorDelay = millis();
   }
 
-  if (doorTimer + 5000 <= millis()){
+  if (doorTimer + 5000 <= millis())
+  {
     // Close door after 5 sec
     door.write(0);
   }
-
-  // TODO
-  //  PIR Sensor reading
+  
+  readPIRSensor();
 }
