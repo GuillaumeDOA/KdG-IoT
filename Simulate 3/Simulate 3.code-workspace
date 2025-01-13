@@ -18,6 +18,10 @@
 		{
 			"name": "Final Project",
 			"path": "Code/Final Project"
+		},
+		{
+			"name": "FB2 ESP32-S3",
+			"path": "Code/FB2 ESP32-S3"
 		}
 	],
 	"settings": {}

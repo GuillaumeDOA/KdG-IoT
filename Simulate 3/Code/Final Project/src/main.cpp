@@ -42,7 +42,8 @@ uint16_t error;
 char errorMessage[256];
 
 // Timer variables
-unsigned long nfcDelay, sensorDelay;
+unsigned long nfcDelay, sensorDelay, doorTimer;
+bool openDoor = false;
 
 // Servo setup
 Servo door;
@@ -171,7 +172,7 @@ void readSCD4X()
 
     char msgStr[50];
 
-    //Send Data to MQTT Broker
+    // Send Data to MQTT Broker
     itoa(co2, msgStr, 10);
     mqttClient.publish(MQTT_CO2, msgStr);
 
@@ -254,11 +255,31 @@ void callback(char *topic, byte *payload, unsigned int length)
   message[length] = '\0'; // Null-terminate the char array
 
   String receivedMsg = String(message);
-  Serial.println(receivedMsg);
+  Serial.println("Received message: " + receivedMsg);
 
-  //TODO
-  // Logic for what topic receives a update
 
+  if (topicStr.compareTo((String)MQTT_DOORRESPONSE) == 0)
+  {
+    door.write(180);
+    doorTimer = millis();
+  }
+  else if (topicStr.compareTo((String)MQTT_WINDOWRESPOSNE) == 0)
+  {
+     if(receivedMsg.compareTo("true") == 0){
+      // Set window servo open
+     }
+     else {
+      // Set window servo closed
+     }
+  }
+  else if (topicStr.compareTo((String)MQTT_MOTIONRESPONSE) == 0)
+  {
+    
+  }
+  else
+  {
+    Serial.println("Unknown Topic");
+  }
 }
 
 // MQTT Reconnect funtion
@@ -272,7 +293,10 @@ void reconnect()
     if (mqttClient.connect("ESP-IntelliHome"))
     {
       Serial.println("connected");
-      //mqttClient.subscribe("test/led");
+      // mqttClient.subscribe("test/led");
+      mqttClient.subscribe(MQTT_DOORRESPONSE);
+      mqttClient.subscribe(MQTT_MOTIONRESPONSE);
+      mqttClient.subscribe(MQTT_WINDOWRESPOSNE);
     }
     else
     {
@@ -297,8 +321,8 @@ void setup()
 
   Serial.println("Initializing System\n");
 
-  initSCD4X();
-  initNFC();
+  // initSCD4X();
+  // initNFC();
   initWiFi();
 
   mqttClient.setServer(RPI_ADDRESS, 1883);
@@ -306,8 +330,10 @@ void setup()
 
   door.attach(D10);
 
-  nfcDelay, sensorDelay = millis();
+  nfcDelay, sensorDelay, doorTimer = millis();
 }
+
+int val = 0;
 
 void loop()
 {
@@ -319,16 +345,21 @@ void loop()
 
   if (millis() - nfcDelay >= 2000)
   {
-    readNFC();
+    //readNFC();
   }
 
   if (millis() - sensorDelay >= 5000)
   {
-    readSCD4X();
-    readACCurrent();
+    /* readSCD4X();
+    readACCurrent(); */
     sensorDelay = millis();
   }
 
-  //TODO
-  // PIR Sensor reading
+  if (doorTimer + 5000 <= millis()){
+    // Close door after 5 sec
+    door.write(0);
+  }
+
+  // TODO
+  //  PIR Sensor reading
 }
