@@ -6,6 +6,7 @@
 #include <WiFi.h>
 #include <PubSubClient.h>
 #include <secrets.h>
+#include <config.h>
 extern "C"
 {
 #include "freertos/FreeRTOS.h"
@@ -30,7 +31,7 @@ extern "C"
 
 // PIR State
 int state = LOW;
-int val = 0; 
+int val = 0;
 
 // WiFi and MQTT Client objects
 WiFiClient espClient;
@@ -46,7 +47,7 @@ uint16_t error;
 char errorMessage[256];
 
 // Timer variables
-unsigned long nfcDelay, sensorDelay, doorTimer;
+unsigned long nfcTimer, sensorTimer, doorTimer;
 bool openDoor = false;
 
 // Servo setup
@@ -139,7 +140,7 @@ void readNFC()
       // Send data to MQTT Broker
       mqttClient.publish(MQTT_NFC, (char *)dataRead);
     }
-    nfcDelay = millis();
+    nfcTimer = millis();
   }
 }
 
@@ -219,24 +220,27 @@ void readACCurrent()
 // Function to read PIR sensor
 void readPIRSensor()
 {
- val = digitalRead(PIR);   // read sensor value
-  if (val == HIGH) {           // check if the sensor is HIGH
-    if (state == LOW) {
-      Serial.println("Motion detected!"); 
+  val = digitalRead(PIR); // read sensor value
+  if (val == HIGH)
+  { // check if the sensor is HIGH
+    if (state == LOW)
+    {
+      Serial.println("Motion detected!");
       // Turn Leds on
       digitalWrite(D6, HIGH);
       mqttClient.publish(MQTT_MOTION, "Motion Detected");
       state = HIGH;
     }
-  } 
-  else {
-      if (state == HIGH){
-        Serial.println("Motion stopped!");
-        // Turn Leds off
-        digitalWrite(D6, LOW);
-        mqttClient.publish(MQTT_MOTION, "No Motion Detected");
-        state = LOW;
-      
+  }
+  else
+  {
+    if (state == HIGH)
+    {
+      Serial.println("Motion stopped!");
+      // Turn Leds off
+      digitalWrite(D6, LOW);
+      mqttClient.publish(MQTT_MOTION, "No Motion Detected");
+      state = LOW;
     }
   }
 }
@@ -309,7 +313,6 @@ void reconnect()
     if (mqttClient.connect("ESP-IntelliHome"))
     {
       Serial.println("connected");
-      // mqttClient.subscribe("test/led");
       mqttClient.subscribe(MQTT_DOORRESPONSE);
       mqttClient.subscribe(MQTT_WINDOWRESPOSNE);
     }
@@ -329,25 +332,23 @@ void setup()
   Wire.begin();
   Serial.begin(115200);
   delay(50);
+  Serial.println("Initializing System\n");
 
   pinMode(LED_BUILTIN, OUTPUT);
   pinMode(PIR, INPUT);
   pinMode(CURRENTSENSOR, INPUT);
-  pinMode(D6, OUTPUT);
 
-  Serial.println("Initializing System\n");
-
-  /* initSCD4X();
+  initSCD4X();
   initNFC();
-  initWiFi(); */
+  initWiFi();
 
-  mqttClient.setServer(RPI_ADDRESS, 1883);
+  mqttClient.setServer(MQTT_ADDRESS, 1883);
   mqttClient.setCallback(callback);
 
   door.attach(D10);
   window.attach(D11);
 
-  nfcDelay, sensorDelay, doorTimer = millis();
+  nfcTimer, sensorTimer, doorTimer = millis();
 }
 
 void loop()
@@ -358,23 +359,23 @@ void loop()
   }
   mqttClient.loop();
 
-  if (millis() - nfcDelay >= 2000)
+  if (millis() - nfcTimer >= NFCDELAY)
   {
-   // readNFC();
+    readNFC();
   }
 
-  if (millis() - sensorDelay >= 50)
+  if (millis() - sensorTimer >= SENSORDELAY)
   {
-    // readSCD4X();
+    readSCD4X();
     readACCurrent();
-    sensorDelay = millis();
+    sensorTimer = millis();
   }
 
-  if (doorTimer + 5000 <= millis())
+  if (doorTimer + DOORDELAY <= millis())
   {
     // Close door after 5 sec
     door.write(0);
   }
-  
+
   readPIRSensor();
 }
