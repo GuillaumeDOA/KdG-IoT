@@ -224,14 +224,19 @@ void readPIRSensor()
     if (state == LOW) {
       Serial.println("Motion detected!"); 
       // Turn Leds on
+      digitalWrite(D6, HIGH);
       mqttClient.publish(MQTT_MOTION, "Motion Detected");
+      state = HIGH;
     }
   } 
   else {
       if (state == HIGH){
         Serial.println("Motion stopped!");
         // Turn Leds off
+        digitalWrite(D6, LOW);
         mqttClient.publish(MQTT_MOTION, "No Motion Detected");
+        state = LOW;
+      
     }
   }
 }
@@ -279,10 +284,12 @@ void callback(char *topic, byte *payload, unsigned int length)
     if (receivedMsg.compareTo("true") == 0)
     {
       // Set window servo open
+      window.write(0);
     }
     else
     {
       // Set window servo closed
+      window.write(180);
     }
   }
   else
@@ -304,7 +311,6 @@ void reconnect()
       Serial.println("connected");
       // mqttClient.subscribe("test/led");
       mqttClient.subscribe(MQTT_DOORRESPONSE);
-      mqttClient.subscribe(MQTT_MOTIONRESPONSE);
       mqttClient.subscribe(MQTT_WINDOWRESPOSNE);
     }
     else
@@ -327,22 +333,22 @@ void setup()
   pinMode(LED_BUILTIN, OUTPUT);
   pinMode(PIR, INPUT);
   pinMode(CURRENTSENSOR, INPUT);
+  pinMode(D6, OUTPUT);
 
   Serial.println("Initializing System\n");
 
-  initSCD4X();
+  /* initSCD4X();
   initNFC();
-  initWiFi();
+  initWiFi(); */
 
   mqttClient.setServer(RPI_ADDRESS, 1883);
   mqttClient.setCallback(callback);
 
   door.attach(D10);
+  window.attach(D11);
 
   nfcDelay, sensorDelay, doorTimer = millis();
 }
-
-int val = 0;
 
 void loop()
 {
@@ -354,12 +360,12 @@ void loop()
 
   if (millis() - nfcDelay >= 2000)
   {
-    readNFC();
+   // readNFC();
   }
 
-  if (millis() - sensorDelay >= 5000)
+  if (millis() - sensorDelay >= 50)
   {
-    readSCD4X();
+    // readSCD4X();
     readACCurrent();
     sensorDelay = millis();
   }
