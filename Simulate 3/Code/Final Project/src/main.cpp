@@ -7,16 +7,19 @@
 #include <PubSubClient.h>
 #include <secrets.h>
 #include <config.h>
-extern "C"
-{
-#include "freertos/FreeRTOS.h"
-#include "freertos/timers.h"
-}
 
 // NFC Config Variables
 #define BLOCK_SIZE 16
 #define PN532_IRQ 2
 #define POLLING 0
+
+// RGB Pins
+#define RGB_RED D2
+#define RGB_BLUE D3
+#define RGB_GREEN D5
+
+// Hallway led
+#define HALLWAY_LED D6
 
 // Set Currentsensor Variables
 #define ACTectionRange 20
@@ -209,12 +212,12 @@ void readACCurrent()
   voltageVirtualValue = (voltageVirtualValue / 1024 * VREF) / 2;
 
   ACCurrtntValue = voltageVirtualValue * ACTectionRange;
-  Serial.print("Currentsensor Value: ");
-  Serial.println(ACCurrtntValue);
 
-  char msgStr[50];
-  itoa(ACCurrtntValue, msgStr, 10);
-  mqttClient.publish(MQTT_CURRENT, msgStr);
+  ACCurrtntValue = ACCurrtntValue / 100;
+
+  char msgStr[8];
+  dtostrf(ACCurrtntValue, 0, 4, msgStr);
+  mqttClient.publish("intellihome/current", msgStr);
 }
 
 // Function to read PIR sensor
@@ -226,8 +229,7 @@ void readPIRSensor()
     if (state == LOW)
     {
       Serial.println("Motion detected!");
-      // Turn Leds on
-      digitalWrite(D6, HIGH);
+      digitalWrite(HALLWAY_LED, HIGH);
       mqttClient.publish(MQTT_MOTION, "Motion Detected");
       state = HIGH;
     }
@@ -237,8 +239,7 @@ void readPIRSensor()
     if (state == HIGH)
     {
       Serial.println("Motion stopped!");
-      // Turn Leds off
-      digitalWrite(D6, LOW);
+      digitalWrite(HALLWAY_LED, LOW);
       mqttClient.publish(MQTT_MOTION, "No Motion Detected");
       state = LOW;
     }
@@ -280,8 +281,11 @@ void callback(char *topic, byte *payload, unsigned int length)
 
   if (topicStr.compareTo((String)MQTT_DOORRESPONSE) == 0)
   {
-    door.write(180);
+    door.write(0);
     doorTimer = millis();
+    analogWrite(RGB_BLUE, HIGH);
+    analogWrite(RGB_GREEN, LOW);
+    analogWrite(RGB_RED, HIGH);
   }
   else if (topicStr.compareTo((String)MQTT_WINDOWRESPOSNE) == 0)
   {
@@ -293,7 +297,7 @@ void callback(char *topic, byte *payload, unsigned int length)
     else
     {
       // Set window servo closed
-      window.write(180);
+      window.write(45);
     }
   }
   else
@@ -337,6 +341,9 @@ void setup()
   pinMode(LED_BUILTIN, OUTPUT);
   pinMode(PIR, INPUT);
   pinMode(CURRENTSENSOR, INPUT);
+  pinMode(RGB_BLUE, OUTPUT);
+  pinMode(RGB_GREEN, OUTPUT);
+  pinMode(RGB_RED, OUTPUT);
 
   initSCD4X();
   initNFC();
@@ -374,7 +381,10 @@ void loop()
   if (doorTimer + DOORDELAY <= millis())
   {
     // Close door after 5 sec
-    door.write(0);
+    analogWrite(RGB_BLUE, HIGH);
+    analogWrite(RGB_GREEN, HIGH);
+    analogWrite(RGB_RED, HIGH);
+    door.write(90);
   }
 
   readPIRSensor();
