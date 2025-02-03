@@ -1,8 +1,8 @@
 #include <Arduino.h>
 
 // WiFi credentials
-String PASSWORD = "KdGIoT0!";
-String SSID = "IoT";
+String PASSWORD = "wachtwoord";
+String SSID = "Guillaume";
 
 // MQTT Credentials
 const char *MQTT_ADDRESS = "109.137.19.53";

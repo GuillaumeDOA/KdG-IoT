@@ -283,9 +283,9 @@ void callback(char *topic, byte *payload, unsigned int length)
   {
     door.write(0);
     doorTimer = millis();
-    analogWrite(RGB_BLUE, HIGH);
-    analogWrite(RGB_GREEN, LOW);
-    analogWrite(RGB_RED, HIGH);
+    analogWrite(RGB_BLUE, 255);
+    analogWrite(RGB_GREEN, 0);
+    analogWrite(RGB_RED, 255);
   }
   else if (topicStr.compareTo((String)MQTT_WINDOWRESPOSNE) == 0)
   {
@@ -297,7 +297,7 @@ void callback(char *topic, byte *payload, unsigned int length)
     else
     {
       // Set window servo closed
-      window.write(45);
+      window.write(180);
     }
   }
   else
@@ -381,9 +381,9 @@ void loop()
   if (doorTimer + DOORDELAY <= millis())
   {
     // Close door after 5 sec
-    analogWrite(RGB_BLUE, HIGH);
-    analogWrite(RGB_GREEN, HIGH);
-    analogWrite(RGB_RED, HIGH);
+    analogWrite(RGB_BLUE, 255);
+    analogWrite(RGB_GREEN, 255);
+    analogWrite(RGB_RED, 255);
     door.write(90);
   }
 
