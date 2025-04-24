@@ -13,6 +13,9 @@ PubSubClient mqttClient(espClient);
 DFRobot_PN532_IIC nfc(PN532_IRQ, POLLING);
 uint8_t dataRead[16] = {0};
 
+// Global Variables
+unsigned long nfcTimer;
+
 // Initialise WiFi
 void initWiFi()
 {
@@ -84,13 +87,18 @@ void readNFC()
   {
     if (nfc.readData(dataRead, READ_BLOCK_NO) != 1)
     {
-      Serial.println(" read failure!");
+      Serial.println("Read failure!");
     }
     else
     {
       Serial.print("NFC string: ");
       Serial.println((char *)dataRead);
+
+      // Sending Json over MQTT
+      String payload = "{\"tag_secret\":\"" + String((char *)dataRead) + "\",\"door_name\":\"" + DEVICE_NAME + "\"}";
+      mqttClient.publish(MQTT_READ, payload.c_str());
     }
+    nfcTimer = millis(); // Reset the timer to avoid reading the same card multiple times
   }
 }
 
@@ -103,6 +111,8 @@ void setup()
 
   mqttClient.setServer(MQTT_ADDRESS, MQTT_PORT);
   mqttClient.setCallback(callback);
+
+  nfcTimer = millis();
 }
 
 void loop()
@@ -115,11 +125,17 @@ void loop()
   mqttClient.loop();
 
   // TODO Lock logic
-  // Read NFC card and send data to MQTT broker
   // Receieve MQTT message and check if it is a valid NFC card
   // Open lock if NFC card is valid
   //
   // TODO Hall effect sensor logic
   // Read hall effect sensor and send data to MQTT broker  
+
+
+  //NFC Logic
+  if (millis() - nfcTimer >= NFC_DELAY)
+  {
+    readNFC();
+  }
 
 }
