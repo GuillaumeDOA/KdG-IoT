@@ -10,6 +10,8 @@ const int MQTT_PORT = 1883;
    
 // MQTT Topics
 const char *MQTT_READ = "nfc/scan";
+const char *MQTT_WRITE = "nfc/write";
+const char *MQTT_RESULT = "nfc/result";
 
 // NFC Configuration
 #define BLOCK_SIZE 16

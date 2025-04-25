@@ -5,6 +5,9 @@
 #include <config.h>
 #include <secret.h>
 
+// Pin Definitions
+#define LOCK_PIN 12
+
 // WiFi and MQTT Client objects
 WiFiClient espClient;
 PubSubClient mqttClient(espClient);
@@ -15,6 +18,8 @@ uint8_t dataRead[16] = {0};
 
 // Global Variables
 unsigned long nfcTimer;
+bool lockActive = false;
+unsigned long lockTimer = 0;
 
 // Initialise WiFi
 void initWiFi()
@@ -34,13 +39,42 @@ void initWiFi()
 // MQTT Callback funtion
 void callback(char *topic, byte *payload, unsigned int length)
 {
-  Serial.print("Message arrived on topic: ");
+  Serial.print("Mssage arrived on topic: ");
   Serial.println(topic);
 
-  Serial.print("Message: ");
-  for (int i = 0; i < length; i++)
+  // Check if the message is on the MQTT_RESULT topic
+  if (strcmp(topic, MQTT_RESULT) == 0)
   {
-    Serial.print((char)payload[i]);
+    // Convert the payload to a string
+    String message;
+    for (unsigned int i = 0; i < length; i++)
+    {
+      message += (char)payload[i];
+    }
+
+    Serial.print("Message: ");
+    Serial.println(message);
+
+    // Check if the result is "true"
+    if (message == "true")
+    {
+      Serial.println("Valid card detected. Opening lock...");
+      digitalWrite(LOCK_PIN, HIGH); // Open the lock
+      lockActive = true;
+      lockTimer = millis(); // Start the lock timer
+    }
+    else
+    {
+      Serial.println("Invalid card. Access denied.");
+    }
+  }
+  else
+  {
+    Serial.print("Message: ");
+    for (int i = 0; i < length; i++)
+    {
+      Serial.print((char)payload[i]);
+    }
   }
 }
 
@@ -55,7 +89,7 @@ void reconnect()
     if (mqttClient.connect("SmartLock", MQTT_USERNAME, MQTT_PASSWORD))
     {
       Serial.println("connected");
-      //mqttClient.subscribe(MQTT_TEST);
+      mqttClient.subscribe(MQTT_RESULT);
     }
     else
     {
@@ -104,14 +138,23 @@ void readNFC()
 
 void setup()
 {
+  // Start Serial Communication
   Serial.begin(115200);
 
+  // Initialise Wifi and MQTT
   initWiFi();
   initNFC();
 
+  // Set MQTT server and callback
   mqttClient.setServer(MQTT_ADDRESS, MQTT_PORT);
   mqttClient.setCallback(callback);
 
+  // Set Pin Modes
+  pinMode(LOCK_PIN, OUTPUT);
+
+  digitalWrite(LOCK_PIN, LOW); // Lock the door by default
+
+  // Start the NFC timer
   nfcTimer = millis();
 }
 
@@ -124,18 +167,21 @@ void loop()
   }
   mqttClient.loop();
 
-  // TODO Lock logic
-  // Receieve MQTT message and check if it is a valid NFC card
-  // Open lock if NFC card is valid
+
   //
   // TODO Hall effect sensor logic
-  // Read hall effect sensor and send data to MQTT broker  
+  // Read hall effect sensor and send data to MQTT broker
 
-
-  //NFC Logic
+  // NFC Logic
   if (millis() - nfcTimer >= NFC_DELAY)
   {
     readNFC();
   }
 
+  if (lockActive && millis() - lockTimer >= 5000)
+  {
+    Serial.println("Locking the door...");
+    digitalWrite(LOCK_PIN, LOW); // Lock the door
+    lockActive = false;
+  }
 }
