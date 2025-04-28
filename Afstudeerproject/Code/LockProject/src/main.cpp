@@ -2,11 +2,13 @@
 #include <WiFi.h>
 #include <PubSubClient.h>
 #include <DFRobot_PN532.h>
+#include <ArduinoJson.h>
 #include <config.h>
 #include <secret.h>
 
 // Pin Definitions
 #define LOCK_PIN 12
+#define HALL_SENSOR A0
 
 // WiFi and MQTT Client objects
 WiFiClient espClient;
@@ -17,9 +19,8 @@ DFRobot_PN532_IIC nfc(PN532_IRQ, POLLING);
 uint8_t dataRead[16] = {0};
 
 // Global Variables
-unsigned long nfcTimer;
+unsigned long nfcTimer, hallTimer, lockStartTime = 0;
 bool lockActive = false;
-unsigned long lockTimer = 0;
 
 // Initialise WiFi
 void initWiFi()
@@ -55,21 +56,43 @@ void callback(char *topic, byte *payload, unsigned int length)
     Serial.print("Message: ");
     Serial.println(message);
 
-    // Check if the result is "true"
-    if (message == "true")
+    // Parse the JSON payload
+    DynamicJsonDocument doc(256);
+    DeserializationError error = deserializeJson(doc, message);
+
+    // Extract "doorname" and "unlock" from the JSON
+    const char *doorname = doc["doorname"];
+    bool unlock = doc["unlock"];
+
+    if (error)
     {
-      Serial.println("Valid card detected. Opening lock...");
-      digitalWrite(LOCK_PIN, HIGH); // Open the lock
-      lockActive = true;
-      lockTimer = millis(); // Start the lock timer
+      Serial.print("Failed to parse JSON: ");
+      Serial.println(error.c_str());
+      return;
+    }
+
+    if (String(doorname) == DEVICE_NAME)
+    {
+      if (unlock)
+      {
+        Serial.println("Valid card detected. Opening lock...");
+        digitalWrite(LOCK_PIN, HIGH); // Open the lock
+        lockActive = true;
+        lockStartTime = millis(); // Start the lock timer
+      }
+      else
+      {
+        Serial.println("Access denied.");
+      }
     }
     else
     {
-      Serial.println("Invalid card. Access denied.");
+      Serial.println("Door name mismatch. Ignoring message.");
     }
   }
   else
   {
+    // Unhandled topic
     Serial.print("Message: ");
     for (int i = 0; i < length; i++)
     {
@@ -136,6 +159,18 @@ void readNFC()
   }
 }
 
+void readHallSensor()
+{
+  // TODO
+  // Hall sensor logic
+  // returns state of door in string format
+  String doorState = "open";
+
+  // Sending Json over MQTT
+  String payload = "{\"doorstate\":\"" + doorState + "\",\"door_name\":\"" + DEVICE_NAME + "\"}";
+  mqttClient.publish(MQTT_HALLSENSOR, payload.c_str());
+}
+
 void setup()
 {
   // Start Serial Communication
@@ -151,11 +186,14 @@ void setup()
 
   // Set Pin Modes
   pinMode(LOCK_PIN, OUTPUT);
+  pinMode(HALL_SENSOR, INPUT);
 
-  digitalWrite(LOCK_PIN, LOW); // Lock the door by default
+  // Lock the door by default
+  digitalWrite(LOCK_PIN, LOW);
 
   // Start the NFC timer
   nfcTimer = millis();
+  hallTimer = millis();
 }
 
 void loop()
@@ -167,18 +205,21 @@ void loop()
   }
   mqttClient.loop();
 
-
-  //
-  // TODO Hall effect sensor logic
-  // Read hall effect sensor and send data to MQTT broker
-
-  // NFC Logic
+  // Read NFC
   if (millis() - nfcTimer >= NFC_DELAY)
   {
     readNFC();
   }
 
-  if (lockActive && millis() - lockTimer >= 5000)
+  // Read Hall Sensor
+  if (millis() - hallTimer >= HALLSENSOR_DELAY)
+  {
+    readHallSensor();
+    hallTimer = millis(); // Reset the timer
+  }
+
+  // Check if the lock should be deactivated
+  if (lockActive && millis() - lockStartTime >= LOCK_TIMER)
   {
     Serial.println("Locking the door...");
     digitalWrite(LOCK_PIN, LOW); // Lock the door

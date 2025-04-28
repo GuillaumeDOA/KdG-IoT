@@ -7,6 +7,10 @@
 		{
 			"name": "LockProject",
 			"path": "LockProject"
+		},
+		{
+			"name": "HallSensor Test",
+			"path": "HallSensor Test"
 		}
 	],
 	"settings": {}
