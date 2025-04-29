@@ -4,7 +4,7 @@ const char *DEVICE_NAME="Server Room";
 // Timers
 const unsigned long LOCK_TIMER = 5000;
 const unsigned long HALLSENSOR_DELAY = 1000;
-const unsigned long NFC_DELAY = 1000;
+const unsigned long NFC_READ_DELAY = 1000;
 const unsigned long NFC_WRITE_DELAY = 5000;
 
 // MQTT Configuration

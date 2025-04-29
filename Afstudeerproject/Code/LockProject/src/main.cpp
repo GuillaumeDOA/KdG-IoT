@@ -20,7 +20,7 @@ uint8_t dataRead[BLOCK_SIZE] = {0};
 uint8_t dataWrite[BLOCK_SIZE] = {""};
 
 // Global Variables
-unsigned long nfcTimer, hallTimer, lockStartTime, writeModeTimer;
+unsigned long nfcReadTimer, hallTimer, lockStartTime, nfcWriteTimer;
 bool lockActive = false;
 bool isWriteMode = false;
 
@@ -71,7 +71,7 @@ void callback(char *topic, byte *payload, unsigned int length)
   const char *doorname = doc["DoorName"];
 
   // Check if the door name matches the device name
-  if (doorname != DEVICE_NAME)
+  if (strcmp(doorname, DEVICE_NAME) != 0)
   {
     Serial.println("DoorName mismatch. Ignoring message.");
     return;
@@ -109,7 +109,9 @@ void callback(char *topic, byte *payload, unsigned int length)
 
     // Set NFC Wrtite mode to True and start Timer
     isWriteMode = true;
-    writeModeTimer = millis();
+    nfcWriteTimer = millis();
+
+    Serial.println("NFC Write mode activated. Please scan the card to write the new secret.");
   }
   // Unhandled topic
   else
@@ -177,7 +179,7 @@ void readNFC()
       String payload = "{\"tag_secret\":\"" + String((char *)dataRead) + "\",\"door_name\":\"" + DEVICE_NAME + "\"}";
       mqttClient.publish(MQTT_READ, payload.c_str());
     }
-    nfcTimer = millis(); // Reset the timer to avoid reading the same card multiple times
+    nfcReadTimer = millis(); // Reset the timer to avoid reading the same card multiple times
   }
 }
 
@@ -205,10 +207,10 @@ void readHallSensor()
   // TODO
   // Hall sensor logic
   // returns state of door in string format (Open/Closed)
-  String doorState = "Open";
+  String doorState = "Closed";
 
   // Sending Json over MQTT
-  String payload = "{\"doorstate\":\"" + doorState + "\",\"door_name\":\"" + DEVICE_NAME + "\"}";
+  String payload = "{\"doorstate\":\"" + doorState + "\",\"doorname\":\"" + DEVICE_NAME + "\"}";
   mqttClient.publish(MQTT_HALLSENSOR, payload.c_str());
 }
 
@@ -233,7 +235,7 @@ void setup()
   digitalWrite(LOCK_PIN, LOW);
 
   // Start the NFC timer
-  nfcTimer = millis();
+  nfcReadTimer = millis();
   hallTimer = millis();
 }
 
@@ -247,7 +249,7 @@ void loop()
   mqttClient.loop();
 
   // Read NFC
-  if (millis() - nfcTimer >= NFC_DELAY)
+  if (!isWriteMode && millis() - nfcReadTimer >= NFC_READ_DELAY)
   {
     readNFC();
   }
@@ -268,8 +270,16 @@ void loop()
   }
 
   // Check if NFC write mode is active
-  if (isWriteMode && millis() - writeModeTimer >= NFC_WRITE_DELAY)
+  if (isWriteMode)
   {
     writeNFC();
+    nfcReadTimer = millis(); // Reset the NFC timer to avoid reading the same card multiple times
+  }
+
+  // Check if NFC write mode timer has expired
+  if (isWriteMode && millis() - nfcWriteTimer >= NFC_WRITE_DELAY)
+  {
+    Serial.println("NFC Write mode timed out.");
+    isWriteMode = false; // Reset write mode
   }
 }
