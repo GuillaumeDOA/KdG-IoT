@@ -5,6 +5,7 @@ const char *DEVICE_NAME="Server Room";
 const unsigned long LOCK_TIMER = 5000;
 const unsigned long HALLSENSOR_DELAY = 1000;
 const unsigned long NFC_DELAY = 1000;
+const unsigned long NFC_WRITE_DELAY = 5000;
 
 // MQTT Configuration
 const char *MQTT_ADDRESS = "172.201.156.113";
@@ -23,4 +24,4 @@ const char *MQTT_HALLSENSOR = "hallsensor/read";
 #define BLOCK_SIZE 16
 #define PN532_IRQ 2
 #define POLLING 0
-#define READ_BLOCK_NO 2
+#define BLOCK_NO 2

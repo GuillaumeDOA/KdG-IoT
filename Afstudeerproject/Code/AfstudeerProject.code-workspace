@@ -11,6 +11,9 @@
 		{
 			"name": "HallSensor Test",
 			"path": "HallSensor Test"
+		},
+		{
+			"path": "NFC Write"
 		}
 	],
 	"settings": {}
