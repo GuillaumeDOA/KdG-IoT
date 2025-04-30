@@ -23,6 +23,7 @@ uint8_t dataWrite[BLOCK_SIZE] = {""};
 unsigned long nfcReadTimer, hallTimer, lockStartTime, nfcWriteTimer;
 bool lockActive = false;
 bool isWriteMode = false;
+String previousDoorState = "Closed";
 
 // Initialise WiFi
 void initWiFi()
@@ -209,9 +210,17 @@ void readHallSensor()
   // returns state of door in string format (Open/Closed)
   String doorState = "Closed";
 
-  // Sending Json over MQTT
-  String payload = "{\"doorstate\":\"" + doorState + "\",\"doorname\":\"" + DEVICE_NAME + "\"}";
-  mqttClient.publish(MQTT_HALLSENSOR, payload.c_str());
+  // Sending Json over MQTT if door state has changed
+  if (!doorState.equals(previousDoorState))
+  {
+    Serial.print("Door state changed: ");
+    Serial.println(doorState);
+    previousDoorState = doorState;
+
+    // Sending Json over MQTT
+    String payload = "{\"doorstate\":\"" + doorState + "\",\"doorname\":\"" + DEVICE_NAME + "\"}";
+    mqttClient.publish(MQTT_HALLSENSOR, payload.c_str());
+  }
 }
 
 void setup()
