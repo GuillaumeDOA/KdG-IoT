@@ -3,12 +3,18 @@
 #include <PubSubClient.h>
 #include <DFRobot_PN532.h>
 #include <ArduinoJson.h>
+#include <Wire.h>
+#include <Adafruit_GFX.h>
+#include <Adafruit_SSD1306.h>
 #include <config.h>
 #include <secret.h>
 
 // Pin Definitions
 #define LOCK_PIN 12
-#define HALL_SENSOR A0
+#define HALL_SENSOR A5
+
+// OLED Display Object
+Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 
 // WiFi and MQTT Client objects
 WiFiClient espClient;
@@ -20,15 +26,75 @@ uint8_t dataRead[BLOCK_SIZE] = {0};
 uint8_t dataWrite[BLOCK_SIZE] = {""};
 
 // Global Variables
-unsigned long nfcReadTimer, hallTimer, lockStartTime, nfcWriteTimer;
+unsigned long nfcReadTimer, hallTimer, lockStartTime, nfcWriteTimer, displayTimer;
 bool lockActive = false;
 bool isWriteMode = false;
-String previousDoorState = "Closed";
+bool displayChanged = false;
+String doorState = "Closed", previousDoorState = "Closed";
+
+// Initialise the OLED display
+void initDisplay()
+{
+  Serial.println(F("Initializing OLED display..."));
+
+  if (!display.begin(SSD1306_SWITCHCAPVCC, 0x3C))
+  {
+    Serial.println(F("SSD1315 allocation failed"));
+    for (;;)
+      ;
+  }
+
+  display.clearDisplay();
+  display.setTextSize(1);
+  display.setCursor(0, 0);
+  display.setTextColor(SSD1306_WHITE);
+  display.println(F(DEVICE_NAME));
+  display.setCursor(0, 16);
+  display.println(F("Booting up System"));
+  display.display();
+}
+
+// Function to write to the OLED display
+void writeToDisplay(const char *message)
+{
+  display.clearDisplay();
+  display.setCursor(0, 0);
+  display.println((String(DEVICE_NAME) + " - " + doorState).c_str());
+  display.setCursor(0, 16);
+  display.println(message);
+  display.display();
+}
+
+// Function to append to the OLED display
+void appendToDisplay(const char *message, int cursorX = 0, int cursorY = 16)
+{
+  // Set the cursor to the specified position
+  display.setCursor(cursorX, cursorY);
+
+  // Write the new message
+  display.println(message);
+
+  // Update the display with the new content
+  display.display();
+}
+
+// Function to update disply to default state
+void defaultDisplay()
+{
+  display.clearDisplay();
+  display.setCursor(0, 0);
+  display.println((String(DEVICE_NAME) + " - " + doorState).c_str());
+  display.setCursor(0, 16);
+  display.println(F("Ready To Accept Cards"));
+  display.display();
+}
 
 // Initialise WiFi
 void initWiFi()
 {
   Serial.println("Starting WiFi Connection");
+  writeToDisplay("Connecting to WiFi...");
+
   WiFi.mode(WIFI_STA);
   WiFi.begin(SSID, WIFI_PASSWORD);
 
@@ -38,6 +104,7 @@ void initWiFi()
     Serial.print(".");
   }
   Serial.println(" WiFi connected!");
+  appendToDisplay("WiFi connected!", 0, 32);
 }
 
 // MQTT Callback funtion
@@ -87,14 +154,26 @@ void callback(char *topic, byte *payload, unsigned int length)
     // Open the lock if the door name matches and unlock is true
     if (unlock)
     {
+      // Extract "User" from the JSON
+      const char *user = doc["User"];
+
       Serial.println("Valid card detected. Opening lock...");
+      appendToDisplay("Acces granted!", 0, 32);
+      appendToDisplay(("Welcome " + String(user)).c_str(), 0, 48);
+      
       digitalWrite(LOCK_PIN, HIGH); // Open the lock
       lockActive = true;
       lockStartTime = millis(); // Start the lock timer
+      displayTimer = millis();  // Start the display timer
+      displayChanged = true; // Set display changed flag
     }
     else
     {
       Serial.println("Access denied.");
+      appendToDisplay("Access denied!", 0, 32);
+
+      displayTimer = millis(); // Start the display timer
+      displayChanged = true; // Set display changed flag
     }
   }
   // Check if the message is on the MQTT_WRITE topic
@@ -113,6 +192,7 @@ void callback(char *topic, byte *payload, unsigned int length)
     nfcWriteTimer = millis();
 
     Serial.println("NFC Write mode activated. Please scan the card to write the new secret.");
+    writeToDisplay("Write mode activated!Please scan the card.");
   }
   // Unhandled topic
   else
@@ -176,6 +256,8 @@ void readNFC()
       Serial.print("NFC string: ");
       Serial.println((char *)dataRead);
 
+      writeToDisplay("Card Detected!\nChecking access...");
+
       // Sending Json over MQTT
       String payload = "{\"tag_secret\":\"" + String((char *)dataRead) + "\",\"door_name\":\"" + DEVICE_NAME + "\"}";
       mqttClient.publish(MQTT_READ, payload.c_str());
@@ -197,7 +279,10 @@ void writeNFC()
     {
       Serial.print("Data written (string): ");
       Serial.println((char *)dataWrite);
+      appendToDisplay("Card detected!\nSecret written...", 0, 48);
       isWriteMode = false; // Reset write mode
+      displayTimer = millis(); // Start the display timer
+      displayChanged = true; // Set display changed flag
     }
   }
 }
@@ -205,10 +290,20 @@ void writeNFC()
 // Function to read Hall Sensor
 void readHallSensor()
 {
-  // TODO
-  // Hall sensor logic
-  // returns state of door in string format (Open/Closed)
-  String doorState = "Closed";
+  // Read the hall sensor value
+  int hallValue = analogRead(HALL_SENSOR);
+  Serial.print("Hall Sensor Value: ");
+  Serial.println(hallValue);
+
+  // Determine the door state based on the Hall sensor value
+  if (hallValue > 2800) // Adjust threshold based on your sensor's behavior
+  {
+    doorState = "Closed";
+  }
+  else
+  {
+    doorState = "Open";
+  }
 
   // Sending Json over MQTT if door state has changed
   if (!doorState.equals(previousDoorState))
@@ -219,7 +314,7 @@ void readHallSensor()
 
     // Sending Json over MQTT
     String payload = "{\"doorstate\":\"" + doorState + "\",\"doorname\":\"" + DEVICE_NAME + "\"}";
-    mqttClient.publish(MQTT_HALLSENSOR, payload.c_str());
+    // mqttClient.publish(MQTT_HALLSENSOR, payload.c_str());
   }
 }
 
@@ -227,6 +322,9 @@ void setup()
 {
   // Start Serial Communication
   Serial.begin(115200);
+
+  // Initialise the OLED display
+  initDisplay();
 
   // Initialise Wifi and MQTT
   initWiFi();
@@ -246,6 +344,9 @@ void setup()
   // Start the NFC timer
   nfcReadTimer = millis();
   hallTimer = millis();
+
+  // Clear the display
+  defaultDisplay();
 }
 
 void loop()
@@ -290,5 +391,12 @@ void loop()
   {
     Serial.println("NFC Write mode timed out.");
     isWriteMode = false; // Reset write mode
+    defaultDisplay(); // Reset the display to default state
+  }
+
+  if (displayChanged && millis() - displayTimer >= DISPLAY_UPDATE_INTERVAL)
+  {
+    displayChanged = false; // Reset the flag
+    defaultDisplay();       // Reset the display to default state
   }
 }
