@@ -312,6 +312,14 @@ void readHallSensor()
     Serial.println(doorState);
     previousDoorState = doorState;
 
+    // Clear the top line of the display
+    display.fillRect(0, 0, SCREEN_WIDTH, 8, SSD1306_BLACK);
+    
+    // Write New Door State to the display
+    display.setCursor(0, 0);
+    display.println((String(DEVICE_NAME) + " - " + doorState).c_str());
+    display.display();
+
     // Sending Json over MQTT
     String payload = "{\"doorstate\":\"" + doorState + "\",\"doorname\":\"" + DEVICE_NAME + "\"}";
     // mqttClient.publish(MQTT_HALLSENSOR, payload.c_str());
