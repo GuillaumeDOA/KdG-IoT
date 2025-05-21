@@ -11,9 +11,6 @@ const unsigned long NFC_WRITE_DELAY = 10000;
 const char *MQTT_ADDRESS = "172.201.156.113";
 const int MQTT_PORT = 1883;
 
-/* MQTT UI Password: StrongUIP@ssword
-   DB Password: StrongDBP@ssword */
-   
 // MQTT Topics
 const char *MQTT_READ = "nfc/scan";
 const char *MQTT_WRITE = "nfc/write";
