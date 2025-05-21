@@ -12,7 +12,7 @@ const int   DAYLIGHT_OFFSET_SEC = 0;
 
 // Google Apps Script URL
 const String GOOGLE_APPS_SCRIPT_URL = "https://script.google.com/macros/s/";
-String GOOGLE_SCRIPT_ID = "AKfycbxQMWK_TAYRBz-5lSWmGRl2NjbExDdMIsDX9S-ymY6R9W7p8GJRgNuAK3jEntS27OSJ";
+String GOOGLE_SCRIPT_ID = "";
 
 // Keep track of number of requests
 int requestCounter = 0;
