@@ -5,7 +5,7 @@
 // or if you need your Adafruit IO key.
 
 #define IO_USERNAME  "Exotic"
-#define IO_KEY       "aio_ZEBj40c2V2xTekVRnuoaEHVlAuNa"
+#define IO_KEY       ""
 
 /******************************* WIFI **************************************/
 
