@@ -1,0 +1,2805 @@
+[
+    {
+        "id": "9bb89b62326fdc5c",
+        "type": "tab",
+        "label": "TableView Flow",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "8d243e82e4c35220",
+        "type": "tab",
+        "label": "CRUD Flow",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "ab7e2b1cba749f1c",
+        "type": "tab",
+        "label": "NFC Tags Flow",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "d2df568080d60440",
+        "type": "tab",
+        "label": "Hallsensor Flow",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "033e59d79ea02559",
+        "type": "mqtt-broker",
+        "name": "LocalBroker",
+        "broker": "localhost",
+        "port": 1883,
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": 4,
+        "keepalive": 60,
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "ddaa8fa01124a480",
+        "type": "MySQLdatabase",
+        "name": "SmartLockDB",
+        "host": "127.0.0.1",
+        "port": "3306",
+        "db": "SMART_LOCK",
+        "tz": "",
+        "charset": "UTF8"
+    },
+    {
+        "id": "62fbb3eb93d5c262",
+        "type": "ui-base",
+        "name": "Smart Lock System",
+        "path": "/dashboard",
+        "appIcon": "https://raw.githubusercontent.com/GuillaumeDOA/KdG-IoT/refs/heads/master/Afstudeerproject/Favicon/favicon.ico",
+        "includeClientData": true,
+        "acceptsClientConfig": [
+            "ui-notification",
+            "ui-control"
+        ],
+        "showPathInSidebar": false,
+        "headerContent": "dashboard",
+        "navigationStyle": "default",
+        "titleBarStyle": "default",
+        "showReconnectNotification": true,
+        "notificationDisplayTime": 1,
+        "showDisconnectNotification": true,
+        "allowInstall": true
+    },
+    {
+        "id": "d8e25fea6bc51775",
+        "type": "ui-theme",
+        "name": "Default Theme",
+        "colors": {
+            "surface": "#ffffff",
+            "primary": "#0094ce",
+            "bgPage": "#eeeeee",
+            "groupBg": "#ffffff",
+            "groupOutline": "#cccccc"
+        },
+        "sizes": {
+            "density": "default",
+            "pagePadding": "12px",
+            "groupGap": "12px",
+            "groupBorderRadius": "4px",
+            "widgetGap": "12px"
+        }
+    },
+    {
+        "id": "e98a5bbb1ca7592d",
+        "type": "ui-page",
+        "name": "General Info",
+        "ui": "62fbb3eb93d5c262",
+        "path": "/info",
+        "icon": "triforce",
+        "layout": "grid",
+        "theme": "d8e25fea6bc51775",
+        "breakpoints": [
+            {
+                "name": "Default",
+                "px": "0",
+                "cols": "3"
+            },
+            {
+                "name": "Tablet",
+                "px": "576",
+                "cols": "6"
+            },
+            {
+                "name": "Small Desktop",
+                "px": "768",
+                "cols": "9"
+            },
+            {
+                "name": "Desktop",
+                "px": "1024",
+                "cols": "12"
+            }
+        ],
+        "order": 1,
+        "className": "",
+        "visible": "true",
+        "disabled": "false"
+    },
+    {
+        "id": "f917b5e8216741b3",
+        "type": "ui-group",
+        "name": "Access History",
+        "page": "e98a5bbb1ca7592d",
+        "width": "6",
+        "height": "1",
+        "order": 1,
+        "showTitle": false,
+        "className": "scroll-group",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "6847e0cccb4376ee",
+        "type": "ui-page",
+        "name": "CRUD Operations",
+        "ui": "62fbb3eb93d5c262",
+        "path": "/crud",
+        "icon": "developer-board",
+        "layout": "grid",
+        "theme": "d8e25fea6bc51775",
+        "breakpoints": [
+            {
+                "name": "Default",
+                "px": "0",
+                "cols": "3"
+            },
+            {
+                "name": "Tablet",
+                "px": "576",
+                "cols": "6"
+            },
+            {
+                "name": "Small Desktop",
+                "px": "768",
+                "cols": "9"
+            },
+            {
+                "name": "Desktop",
+                "px": "1024",
+                "cols": "12"
+            }
+        ],
+        "order": 2,
+        "className": "",
+        "visible": "true",
+        "disabled": "false"
+    },
+    {
+        "id": "a070287f702d8387",
+        "type": "ui-group",
+        "name": "User/Door CRUD",
+        "page": "6847e0cccb4376ee",
+        "width": "3",
+        "height": "1",
+        "order": 1,
+        "showTitle": false,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "db085f85b80d814f",
+        "type": "ui-group",
+        "name": "Quick Access",
+        "page": "e98a5bbb1ca7592d",
+        "width": 6,
+        "height": "1",
+        "order": 2,
+        "showTitle": false,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "4b4050bf91ac5ce7",
+        "type": "ui-group",
+        "name": "CRUD Info",
+        "page": "6847e0cccb4376ee",
+        "width": "6",
+        "height": "1",
+        "order": 3,
+        "showTitle": false,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "aa20771b8718c9c8",
+        "type": "ui-group",
+        "name": "Tags CRUD",
+        "page": "6847e0cccb4376ee",
+        "width": "3",
+        "height": "1",
+        "order": 2,
+        "showTitle": false,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "c4722c39b68615e7",
+        "type": "ui-group",
+        "name": "Access CRUD",
+        "page": "6847e0cccb4376ee",
+        "width": "12",
+        "height": 1,
+        "order": 4,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "ef69cba2f33c37d2",
+        "type": "inject",
+        "z": "9bb89b62326fdc5c",
+        "name": "Refresh UI",
+        "props": [
+            {
+                "p": "debug",
+                "v": "Refresh Occured",
+                "vt": "str"
+            }
+        ],
+        "repeat": "3",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "0.2",
+        "topic": "",
+        "x": 130,
+        "y": 240,
+        "wires": [
+            [
+                "7a90e6957460103b",
+                "2e218597f4bd593b",
+                "cf461d429fe1825d",
+                "3cef13f01ce4db38",
+                "c2ba8db531b4dfde",
+                "347e8e011c16010b"
+            ]
+        ]
+    },
+    {
+        "id": "7a90e6957460103b",
+        "type": "function",
+        "z": "9bb89b62326fdc5c",
+        "name": "Access Logs Query",
+        "func": "msg.topic = `SELECT AccessLogs.AccessTime, CONCAT(Users.Firstname, ' ', Users.Lastname) AS FullName, Doors.Name as DoorName, Granted\n             FROM AccessLogs \n             JOIN Tags ON AccessLogs.TagID = Tags.ID \n             JOIN Users ON Tags.UserID = Users.ID \n             JOIN Doors ON AccessLogs.DoorID = Doors.ID\n             ORDER BY AccessLogs.AccessTime DESC;`;\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 370,
+        "y": 240,
+        "wires": [
+            [
+                "mysql_query"
+            ]
+        ]
+    },
+    {
+        "id": "mysql_query",
+        "type": "mysql",
+        "z": "9bb89b62326fdc5c",
+        "mydb": "ddaa8fa01124a480",
+        "name": "Query DB",
+        "x": 600,
+        "y": 240,
+        "wires": [
+            [
+                "bb200a9a5d3b8209"
+            ]
+        ]
+    },
+    {
+        "id": "bb200a9a5d3b8209",
+        "type": "function",
+        "z": "9bb89b62326fdc5c",
+        "name": "Clean Up Result",
+        "func": "// Example: Format your data and add it to the msg.payload\nmsg.payload = msg.payload.map(row => {\n    const date = new Date(row.AccessTime);\n\n    const day = String(date.getDate()).padStart(2, '0');\n    const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based\n    const year = date.getFullYear();\n\n    const hours = String(date.getHours()).padStart(2, '0');\n    const minutes = String(date.getMinutes()).padStart(2, '0');\n    const seconds = String(date.getSeconds()).padStart(2, '0');\n\n    row.AccessTimeFormatted = `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;\n    if(row.Granted){\n        row.Granted = \"Granted\";\n    } else {\n        row.Granted = \"Denied\";\n    }\n    return {\n        FullName: row.FullName,\n        AccessTime: row.AccessTimeFormatted,\n        Granted: row.Granted\n    };\n});\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 800,
+        "y": 240,
+        "wires": [
+            [
+                "d92175e79333cdd6"
+            ]
+        ]
+    },
+    {
+        "id": "2e218597f4bd593b",
+        "type": "function",
+        "z": "9bb89b62326fdc5c",
+        "name": "Doors",
+        "func": "msg.topic = 'SELECT Name, CurrentState FROM Doors;';\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 330,
+        "y": 160,
+        "wires": [
+            [
+                "bcfa1b97dd0e8866"
+            ]
+        ]
+    },
+    {
+        "id": "bcfa1b97dd0e8866",
+        "type": "mysql",
+        "z": "9bb89b62326fdc5c",
+        "mydb": "ddaa8fa01124a480",
+        "name": "Query DB",
+        "x": 600,
+        "y": 160,
+        "wires": [
+            [
+                "ddda48ae4b9e92ed",
+                "4d1af7a31e3b99ec"
+            ]
+        ]
+    },
+    {
+        "id": "cf461d429fe1825d",
+        "type": "function",
+        "z": "9bb89b62326fdc5c",
+        "name": "Users",
+        "func": "msg.topic = 'SELECT Firstname, Lastname FROM Users;';\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 330,
+        "y": 60,
+        "wires": [
+            [
+                "7082429fb235398d"
+            ]
+        ]
+    },
+    {
+        "id": "7082429fb235398d",
+        "type": "mysql",
+        "z": "9bb89b62326fdc5c",
+        "mydb": "ddaa8fa01124a480",
+        "name": "Query DB",
+        "x": 600,
+        "y": 60,
+        "wires": [
+            [
+                "b1c3bd035cf21f70",
+                "4dc3996f8173c8d5"
+            ]
+        ]
+    },
+    {
+        "id": "3cef13f01ce4db38",
+        "type": "ui-template",
+        "z": "9bb89b62326fdc5c",
+        "group": "",
+        "page": "e98a5bbb1ca7592d",
+        "ui": "",
+        "name": "Table Styling",
+        "order": 1,
+        "width": "1",
+        "height": "1",
+        "head": "",
+        "format": "<style>\n  .scroll-group {\n    height: calc(100vh - 90px);\n    overflow-y: auto;\n  }\n</style>",
+        "storeOutMessages": true,
+        "passthru": true,
+        "resendOnRefresh": true,
+        "templateScope": "widget:page",
+        "className": "",
+        "x": 350,
+        "y": 480,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "c2ba8db531b4dfde",
+        "type": "function",
+        "z": "9bb89b62326fdc5c",
+        "name": "Tags",
+        "func": "msg.topic = `\n    SELECT Tags.Name AS TagName, CONCAT(Users.Firstname, ' ', Users.Lastname) AS UserName\n    FROM Tags\n    LEFT JOIN Users ON Tags.UserID = Users.ID;\n`;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 330,
+        "y": 320,
+        "wires": [
+            [
+                "8280224e7163c60d"
+            ]
+        ]
+    },
+    {
+        "id": "8280224e7163c60d",
+        "type": "mysql",
+        "z": "9bb89b62326fdc5c",
+        "mydb": "ddaa8fa01124a480",
+        "name": "Query DB",
+        "x": 600,
+        "y": 320,
+        "wires": [
+            [
+                "933b7f0d45cf3a68"
+            ]
+        ]
+    },
+    {
+        "id": "933b7f0d45cf3a68",
+        "type": "function",
+        "z": "9bb89b62326fdc5c",
+        "name": "Clean Up Result",
+        "func": "// Example: Format your data and add it to the msg.payload\nmsg.payload = msg.payload.map(row => {\n    if(row.UserName === null)\n        row.UserName = \"Unassigned\";\n        \n    return {\n        Fullname: row.UserName,\n        TagName: row.TagName,\n    };\n});\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 800,
+        "y": 320,
+        "wires": [
+            [
+                "dfcf1bc4f029a7f2"
+            ]
+        ]
+    },
+    {
+        "id": "a8b02aaef6dcea46",
+        "type": "ui-text",
+        "z": "9bb89b62326fdc5c",
+        "group": "4b4050bf91ac5ce7",
+        "order": 4,
+        "width": 0,
+        "height": 0,
+        "name": "Unassigned Tags",
+        "label": "Number of Unassigned Tags:         ",
+        "format": "{{msg.payload}}",
+        "layout": "row-left",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#717171",
+        "wrapText": false,
+        "className": "",
+        "x": 1010,
+        "y": 400,
+        "wires": []
+    },
+    {
+        "id": "347e8e011c16010b",
+        "type": "function",
+        "z": "9bb89b62326fdc5c",
+        "name": "#Tags",
+        "func": "msg.topic = `\n    SELECT COUNT(*) AS UnassignedTagCount\n    FROM Tags\n    WHERE UserID IS NULL;\n`;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 330,
+        "y": 400,
+        "wires": [
+            [
+                "ee34fbcf0e1e9440"
+            ]
+        ]
+    },
+    {
+        "id": "ee34fbcf0e1e9440",
+        "type": "mysql",
+        "z": "9bb89b62326fdc5c",
+        "mydb": "ddaa8fa01124a480",
+        "name": "Query DB",
+        "x": 600,
+        "y": 400,
+        "wires": [
+            [
+                "ab2bd8996f76be11"
+            ]
+        ]
+    },
+    {
+        "id": "ab2bd8996f76be11",
+        "type": "function",
+        "z": "9bb89b62326fdc5c",
+        "name": "Clean Up Result",
+        "func": "msg.payload = msg.payload[0].UnassignedTagCount;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 800,
+        "y": 400,
+        "wires": [
+            [
+                "a8b02aaef6dcea46"
+            ]
+        ]
+    },
+    {
+        "id": "ddda48ae4b9e92ed",
+        "type": "ui-template",
+        "z": "9bb89b62326fdc5c",
+        "group": "db085f85b80d814f",
+        "page": "",
+        "ui": "",
+        "name": "Doors",
+        "order": 2,
+        "width": "6",
+        "height": "1",
+        "head": "",
+        "format": "<template>\n    <div class=\"table-container\">\n        <h3 class=\"table-title\">Doors</h3>\n        <table class=\"custom-table\">\n            <thead>\n                <tr>\n                    <th>Door Name</th>\n                    <th>Current State</th>\n                    <th>Access</th>\n                </tr>\n            </thead>\n            <tbody>\n                <tr v-for=\"door in msg.payload\" :key=\"door.Name\">\n                    <td>{{ door.Name }}</td>\n                    <td>{{ door.CurrentState }}</td>\n                    <td><button class=\"unlock-button\" @click=\"unlockDoor(door)\">Unlock</button></td>\n                </tr>\n            </tbody>\n        </table>\n    </div>\n</template>\n\n<style>\n    .table-container {\n        background-color: #ffffff;\n        padding: 16px;\n        border-radius: 12px;\n        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);\n        overflow-x: auto;\n    }\n\n    /* Table Styling */\n    .custom-table {\n        width: 100%;\n        border-collapse: collapse;\n        font-family: Arial, sans-serif;\n        margin-top: 10px;\n    }\n\n    .custom-table th,\n    .custom-table td {\n        border: 1px solid #ddd;\n        padding: 10px;\n        text-align: center;\n        font-size: 14px;\n        background-color: #fff;\n    }\n\n\n    .custom-table th {\n        color: #333;\n        font-weight: 600;\n        background-color: #76c6e5;\n    }\n\n    .custom-table tbody tr:hover {\n        background-color: #f1f1f1;\n    }\n\n    /* Checkbox Styling */\n    .checkbox {\n        width: 20px;\n        height: 20px;\n        cursor: pointer;\n        accent-color: #007bff;\n    }\n\n    .checkbox:disabled {\n        opacity: 0.5;\n        cursor: not-allowed;\n        background-color: #f0f0f0;\n    }\n\n    /* Tooltip Styling */\n    .tooltip-wrapper {\n        position: relative;\n        display: inline-block;\n        color: #9ca3af;\n        /* Optional: greyed-out look */\n        cursor: not-allowed;\n    }\n\n    .tooltip-wrapper .tooltip {\n        visibility: hidden;\n        background-color: #111;\n        color: #fff;\n        text-align: center;\n        padding: 6px 10px;\n        border-radius: 6px;\n        position: absolute;\n        z-index: 10;\n        bottom: 125%;\n        left: 50%;\n        transform: translateX(-50%);\n        opacity: 0;\n        white-space: nowrap;\n        transition: opacity 0.3s;\n        font-size: 12px;\n    }\n\n    .tooltip-wrapper:hover .tooltip {\n        visibility: visible;\n        opacity: 1;\n    }\n    \n    .unlock-button {\n    background-color: #4CAF50;\n    color: white;\n    padding: 8px 14px;\n    border: none;\n    border-radius: 6px;\n    cursor: pointer;\n    font-size: 14px;\n    transition: background-color 0.2s;\n}\n\n.unlock-button:hover {\n    background-color: #45a049;\n}\n\n.table-title {\n    margin: 0;\n    font-size: 18px;\n    font-weight: 600;\n    color: #333;\n    text-align: center;\n}\n\n\n</style>\n\n<script>\nexport default {\n  methods: {\n    unlockDoor(door) {\n      this.send({\n        topic: 'unlock-door',\n        payload: {\n          DoorID: door.ID,\n          DoorName: door.Name\n        }\n      });\n    }\n  }\n}\n</script>",
+        "storeOutMessages": true,
+        "passthru": true,
+        "resendOnRefresh": true,
+        "templateScope": "local",
+        "className": "",
+        "x": 770,
+        "y": 140,
+        "wires": [
+            [
+                "e6dc5bd5c3a5bfad"
+            ]
+        ]
+    },
+    {
+        "id": "e6dc5bd5c3a5bfad",
+        "type": "function",
+        "z": "9bb89b62326fdc5c",
+        "name": "Handle Onclick",
+        "func": "if(msg.topic === \"unlock-door\"){\nmsg.payload = `\n    {\n        \"DoorName\": \"${msg.payload.DoorName}\",\n        \"Unlock\": true,\n        \"User\": \"Dashboard User\"\n    }`;\n    return msg;\n}\nelse\n    return null;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 940,
+        "y": 140,
+        "wires": [
+            [
+                "861976d7f9f10010"
+            ]
+        ]
+    },
+    {
+        "id": "861976d7f9f10010",
+        "type": "mqtt out",
+        "z": "9bb89b62326fdc5c",
+        "name": "MQTT Out",
+        "topic": "nfc/result",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "033e59d79ea02559",
+        "x": 1130,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "4d1af7a31e3b99ec",
+        "type": "ui-template",
+        "z": "9bb89b62326fdc5c",
+        "group": "4b4050bf91ac5ce7",
+        "page": "",
+        "ui": "",
+        "name": "Doors",
+        "order": 2,
+        "width": "3",
+        "height": "1",
+        "head": "",
+        "format": "<template>\n    <div class=\"table-container\">\n        <h3 class=\"table-title\">Doors</h3>\n        <table class=\"custom-table\">\n            <thead>\n                <tr>\n                    <th>Door Name</th>\n                    <th>Current State</th>\n                </tr>\n            </thead>\n            <tbody>\n                <tr v-for=\"door in msg.payload\" :key=\"door.Name\">\n                    <td>{{ door.Name }}</td>\n                    <td>{{ door.CurrentState }}</td>\n                </tr>\n            </tbody>\n        </table>\n    </div>\n</template>\n\n<style>\n    .table-container {\n        background-color: #ffffff;\n        padding: 16px;\n        border-radius: 12px;\n        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);\n        overflow-x: auto;\n    }\n\n    /* Table Styling */\n    .custom-table {\n        width: 100%;\n        border-collapse: collapse;\n        font-family: Arial, sans-serif;\n        margin-top: 10px;\n    }\n\n    .custom-table th,\n    .custom-table td {\n        border: 1px solid #ddd;\n        padding: 10px;\n        text-align: center;\n        font-size: 14px;\n        background-color: #fff;\n    }\n\n\n    .custom-table th {\n        color: #333;\n        font-weight: 600;\n        background-color: #76c6e5;\n    }\n\n    .custom-table tbody tr:hover {\n        background-color: #f1f1f1;\n    }\n\n    /* Checkbox Styling */\n    .checkbox {\n        width: 20px;\n        height: 20px;\n        cursor: pointer;\n        accent-color: #007bff;\n    }\n\n    .checkbox:disabled {\n        opacity: 0.5;\n        cursor: not-allowed;\n        background-color: #f0f0f0;\n    }\n\n    /* Tooltip Styling */\n    .tooltip-wrapper {\n        position: relative;\n        display: inline-block;\n        color: #9ca3af;\n        /* Optional: greyed-out look */\n        cursor: not-allowed;\n    }\n\n    .tooltip-wrapper .tooltip {\n        visibility: hidden;\n        background-color: #111;\n        color: #fff;\n        text-align: center;\n        padding: 6px 10px;\n        border-radius: 6px;\n        position: absolute;\n        z-index: 10;\n        bottom: 125%;\n        left: 50%;\n        transform: translateX(-50%);\n        opacity: 0;\n        white-space: nowrap;\n        transition: opacity 0.3s;\n        font-size: 12px;\n    }\n\n    .tooltip-wrapper:hover .tooltip {\n        visibility: visible;\n        opacity: 1;\n    }\n    \n    .unlock-button {\n    background-color: #4CAF50;\n    color: white;\n    padding: 8px 14px;\n    border: none;\n    border-radius: 6px;\n    cursor: pointer;\n    font-size: 14px;\n    transition: background-color 0.2s;\n}\n\n.unlock-button:hover {\n    background-color: #45a049;\n}\n\n.table-title {\n    margin: 0;\n    font-size: 18px;\n    font-weight: 600;\n    color: #333;\n    text-align: center;\n}\n\n\n</style>\n\n<script>\nexport default {\n  methods: {\n    \n  }\n}\n</script>",
+        "storeOutMessages": true,
+        "passthru": true,
+        "resendOnRefresh": true,
+        "templateScope": "local",
+        "className": "",
+        "x": 770,
+        "y": 180,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "b1c3bd035cf21f70",
+        "type": "ui-template",
+        "z": "9bb89b62326fdc5c",
+        "group": "4b4050bf91ac5ce7",
+        "page": "",
+        "ui": "",
+        "name": "Users",
+        "order": 1,
+        "width": "3",
+        "height": "1",
+        "head": "",
+        "format": "<template>\n    <div class=\"table-container\">\n        <h3 class=\"table-title\">Users</h3>\n        <table class=\"custom-table\">\n            <thead>\n                <tr>\n                    <th>First Name</th>\n                    <th>Last Name</th>\n                </tr>\n            </thead>\n            <tbody>\n                <tr v-for=\"user in msg.payload\" :key=\"user.Firstname\">\n                    <td>{{ user.Firstname }}</td>\n                    <td>{{ user.Lastname }}</td>\n                </tr>\n            </tbody>\n        </table>\n    </div>\n</template>\n\n<style>\n    .table-container {\n        background-color: #ffffff;\n        padding: 16px;\n        border-radius: 12px;\n        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);\n        overflow-x: auto;\n    }\n\n    /* Table Styling */\n    .custom-table {\n        width: 100%;\n        border-collapse: collapse;\n        font-family: Arial, sans-serif;\n        margin-top: 10px;\n    }\n\n    .custom-table th,\n    .custom-table td {\n        border: 1px solid #ddd;\n        padding: 10px;\n        text-align: center;\n        font-size: 14px;\n        background-color: #fff;\n    }\n\n\n    .custom-table th {\n        color: #333;\n        font-weight: 600;\n        background-color: #76c6e5;\n    }\n\n    .custom-table tbody tr:hover {\n        background-color: #f1f1f1;\n    }\n\n    /* Checkbox Styling */\n    .checkbox {\n        width: 20px;\n        height: 20px;\n        cursor: pointer;\n        accent-color: #007bff;\n    }\n\n    .checkbox:disabled {\n        opacity: 0.5;\n        cursor: not-allowed;\n        background-color: #f0f0f0;\n    }\n\n    /* Tooltip Styling */\n    .tooltip-wrapper {\n        position: relative;\n        display: inline-block;\n        color: #9ca3af;\n        /* Optional: greyed-out look */\n        cursor: not-allowed;\n    }\n\n    .tooltip-wrapper .tooltip {\n        visibility: hidden;\n        background-color: #111;\n        color: #fff;\n        text-align: center;\n        padding: 6px 10px;\n        border-radius: 6px;\n        position: absolute;\n        z-index: 10;\n        bottom: 125%;\n        left: 50%;\n        transform: translateX(-50%);\n        opacity: 0;\n        white-space: nowrap;\n        transition: opacity 0.3s;\n        font-size: 12px;\n    }\n\n    .tooltip-wrapper:hover .tooltip {\n        visibility: visible;\n        opacity: 1;\n    }\n    \n    .unlock-button {\n    background-color: #4CAF50;\n    color: white;\n    padding: 8px 14px;\n    border: none;\n    border-radius: 6px;\n    cursor: pointer;\n    font-size: 14px;\n    transition: background-color 0.2s;\n}\n\n.unlock-button:hover {\n    background-color: #45a049;\n}\n\n.table-title {\n    margin: 0;\n    font-size: 18px;\n    font-weight: 600;\n    color: #333;\n    text-align: center;\n}\n\n\n</style>\n\n<script>\nexport default {\n  methods: {\n    \n  }\n}\n</script>",
+        "storeOutMessages": true,
+        "passthru": true,
+        "resendOnRefresh": true,
+        "templateScope": "local",
+        "className": "",
+        "x": 770,
+        "y": 40,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "dfcf1bc4f029a7f2",
+        "type": "ui-template",
+        "z": "9bb89b62326fdc5c",
+        "group": "4b4050bf91ac5ce7",
+        "page": "",
+        "ui": "",
+        "name": "Tags",
+        "order": 3,
+        "width": "6",
+        "height": "1",
+        "head": "",
+        "format": "<template>\n    <div class=\"table-container\">\n        <h3 class=\"table-title\">Tags</h3>\n        <table class=\"custom-table\">\n            <thead>\n                <tr>\n                    <th>Full Name</th>\n                    <th>Tag Name</th>\n                </tr>\n            </thead>\n            <tbody>\n                <tr v-for=\"tag in msg.payload\" :key=\"tag.TagName\">\n                    <td>{{ tag.Fullname }}</td>\n                    <td>{{ tag.TagName }}</td>\n                </tr>\n            </tbody>\n        </table>\n    </div>\n</template>\n\n<style>\n    .table-container {\n        background-color: #ffffff;\n        padding: 16px;\n        border-radius: 12px;\n        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);\n        overflow-x: auto;\n    }\n\n    /* Table Styling */\n    .custom-table {\n        width: 100%;\n        border-collapse: collapse;\n        font-family: Arial, sans-serif;\n        margin-top: 10px;\n    }\n\n    .custom-table th,\n    .custom-table td {\n        border: 1px solid #ddd;\n        padding: 10px;\n        text-align: center;\n        font-size: 14px;\n        background-color: #fff;\n    }\n\n\n    .custom-table th {\n        color: #333;\n        font-weight: 600;\n        background-color: #76c6e5;\n    }\n\n    .custom-table tbody tr:hover {\n        background-color: #f1f1f1;\n    }\n\n    /* Checkbox Styling */\n    .checkbox {\n        width: 20px;\n        height: 20px;\n        cursor: pointer;\n        accent-color: #007bff;\n    }\n\n    .checkbox:disabled {\n        opacity: 0.5;\n        cursor: not-allowed;\n        background-color: #f0f0f0;\n    }\n\n    /* Tooltip Styling */\n    .tooltip-wrapper {\n        position: relative;\n        display: inline-block;\n        color: #9ca3af;\n        /* Optional: greyed-out look */\n        cursor: not-allowed;\n    }\n\n    .tooltip-wrapper .tooltip {\n        visibility: hidden;\n        background-color: #111;\n        color: #fff;\n        text-align: center;\n        padding: 6px 10px;\n        border-radius: 6px;\n        position: absolute;\n        z-index: 10;\n        bottom: 125%;\n        left: 50%;\n        transform: translateX(-50%);\n        opacity: 0;\n        white-space: nowrap;\n        transition: opacity 0.3s;\n        font-size: 12px;\n    }\n\n    .tooltip-wrapper:hover .tooltip {\n        visibility: visible;\n        opacity: 1;\n    }\n    \n    .unlock-button {\n    background-color: #4CAF50;\n    color: white;\n    padding: 8px 14px;\n    border: none;\n    border-radius: 6px;\n    cursor: pointer;\n    font-size: 14px;\n    transition: background-color 0.2s;\n}\n\n.unlock-button:hover {\n    background-color: #45a049;\n}\n\n.table-title {\n    margin: 0;\n    font-size: 18px;\n    font-weight: 600;\n    color: #333;\n    text-align: center;\n}\n\n\n</style>\n\n<script>\nexport default {\n  methods: {\n    \n  }\n}\n</script>",
+        "storeOutMessages": true,
+        "passthru": true,
+        "resendOnRefresh": true,
+        "templateScope": "local",
+        "className": "",
+        "x": 970,
+        "y": 320,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "4dc3996f8173c8d5",
+        "type": "ui-template",
+        "z": "9bb89b62326fdc5c",
+        "group": "db085f85b80d814f",
+        "page": "",
+        "ui": "",
+        "name": "Users",
+        "order": 1,
+        "width": "6",
+        "height": "1",
+        "head": "",
+        "format": "<template>\n    <div class=\"table-container\">\n        <h3 class=\"table-title\">Users</h3>\n        <table class=\"custom-table\">\n            <thead>\n                <tr>\n                    <th>First Name</th>\n                    <th>Last Name</th>\n                </tr>\n            </thead>\n            <tbody>\n                <tr v-for=\"user in msg.payload\" :key=\"user.Firstname\">\n                    <td>{{ user.Firstname }}</td>\n                    <td>{{ user.Lastname }}</td>\n                </tr>\n            </tbody>\n        </table>\n    </div>\n</template>\n\n<style>\n    .table-container {\n        background-color: #ffffff;\n        padding: 16px;\n        border-radius: 12px;\n        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);\n        overflow-x: auto;\n    }\n\n    /* Table Styling */\n    .custom-table {\n        width: 100%;\n        border-collapse: collapse;\n        font-family: Arial, sans-serif;\n        margin-top: 10px;\n    }\n\n    .custom-table th,\n    .custom-table td {\n        border: 1px solid #ddd;\n        padding: 10px;\n        text-align: center;\n        font-size: 14px;\n        background-color: #fff;\n    }\n\n\n    .custom-table th {\n        color: #333;\n        font-weight: 600;\n        background-color: #76c6e5;\n    }\n\n    .custom-table tbody tr:hover {\n        background-color: #f1f1f1;\n    }\n\n    /* Checkbox Styling */\n    .checkbox {\n        width: 20px;\n        height: 20px;\n        cursor: pointer;\n        accent-color: #007bff;\n    }\n\n    .checkbox:disabled {\n        opacity: 0.5;\n        cursor: not-allowed;\n        background-color: #f0f0f0;\n    }\n\n    /* Tooltip Styling */\n    .tooltip-wrapper {\n        position: relative;\n        display: inline-block;\n        color: #9ca3af;\n        /* Optional: greyed-out look */\n        cursor: not-allowed;\n    }\n\n    .tooltip-wrapper .tooltip {\n        visibility: hidden;\n        background-color: #111;\n        color: #fff;\n        text-align: center;\n        padding: 6px 10px;\n        border-radius: 6px;\n        position: absolute;\n        z-index: 10;\n        bottom: 125%;\n        left: 50%;\n        transform: translateX(-50%);\n        opacity: 0;\n        white-space: nowrap;\n        transition: opacity 0.3s;\n        font-size: 12px;\n    }\n\n    .tooltip-wrapper:hover .tooltip {\n        visibility: visible;\n        opacity: 1;\n    }\n    \n    .unlock-button {\n    background-color: #4CAF50;\n    color: white;\n    padding: 8px 14px;\n    border: none;\n    border-radius: 6px;\n    cursor: pointer;\n    font-size: 14px;\n    transition: background-color 0.2s;\n}\n\n.unlock-button:hover {\n    background-color: #45a049;\n}\n\n.table-title {\n    margin: 0;\n    font-size: 18px;\n    font-weight: 600;\n    color: #333;\n    text-align: center;\n}\n\n\n</style>\n\n<script>\nexport default {\n  methods: {\n    \n  }\n}\n</script>",
+        "storeOutMessages": true,
+        "passthru": true,
+        "resendOnRefresh": true,
+        "templateScope": "local",
+        "className": "",
+        "x": 770,
+        "y": 80,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "d92175e79333cdd6",
+        "type": "ui-template",
+        "z": "9bb89b62326fdc5c",
+        "group": "f917b5e8216741b3",
+        "page": "",
+        "ui": "",
+        "name": "Access Logs",
+        "order": 1,
+        "width": "6",
+        "height": "1",
+        "head": "",
+        "format": "<template>\n    <div class=\"table-container\">\n        <h3 class=\"table-title\">Access Logs</h3>\n        <div class=\"table-wrapper\">\n            <table class=\"custom-table\">\n                <thead>\n                    <tr>\n                        <th>Full Name</th>\n                        <th>Access Time</th>\n                        <th>Access Granted</th>\n                    </tr>\n                </thead>\n                <tbody>\n                    <tr v-for=\"log in msg.payload\" :key=\"log.AccessTime\">\n                        <td>{{ log.FullName }}</td>\n                        <td>{{ log.AccessTime }}</td>\n                        <td>{{ log.Granted }}</td>\n                    </tr>\n                </tbody>\n            </table>\n        </div>\n    </div>\n</template>\n\n<style>\n    .table-container {\n        background-color: #ffffff;\n        padding: 16px;\n        border-radius: 12px;\n        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);\n        overflow-x: auto;\n    }\n\n    /* Table Styling */\n    .custom-table {\n        width: 100%;\n        border-collapse: collapse;\n        font-family: Arial, sans-serif;\n        margin-top: 10px;\n    }\n\n    .custom-table th,\n    .custom-table td {\n        border: 1px solid #ddd;\n        padding: 10px;\n        text-align: center;\n        font-size: 14px;\n        background-color: #fff;\n    }\n\n\n    .custom-table th {\n        color: #333;\n        font-weight: 600;\n        background-color: #76c6e5;\n    }\n\n    .custom-table tbody tr:hover {\n        background-color: #f1f1f1;\n    }\n\n    /* Checkbox Styling */\n    .checkbox {\n        width: 20px;\n        height: 20px;\n        cursor: pointer;\n        accent-color: #007bff;\n    }\n\n    .checkbox:disabled {\n        opacity: 0.5;\n        cursor: not-allowed;\n        background-color: #f0f0f0;\n    }\n\n    /* Tooltip Styling */\n    .tooltip-wrapper {\n        position: relative;\n        display: inline-block;\n        color: #9ca3af;\n        /* Optional: greyed-out look */\n        cursor: not-allowed;\n    }\n\n    .tooltip-wrapper .tooltip {\n        visibility: hidden;\n        background-color: #111;\n        color: #fff;\n        text-align: center;\n        padding: 6px 10px;\n        border-radius: 6px;\n        position: absolute;\n        z-index: 10;\n        bottom: 125%;\n        left: 50%;\n        transform: translateX(-50%);\n        opacity: 0;\n        white-space: nowrap;\n        transition: opacity 0.3s;\n        font-size: 12px;\n    }\n\n    .tooltip-wrapper:hover .tooltip {\n        visibility: visible;\n        opacity: 1;\n    }\n    \n    .unlock-button {\n    background-color: #4CAF50;\n    color: white;\n    padding: 8px 14px;\n    border: none;\n    border-radius: 6px;\n    cursor: pointer;\n    font-size: 14px;\n    transition: background-color 0.2s;\n}\n\n.unlock-button:hover {\n    background-color: #45a049;\n}\n\n.table-title {\n    margin: 0;\n    font-size: 18px;\n    font-weight: 600;\n    color: #333;\n    text-align: center;\n}\n\n.table-container {\n    background-color: #ffffff;\n    padding: 16px;\n    border-radius: 12px;\n    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);\n}\n\n.table-title {\n    margin: 0;\n    font-size: 18px;\n    font-weight: 600;\n    color: #333;\n    text-align: center;\n}\n\n/* Make table scrollable and headers sticky */\n.table-wrapper {\n    max-height: 750px; /* Adjust height as needed */\n    overflow-y: auto;\n}\n\n.custom-table {\n    width: 100%;\n    border-collapse: collapse;\n    font-family: Arial, sans-serif;\n    margin-top: 10px;\n}\n\n.custom-table th,\n.custom-table td {\n    border: 1px solid #ddd;\n    padding: 10px;\n    text-align: center;\n    font-size: 14px;\n    background-color: #fff;\n}\n\n/* Sticky header */\n.custom-table th {\n    position: sticky;\n    top: 0;\n    background-color: #76c6e5;\n    color: #333;\n    font-weight: 600;\n    z-index: 1;\n}\n\n.custom-table tbody tr:hover {\n    background-color: #f1f1f1;\n}\n\n\n\n</style>\n\n<script>\nexport default {\n  methods: {\n    \n  }\n}\n</script>",
+        "storeOutMessages": true,
+        "passthru": true,
+        "resendOnRefresh": true,
+        "templateScope": "local",
+        "className": "",
+        "x": 990,
+        "y": 240,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "0fd97363e971e76d",
+        "type": "function",
+        "z": "8d243e82e4c35220",
+        "name": "Prepare Insert Users",
+        "func": "let firstname = msg.payload.firstname;\nlet lastname = msg.payload.lastname;\n\nmsg.topic = `INSERT INTO Users (Firstname, Lastname) VALUES ('${firstname}', '${lastname}')`;\n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 326,
+        "y": 100,
+        "wires": [
+            [
+                "4e88f3a0f571fb36"
+            ]
+        ]
+    },
+    {
+        "id": "4e88f3a0f571fb36",
+        "type": "mysql",
+        "z": "8d243e82e4c35220",
+        "mydb": "ddaa8fa01124a480",
+        "name": "Query DB",
+        "x": 526,
+        "y": 100,
+        "wires": [
+            [
+                "65c93cd5f682f70a"
+            ]
+        ]
+    },
+    {
+        "id": "65c93cd5f682f70a",
+        "type": "function",
+        "z": "8d243e82e4c35220",
+        "name": "Format Notificaiton",
+        "func": "if(msg.payload !== null){\n    msg.payload = \"User Creation Successful\";\n} else {\n    msg.payload = \"User Creation Failed\";\n}\nmsg.topic = \"User Creation\";\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 736,
+        "y": 100,
+        "wires": [
+            [
+                "88e0932c9f9d250f"
+            ]
+        ]
+    },
+    {
+        "id": "775d147a6b5f02f3",
+        "type": "ui-form",
+        "z": "8d243e82e4c35220",
+        "name": "Create User",
+        "group": "a070287f702d8387",
+        "label": "Create User Form",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "options": [
+            {
+                "label": "First Name",
+                "key": "firstname",
+                "type": "text",
+                "required": true,
+                "rows": null
+            },
+            {
+                "label": "Last Name",
+                "key": "lastname",
+                "type": "text",
+                "required": true,
+                "rows": null
+            }
+        ],
+        "formValue": {
+            "firstname": "",
+            "lastname": ""
+        },
+        "payload": "",
+        "submit": "Create User",
+        "cancel": "Clear",
+        "resetOnSubmit": true,
+        "topic": "topic",
+        "topicType": "msg",
+        "splitLayout": true,
+        "className": "",
+        "passthru": false,
+        "dropdownOptions": [],
+        "x": 116,
+        "y": 100,
+        "wires": [
+            [
+                "0fd97363e971e76d"
+            ]
+        ]
+    },
+    {
+        "id": "88e0932c9f9d250f",
+        "type": "ui-notification",
+        "z": "8d243e82e4c35220",
+        "ui": "62fbb3eb93d5c262",
+        "position": "top right",
+        "colorDefault": true,
+        "color": "#000000",
+        "displayTime": "3",
+        "showCountdown": true,
+        "outputs": 1,
+        "allowDismiss": true,
+        "dismissText": "Close",
+        "allowConfirm": false,
+        "confirmText": "Confirm",
+        "raw": false,
+        "className": "",
+        "name": "Create User Notificaiton",
+        "x": 976,
+        "y": 100,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "70745140d613d9f6",
+        "type": "function",
+        "z": "8d243e82e4c35220",
+        "name": "Populate Dropdown",
+        "func": "msg.ui_update = {\n    dropdownOptions: msg.payload.map(user => ({\n        dropdown: \"userID\", // must match the 'name' of the dropdown field in your form\n        value: user.ID.toString(),\n        label: `${user.Firstname} ${user.Lastname}`\n    }))\n};\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 476,
+        "y": 200,
+        "wires": [
+            [
+                "855986a627263673"
+            ]
+        ]
+    },
+    {
+        "id": "0dd8f8f75960e323",
+        "type": "inject",
+        "z": "8d243e82e4c35220",
+        "name": "Set Query",
+        "props": [
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "5",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "0.3",
+        "topic": "SELECT * FROM Users;",
+        "x": 116,
+        "y": 200,
+        "wires": [
+            [
+                "a51939f520d04e14"
+            ]
+        ]
+    },
+    {
+        "id": "a51939f520d04e14",
+        "type": "mysql",
+        "z": "8d243e82e4c35220",
+        "mydb": "ddaa8fa01124a480",
+        "name": "Query DB",
+        "x": 286,
+        "y": 200,
+        "wires": [
+            [
+                "70745140d613d9f6"
+            ]
+        ]
+    },
+    {
+        "id": "855986a627263673",
+        "type": "ui-form",
+        "z": "8d243e82e4c35220",
+        "name": "Delete User",
+        "group": "a070287f702d8387",
+        "label": "Delete User Form",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "options": [
+            {
+                "label": "Name",
+                "key": "userID",
+                "type": "dropdown",
+                "required": false,
+                "rows": null
+            }
+        ],
+        "formValue": {
+            "userID": ""
+        },
+        "payload": "",
+        "submit": "Delete User",
+        "cancel": "Clear",
+        "resetOnSubmit": true,
+        "topic": "topic",
+        "topicType": "msg",
+        "splitLayout": "",
+        "className": "",
+        "passthru": false,
+        "dropdownOptions": [],
+        "x": 676,
+        "y": 200,
+        "wires": [
+            [
+                "a6a891982887ebb5"
+            ]
+        ]
+    },
+    {
+        "id": "e22b6e287e6233c6",
+        "type": "ui-notification",
+        "z": "8d243e82e4c35220",
+        "ui": "62fbb3eb93d5c262",
+        "position": "top right",
+        "colorDefault": true,
+        "color": "#000000",
+        "displayTime": "3",
+        "showCountdown": true,
+        "outputs": 1,
+        "allowDismiss": true,
+        "dismissText": "Close",
+        "allowConfirm": false,
+        "confirmText": "Confirm",
+        "raw": false,
+        "className": "",
+        "name": "Delete User Notification",
+        "x": 876,
+        "y": 280,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "a6a891982887ebb5",
+        "type": "function",
+        "z": "8d243e82e4c35220",
+        "name": "Prepare Delete Query",
+        "func": "if(msg.payload.userID === \"\"){\n    msg.topic = \"select * from Tags;\";\n    return msg;\n}\n\nmsg.topic = `DELETE FROM Users\n             WHERE ID = ${msg.payload.userID}`;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 886,
+        "y": 200,
+        "wires": [
+            [
+                "f930cbafe8b608d9"
+            ]
+        ]
+    },
+    {
+        "id": "f930cbafe8b608d9",
+        "type": "mysql",
+        "z": "8d243e82e4c35220",
+        "mydb": "ddaa8fa01124a480",
+        "name": "Query DB",
+        "x": 1106,
+        "y": 200,
+        "wires": [
+            [
+                "a6eced182b3b6893"
+            ]
+        ]
+    },
+    {
+        "id": "a6eced182b3b6893",
+        "type": "function",
+        "z": "8d243e82e4c35220",
+        "name": "Format Notification",
+        "func": "if(msg.payload.affectedRows === 1){\n    msg.payload = \"User Successfully Removed\";\n} else {\n    msg.payload = \"User Deletion Failed\";\n}\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 616,
+        "y": 280,
+        "wires": [
+            [
+                "e22b6e287e6233c6"
+            ]
+        ]
+    },
+    {
+        "id": "f5b70a49bf6a7fde",
+        "type": "function",
+        "z": "8d243e82e4c35220",
+        "name": "Prepare Insert Doors",
+        "func": "let doorname = msg.payload.doorname;\n\nmsg.topic = `INSERT INTO Doors (Name) VALUES ('${doorname}')`;\n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 326,
+        "y": 400,
+        "wires": [
+            [
+                "0e3921c64616d926"
+            ]
+        ]
+    },
+    {
+        "id": "0e3921c64616d926",
+        "type": "mysql",
+        "z": "8d243e82e4c35220",
+        "mydb": "ddaa8fa01124a480",
+        "name": "Query DB",
+        "x": 526,
+        "y": 400,
+        "wires": [
+            [
+                "6cc6d5ab5fa07129"
+            ]
+        ]
+    },
+    {
+        "id": "6cc6d5ab5fa07129",
+        "type": "function",
+        "z": "8d243e82e4c35220",
+        "name": "Format Notificaiton",
+        "func": "if(msg.payload !== null){\n    msg.payload = \"Door Creation Successful\";\n} else {\n    msg.payload = \"Door Creation Failed\";\n}\nmsg.topic = \"Door Creation\";\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 736,
+        "y": 400,
+        "wires": [
+            [
+                "29176775c0fd65dc"
+            ]
+        ]
+    },
+    {
+        "id": "a30ebd0e93b1a9b2",
+        "type": "ui-form",
+        "z": "8d243e82e4c35220",
+        "name": "Create Door",
+        "group": "a070287f702d8387",
+        "label": "Create Door Form",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "options": [
+            {
+                "label": "Door Name",
+                "key": "doorname",
+                "type": "text",
+                "required": true,
+                "rows": null
+            }
+        ],
+        "formValue": {
+            "doorname": ""
+        },
+        "payload": "",
+        "submit": "Create Door",
+        "cancel": "Clear",
+        "resetOnSubmit": true,
+        "topic": "topic",
+        "topicType": "msg",
+        "splitLayout": false,
+        "className": "",
+        "passthru": false,
+        "dropdownOptions": [],
+        "x": 116,
+        "y": 400,
+        "wires": [
+            [
+                "f5b70a49bf6a7fde"
+            ]
+        ]
+    },
+    {
+        "id": "29176775c0fd65dc",
+        "type": "ui-notification",
+        "z": "8d243e82e4c35220",
+        "ui": "62fbb3eb93d5c262",
+        "position": "top right",
+        "colorDefault": true,
+        "color": "#000000",
+        "displayTime": "3",
+        "showCountdown": true,
+        "outputs": 1,
+        "allowDismiss": true,
+        "dismissText": "Close",
+        "allowConfirm": false,
+        "confirmText": "Confirm",
+        "raw": false,
+        "className": "",
+        "name": "Create Door Notificaiton",
+        "x": 976,
+        "y": 400,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "df8b7c0883689180",
+        "type": "function",
+        "z": "8d243e82e4c35220",
+        "name": "Populate Dropdown",
+        "func": "msg.ui_update = {\n    dropdownOptions: msg.payload.map(door => ({\n        dropdown: \"doorID\", // must match the 'name' of the dropdown field in your form\n        value: door.ID.toString(),\n        label: `${door.Name}`\n    }))\n};\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 476,
+        "y": 500,
+        "wires": [
+            [
+                "5c0a53fd8904cbde"
+            ]
+        ]
+    },
+    {
+        "id": "a4cb180df1694571",
+        "type": "inject",
+        "z": "8d243e82e4c35220",
+        "name": "Set Query",
+        "props": [
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "5",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "0.3",
+        "topic": "SELECT * FROM Doors;",
+        "x": 116,
+        "y": 500,
+        "wires": [
+            [
+                "7247b612e64df0c2"
+            ]
+        ]
+    },
+    {
+        "id": "7247b612e64df0c2",
+        "type": "mysql",
+        "z": "8d243e82e4c35220",
+        "mydb": "ddaa8fa01124a480",
+        "name": "Query DB",
+        "x": 286,
+        "y": 500,
+        "wires": [
+            [
+                "df8b7c0883689180"
+            ]
+        ]
+    },
+    {
+        "id": "5c0a53fd8904cbde",
+        "type": "ui-form",
+        "z": "8d243e82e4c35220",
+        "name": "Delete Door",
+        "group": "a070287f702d8387",
+        "label": "Delete Door Form",
+        "order": 4,
+        "width": 0,
+        "height": 0,
+        "options": [
+            {
+                "label": "Name",
+                "key": "doorID",
+                "type": "dropdown",
+                "required": false,
+                "rows": null
+            }
+        ],
+        "formValue": {
+            "doorID": ""
+        },
+        "payload": "",
+        "submit": "Delete Door",
+        "cancel": "Clear",
+        "resetOnSubmit": true,
+        "topic": "topic",
+        "topicType": "msg",
+        "splitLayout": "",
+        "className": "",
+        "passthru": false,
+        "dropdownOptions": [],
+        "x": 676,
+        "y": 500,
+        "wires": [
+            [
+                "c550130e2bc7c730"
+            ]
+        ]
+    },
+    {
+        "id": "f087c34c6264ae23",
+        "type": "ui-notification",
+        "z": "8d243e82e4c35220",
+        "ui": "62fbb3eb93d5c262",
+        "position": "top right",
+        "colorDefault": true,
+        "color": "#000000",
+        "displayTime": "3",
+        "showCountdown": true,
+        "outputs": 1,
+        "allowDismiss": true,
+        "dismissText": "Close",
+        "allowConfirm": false,
+        "confirmText": "Confirm",
+        "raw": false,
+        "className": "",
+        "name": "Delete Door Notification",
+        "x": 1036,
+        "y": 580,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "c550130e2bc7c730",
+        "type": "function",
+        "z": "8d243e82e4c35220",
+        "name": "Prepare Delete Query",
+        "func": "if(msg.payload.doorID === \"\"){\n    msg.topic = \"select * from Tags;\";\n    return msg;\n}\n\nmsg.topic = `DELETE FROM Doors\n             WHERE ID = ${msg.payload.doorID}`;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 886,
+        "y": 500,
+        "wires": [
+            [
+                "08e8c37e2a6e88de"
+            ]
+        ]
+    },
+    {
+        "id": "08e8c37e2a6e88de",
+        "type": "mysql",
+        "z": "8d243e82e4c35220",
+        "mydb": "ddaa8fa01124a480",
+        "name": "Query DB",
+        "x": 1086,
+        "y": 500,
+        "wires": [
+            [
+                "055cf06332a9a249"
+            ]
+        ]
+    },
+    {
+        "id": "055cf06332a9a249",
+        "type": "function",
+        "z": "8d243e82e4c35220",
+        "name": "Format Notification",
+        "func": "if(msg.payload.affectedRows === 1){\n    msg.payload = \"Door Successfully Removed\";\n} else {\n    msg.payload = \"Door Deletion Failed\";\n}\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 796,
+        "y": 580,
+        "wires": [
+            [
+                "f087c34c6264ae23"
+            ]
+        ]
+    },
+    {
+        "id": "177c6639bd952884",
+        "type": "ui-form",
+        "z": "8d243e82e4c35220",
+        "name": "Create Tag",
+        "group": "aa20771b8718c9c8",
+        "label": "Create Tag Form",
+        "order": 1,
+        "width": "0",
+        "height": "0",
+        "options": [
+            {
+                "label": "Tage Name",
+                "key": "tagname",
+                "type": "text",
+                "required": false,
+                "rows": null
+            },
+            {
+                "label": "User",
+                "key": "userID",
+                "type": "dropdown",
+                "required": false,
+                "rows": null
+            }
+        ],
+        "formValue": {
+            "tagname": "",
+            "userID": ""
+        },
+        "payload": "",
+        "submit": "Create Tag",
+        "cancel": "Clear",
+        "resetOnSubmit": true,
+        "topic": "topic",
+        "topicType": "msg",
+        "splitLayout": true,
+        "className": "",
+        "passthru": false,
+        "dropdownOptions": [],
+        "x": 676,
+        "y": 720,
+        "wires": [
+            [
+                "c927ddae695f9bba"
+            ]
+        ]
+    },
+    {
+        "id": "d48ea19d94e67309",
+        "type": "inject",
+        "z": "8d243e82e4c35220",
+        "name": "Set Query",
+        "props": [
+            {
+                "p": "topic",
+                "vt": "str"
+            },
+            {
+                "p": "key",
+                "v": "Users",
+                "vt": "str"
+            }
+        ],
+        "repeat": "5",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "0.3",
+        "topic": "SELECT Users.* FROM Users LEFT JOIN Tags ON Users.ID = Tags.UserID WHERE Tags.UserID IS NULL;",
+        "x": 116,
+        "y": 720,
+        "wires": [
+            [
+                "699beee4ab5119cc"
+            ]
+        ]
+    },
+    {
+        "id": "699beee4ab5119cc",
+        "type": "mysql",
+        "z": "8d243e82e4c35220",
+        "mydb": "ddaa8fa01124a480",
+        "name": "Query DB",
+        "x": 286,
+        "y": 720,
+        "wires": [
+            [
+                "c7437727a53bb41c"
+            ]
+        ]
+    },
+    {
+        "id": "c7437727a53bb41c",
+        "type": "function",
+        "z": "8d243e82e4c35220",
+        "name": "Populate Dropdown",
+        "func": "msg.ui_update = {\n    dropdownOptions: msg.payload.map(user => ({\n        dropdown: \"userID\", // must match the 'name' of the dropdown field in your form\n        value: user.ID.toString(),\n        label: `${user.Firstname} ${user.Lastname}`\n    }))\n};\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 476,
+        "y": 720,
+        "wires": [
+            [
+                "177c6639bd952884",
+                "83b8903c1dc4d49a"
+            ]
+        ]
+    },
+    {
+        "id": "c927ddae695f9bba",
+        "type": "function",
+        "z": "8d243e82e4c35220",
+        "name": "Prepare Insert Query",
+        "func": "if(msg.payload.tagname === \"\"){\n    msg.topic = \"select 1;\";\n    return msg;\n}\n\n// Generate Random Secret\nlet chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';\nlet result = '';\nfor (let i = 0; i < 10; i++) {\n    result += chars.charAt(Math.floor(Math.random() * chars.length));\n}\n\nif (msg.payload.userID === \"\") {\n    msg.topic = `INSERT INTO Tags (Name, Secret)\n                 VALUES ('${msg.payload.tagname}','${result}');`;\n} else {\n    msg.topic = `INSERT INTO Tags (Name, Secret, UserID)\n                 VALUES ('${msg.payload.tagname}','${result}', ${msg.payload.userID});`;\n}\n\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 886,
+        "y": 720,
+        "wires": [
+            [
+                "f7981384c6955994"
+            ]
+        ]
+    },
+    {
+        "id": "f7981384c6955994",
+        "type": "mysql",
+        "z": "8d243e82e4c35220",
+        "mydb": "ddaa8fa01124a480",
+        "name": "Query DB",
+        "x": 1086,
+        "y": 720,
+        "wires": [
+            [
+                "6157785d94a2733e"
+            ]
+        ]
+    },
+    {
+        "id": "fd7836ba77ef188c",
+        "type": "ui-notification",
+        "z": "8d243e82e4c35220",
+        "ui": "62fbb3eb93d5c262",
+        "position": "top right",
+        "colorDefault": true,
+        "color": "#000000",
+        "displayTime": "3",
+        "showCountdown": true,
+        "outputs": 1,
+        "allowDismiss": true,
+        "dismissText": "Close",
+        "allowConfirm": false,
+        "confirmText": "Confirm",
+        "raw": false,
+        "className": "",
+        "name": "Insert Tag Notification",
+        "x": 1026,
+        "y": 800,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "6157785d94a2733e",
+        "type": "function",
+        "z": "8d243e82e4c35220",
+        "name": "Format Notification",
+        "func": "if(msg.payload.affectedRows === 1){\n    msg.payload = \"Tag Successfully Created\";\n} else {\n    msg.payload = \"Tag Cration Failed\";\n}\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 796,
+        "y": 800,
+        "wires": [
+            [
+                "fd7836ba77ef188c"
+            ]
+        ]
+    },
+    {
+        "id": "737366930e37cf82",
+        "type": "ui-form",
+        "z": "8d243e82e4c35220",
+        "name": "Delete Tag",
+        "group": "aa20771b8718c9c8",
+        "label": "Delete Tag Form",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "options": [
+            {
+                "label": "Tag",
+                "key": "tagID",
+                "type": "dropdown",
+                "required": false,
+                "rows": null
+            }
+        ],
+        "formValue": {
+            "tagID": ""
+        },
+        "payload": "",
+        "submit": "Delete Tag",
+        "cancel": "Clear",
+        "resetOnSubmit": true,
+        "topic": "topic",
+        "topicType": "msg",
+        "splitLayout": false,
+        "className": "",
+        "passthru": false,
+        "dropdownOptions": [],
+        "x": 676,
+        "y": 1020,
+        "wires": [
+            [
+                "962da22908abb0e0"
+            ]
+        ]
+    },
+    {
+        "id": "9aadec2c6606984d",
+        "type": "inject",
+        "z": "8d243e82e4c35220",
+        "name": "Set Query",
+        "props": [
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "5",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "0.3",
+        "topic": "SELECT * FROM Tags;",
+        "x": 116,
+        "y": 1020,
+        "wires": [
+            [
+                "b78a6c22e225344c"
+            ]
+        ]
+    },
+    {
+        "id": "b78a6c22e225344c",
+        "type": "mysql",
+        "z": "8d243e82e4c35220",
+        "mydb": "ddaa8fa01124a480",
+        "name": "Query DB",
+        "x": 286,
+        "y": 1020,
+        "wires": [
+            [
+                "56c165c5b67101ba"
+            ]
+        ]
+    },
+    {
+        "id": "56c165c5b67101ba",
+        "type": "function",
+        "z": "8d243e82e4c35220",
+        "name": "Populate Dropdown",
+        "func": "msg.ui_update = {\n    dropdownOptions: msg.payload.map(tag => ({\n        dropdown: \"tagID\", // must match the 'name' of the dropdown field in your form\n        value: tag.ID.toString(),\n        label: `${tag.Name}`\n    }))\n};\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 476,
+        "y": 1020,
+        "wires": [
+            [
+                "737366930e37cf82"
+            ]
+        ]
+    },
+    {
+        "id": "962da22908abb0e0",
+        "type": "function",
+        "z": "8d243e82e4c35220",
+        "name": "Prepare Delete Query",
+        "func": "if(msg.payload.tagID === \"\"){\n    msg.topic = \"select * from Tags;\";\n    return msg;\n}\n\nmsg.topic = `DELETE FROM Tags\n             WHERE ID=${msg.payload.tagID};`;\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 886,
+        "y": 1020,
+        "wires": [
+            [
+                "cf858c9e2ed24259"
+            ]
+        ]
+    },
+    {
+        "id": "cf858c9e2ed24259",
+        "type": "mysql",
+        "z": "8d243e82e4c35220",
+        "mydb": "ddaa8fa01124a480",
+        "name": "Query DB",
+        "x": 1086,
+        "y": 1020,
+        "wires": [
+            [
+                "27c37c9ae632a4b1"
+            ]
+        ]
+    },
+    {
+        "id": "85bd8aa243722b17",
+        "type": "ui-notification",
+        "z": "8d243e82e4c35220",
+        "ui": "62fbb3eb93d5c262",
+        "position": "top right",
+        "colorDefault": true,
+        "color": "#000000",
+        "displayTime": "3",
+        "showCountdown": true,
+        "outputs": 1,
+        "allowDismiss": true,
+        "dismissText": "Close",
+        "allowConfirm": false,
+        "confirmText": "Confirm",
+        "raw": false,
+        "className": "",
+        "name": "Delete Tag Notification",
+        "x": 1026,
+        "y": 1100,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "27c37c9ae632a4b1",
+        "type": "function",
+        "z": "8d243e82e4c35220",
+        "name": "Format Notification",
+        "func": "if(msg.payload.affectedRows === 1){\n    msg.payload = \"Tag Successfully Deleted\";\n} else {\n    msg.payload = \"Tag Deletion Failed\";\n}\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 796,
+        "y": 1100,
+        "wires": [
+            [
+                "85bd8aa243722b17"
+            ]
+        ]
+    },
+    {
+        "id": "228f48dbf9949e44",
+        "type": "comment",
+        "z": "8d243e82e4c35220",
+        "name": "Create Door Flow",
+        "info": "",
+        "x": 206,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "c7420eccd2157227",
+        "type": "comment",
+        "z": "8d243e82e4c35220",
+        "name": "Grant/Revoke Access Table Flow",
+        "info": "",
+        "x": 250,
+        "y": 1240,
+        "wires": []
+    },
+    {
+        "id": "4d74a9348a9a47bf",
+        "type": "function",
+        "z": "8d243e82e4c35220",
+        "name": "Populate Table",
+        "func": "const input = msg.payload;  // your raw access list\n\nconst doorsSet = new Set();\nconst users = {};\n\nfor (const row of input) {\n    const { UserID, UserName, DoorName, HasAccess, HasTag } = row;\n    doorsSet.add(DoorName);\n    if (!users[UserID]) {\n        users[UserID] = {\n            UserID,\n            UserName,\n            HasTag,\n            access: {}\n        };\n    }\n    users[UserID].access[DoorName] = HasAccess;\n}\n\nmsg.payload = {\n    doors: Array.from(doorsSet),\n    users: Object.values(users)\n};\n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 466,
+        "y": 1280,
+        "wires": [
+            [
+                "1df71838690d7457",
+                "1d623093464b315d"
+            ]
+        ]
+    },
+    {
+        "id": "81eeb6da5ce79416",
+        "type": "inject",
+        "z": "8d243e82e4c35220",
+        "name": "Set Query",
+        "props": [
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "5",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "0.1",
+        "topic": "SELECT    Users.ID AS UserID,   CONCAT(Users.Firstname, ' ', Users.Lastname) AS UserName,   Doors.ID AS DoorID,   Doors.Name AS DoorName,   CASE      WHEN EXISTS (       SELECT 1        FROM Tags        JOIN TagDoorAccess ON Tags.ID = TagDoorAccess.TagID        WHERE Tags.UserID = Users.ID AND TagDoorAccess.DoorID = Doors.ID     ) THEN 1      ELSE 0    END AS HasAccess,   CASE      WHEN EXISTS (       SELECT 1        FROM Tags        WHERE Tags.UserID = Users.ID     ) THEN 1      ELSE 0    END AS HasTag FROM Users CROSS JOIN Doors ORDER BY Users.ID, Doors.ID;",
+        "x": 116,
+        "y": 1280,
+        "wires": [
+            [
+                "9c20da34967b576c"
+            ]
+        ]
+    },
+    {
+        "id": "9c20da34967b576c",
+        "type": "mysql",
+        "z": "8d243e82e4c35220",
+        "mydb": "ddaa8fa01124a480",
+        "name": "Query DB",
+        "x": 286,
+        "y": 1280,
+        "wires": [
+            [
+                "4d74a9348a9a47bf"
+            ]
+        ]
+    },
+    {
+        "id": "1d623093464b315d",
+        "type": "debug",
+        "z": "8d243e82e4c35220",
+        "name": "debug 5",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 566,
+        "y": 1360,
+        "wires": []
+    },
+    {
+        "id": "1df71838690d7457",
+        "type": "ui-template",
+        "z": "8d243e82e4c35220",
+        "group": "c4722c39b68615e7",
+        "page": "",
+        "ui": "",
+        "name": "Custom Table",
+        "order": 1,
+        "width": "0",
+        "height": "0",
+        "head": "",
+        "format": "<template>\n  <div class=\"table-container\">\n    <table class=\"custom-table\">\n      <thead>\n        <tr>\n          <th>User</th>\n          <th v-for=\"door in msg.payload?.doors || []\" :key=\"door\">{{ door }}</th>\n        </tr>\n      </thead>\n      <tbody>\n        <tr v-for=\"user in msg.payload.users\" :key=\"user.UserID\" :class=\"{ 'bg-gray-100 text-gray-500': !user.HasTag }\">\n          <td class=\"border p-2 relative\">\n            <span v-if=\"user.HasTag\">{{ user.UserName }}</span>\n            <div v-else class=\"tooltip-wrapper\">\n              {{ user.UserName }}\n              <div class=\"tooltip\">No tag assigned to user</div>\n            </div>\n          </td>\n          <!--           <td v-for=\"door in msg.payload?.doors || []\" :key=\"door\">\n            <input\n              type=\"checkbox\"\n              :checked=\"user.access && user.access[door]\"\n              @change=\"toggleAccess(user.UserID, door, $event.target.checked)\"\n              :disabled=\"!user.HasTag\"\n              class=\"checkbox\"\n            />\n          </td> -->\n          <td v-for=\"door in msg.payload?.doors\" :key=\"door\" class=\"border p-2 text-center\">\n            <div v-if=\"!user.HasTag\" class=\"tooltip-wrapper inline-block\">\n              <input\n                type=\"checkbox\"\n                :checked=\"user.access && user.access[door]\"\n                disabled\n                class=\"checkbox\"\n              />\n              <div class=\"tooltip\">No tag assigned to user</div>\n            </div>\n            <input\n              v-else\n              type=\"checkbox\"\n              :checked=\"user.access && user.access[door]\"\n              @change=\"toggleAccess(user.UserID, door, $event.target.checked)\"\n              :disabled=\"!user.HasTag\"\n              class=\"checkbox\"\n            />\n          </td>\n          </td>\n        </tr>\n      </tbody>\n    </table>\n  </div>\n</template>\n\n<style>\n  .table-container {\n    background-color: #ffffff;\n    padding: 16px;\n    border-radius: 12px;\n    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);\n    overflow-x: auto;\n  }\n\n  /* Table Styling */\n  .custom-table {\n    width: 100%;\n    border-collapse: collapse;\n    font-family: Arial, sans-serif;\n    margin-top: 10px;\n  }\n\n  .custom-table th,\n  .custom-table td {\n    border: 1px solid #ddd;\n    padding: 10px;\n    text-align: center;\n    font-size: 14px;\n    background-color: #fff;\n  }\n\n\n  .custom-table th {\n    color: #333;\n    font-weight: 600;\n    background-color: #76c6e5;\n  }\n\n  .custom-table tbody tr:hover {\n    background-color: #f1f1f1;\n  }\n\n  /* Checkbox Styling */\n  .checkbox {\n    width: 20px;\n    height: 20px;\n    cursor: pointer;\n    accent-color: #007bff;\n  }\n\n  .checkbox:disabled {\n    opacity: 0.5;\n    cursor: not-allowed;\n    background-color: #f0f0f0;\n  }\n\n  /* Tooltip Styling */\n  .tooltip-wrapper {\n    position: relative;\n    display: inline-block;\n    color: #9ca3af;\n    /* Optional: greyed-out look */\n    cursor: not-allowed;\n  }\n\n  .tooltip-wrapper .tooltip {\n    visibility: hidden;\n    background-color: #111;\n    color: #fff;\n    text-align: center;\n    padding: 6px 10px;\n    border-radius: 6px;\n    position: absolute;\n    z-index: 10;\n    bottom: 125%;\n    left: 50%;\n    transform: translateX(-50%);\n    opacity: 0;\n    white-space: nowrap;\n    transition: opacity 0.3s;\n    font-size: 12px;\n  }\n\n  .tooltip-wrapper:hover .tooltip {\n    visibility: visible;\n    opacity: 1;\n  }\n</style>\n\n<script>\n  export default {\n  methods: {\n    toggleAccess(userId, doorName, value) {\n      this.send({\n        topic: 'update-access',\n        payload: {\n          UserID: userId,\n          DoorName: doorName,\n          HasAccess: value ? 1 : 0\n        }\n      });\n    }\n  }\n};\n</script>",
+        "storeOutMessages": true,
+        "passthru": true,
+        "resendOnRefresh": true,
+        "templateScope": "local",
+        "className": "",
+        "x": 666,
+        "y": 1280,
+        "wires": [
+            [
+                "a39ae27c2cfdbcc1"
+            ]
+        ]
+    },
+    {
+        "id": "a39ae27c2cfdbcc1",
+        "type": "function",
+        "z": "8d243e82e4c35220",
+        "name": "Prepare Query",
+        "func": "if(msg.topic !== \"update-access\"){\n    return null;\n}\n\nif(msg.payload.HasAccess === 1){\n    msg.topic = `\n            INSERT INTO TagDoorAccess (TagID, DoorID)\n            SELECT Tags.ID, Doors.ID\n            FROM Tags\n            JOIN Doors ON Doors.Name = '${msg.payload.DoorName}'\n            WHERE Tags.UserID = ${msg.payload.UserID}\n            AND NOT EXISTS (\n                SELECT 1\n                FROM TagDoorAccess\n                WHERE TagDoorAccess.TagID = Tags.ID\n                AND TagDoorAccess.DoorID = Doors.ID\n            );`;\n} else {\n    msg.topic = `\n        DELETE TagDoorAccess\n        FROM TagDoorAccess\n        JOIN Tags ON TagDoorAccess.TagID = Tags.ID\n        JOIN Doors ON TagDoorAccess.DoorID = Doors.ID\n        WHERE Tags.UserID = ${msg.payload.UserID} AND Doors.Name = '${msg.payload.DoorName}';`;\n}\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 866,
+        "y": 1280,
+        "wires": [
+            [
+                "12c0c6c4d0ae8faf"
+            ]
+        ]
+    },
+    {
+        "id": "12c0c6c4d0ae8faf",
+        "type": "mysql",
+        "z": "8d243e82e4c35220",
+        "mydb": "ddaa8fa01124a480",
+        "name": "Query DB",
+        "x": 1046,
+        "y": 1280,
+        "wires": [
+            [
+                "c9f9805290e935d9"
+            ]
+        ]
+    },
+    {
+        "id": "e916d49e488b4018",
+        "type": "ui-notification",
+        "z": "8d243e82e4c35220",
+        "ui": "62fbb3eb93d5c262",
+        "position": "top right",
+        "colorDefault": true,
+        "color": "#000000",
+        "displayTime": "3",
+        "showCountdown": true,
+        "outputs": 1,
+        "allowDismiss": true,
+        "dismissText": "Close",
+        "allowConfirm": false,
+        "confirmText": "Confirm",
+        "raw": false,
+        "className": "",
+        "name": "Access Notification",
+        "x": 1016,
+        "y": 1360,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "c9f9805290e935d9",
+        "type": "function",
+        "z": "8d243e82e4c35220",
+        "name": "Prepare Notification",
+        "func": "if(msg.payload.affectedRows === 0){\n    msg.payload = \"Failed to modify access.\";\n} else {\n    msg.payload = \"Access modified sucessfully.\"\n}\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 796,
+        "y": 1360,
+        "wires": [
+            [
+                "e916d49e488b4018"
+            ]
+        ]
+    },
+    {
+        "id": "9707de6190475da5",
+        "type": "inject",
+        "z": "8d243e82e4c35220",
+        "name": "Set Query",
+        "props": [
+            {
+                "p": "topic",
+                "vt": "str"
+            },
+            {
+                "p": "key",
+                "v": "Tags",
+                "vt": "str"
+            }
+        ],
+        "repeat": "3",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "SELECT * FROM Tags WHERE UserID IS NULL;",
+        "x": 116,
+        "y": 860,
+        "wires": [
+            [
+                "19a3bf4b8dc8b5b2"
+            ]
+        ]
+    },
+    {
+        "id": "08dbb806f5a90f5b",
+        "type": "ui-form",
+        "z": "8d243e82e4c35220",
+        "name": "Assign Tag",
+        "group": "aa20771b8718c9c8",
+        "label": "Assign Tag Form",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "options": [
+            {
+                "label": "Tag",
+                "key": "tagID",
+                "type": "dropdown",
+                "required": false,
+                "rows": null
+            },
+            {
+                "label": "User",
+                "key": "userID",
+                "type": "dropdown",
+                "required": false,
+                "rows": null
+            }
+        ],
+        "formValue": {
+            "tagID": "",
+            "userID": ""
+        },
+        "payload": "",
+        "submit": "Assign Tag",
+        "cancel": "Clear",
+        "resetOnSubmit": true,
+        "topic": "topic",
+        "topicType": "msg",
+        "splitLayout": true,
+        "className": "",
+        "passthru": false,
+        "dropdownOptions": [],
+        "x": 857,
+        "y": 860,
+        "wires": [
+            [
+                "b2c0dbd839533797"
+            ]
+        ]
+    },
+    {
+        "id": "19a3bf4b8dc8b5b2",
+        "type": "mysql",
+        "z": "8d243e82e4c35220",
+        "mydb": "ddaa8fa01124a480",
+        "name": "Query DB",
+        "x": 286,
+        "y": 860,
+        "wires": [
+            [
+                "83b8903c1dc4d49a"
+            ]
+        ]
+    },
+    {
+        "id": "27d46ba73221b6b3",
+        "type": "function",
+        "z": "8d243e82e4c35220",
+        "name": "Populate Dropdown",
+        "func": "const tags = msg.payload.Tags || [];\nconst users = msg.payload.Users || [];\n\nmsg.ui_update = {\n    dropdownOptions: [\n        ...tags.map(tag => ({\n            dropdown: \"tagID\",             // must match the form field key in the form\n            value: tag.ID,\n            label: tag.Name\n        })),\n        ...users.map(user => ({\n            dropdown: \"userID\",            // must match the form field key in the form\n            value: user.ID.toString(),\n            label: `${user.Firstname} ${user.Lastname}`\n        }))\n    ]\n};\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 656,
+        "y": 860,
+        "wires": [
+            [
+                "08dbb806f5a90f5b"
+            ]
+        ]
+    },
+    {
+        "id": "b2c0dbd839533797",
+        "type": "function",
+        "z": "8d243e82e4c35220",
+        "name": "Prepare Update Query",
+        "func": "if(msg.payload.tagID === \"\" || msg.payload.userID === \"\"){\n    msg.topic = \"SELECT 1;\"\n    return msg;\n}\n\nmsg.topic = `\n    UPDATE Tags\n    SET UserID = ${msg.payload.userID}\n    WHERE ID = ${msg.payload.tagID};\n`;\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1067,
+        "y": 860,
+        "wires": [
+            [
+                "7b4fa7363f1948d5"
+            ]
+        ]
+    },
+    {
+        "id": "7b4fa7363f1948d5",
+        "type": "mysql",
+        "z": "8d243e82e4c35220",
+        "mydb": "ddaa8fa01124a480",
+        "name": "Query DB",
+        "x": 1267,
+        "y": 860,
+        "wires": [
+            [
+                "d79df3b7bb63a94b"
+            ]
+        ]
+    },
+    {
+        "id": "935117ecb8bf86a8",
+        "type": "ui-notification",
+        "z": "8d243e82e4c35220",
+        "ui": "62fbb3eb93d5c262",
+        "position": "top right",
+        "colorDefault": true,
+        "color": "#000000",
+        "displayTime": "3",
+        "showCountdown": true,
+        "outputs": 1,
+        "allowDismiss": true,
+        "dismissText": "Close",
+        "allowConfirm": false,
+        "confirmText": "Confirm",
+        "raw": false,
+        "className": "",
+        "name": "Assign Tag Notification",
+        "x": 1207,
+        "y": 940,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "d79df3b7bb63a94b",
+        "type": "function",
+        "z": "8d243e82e4c35220",
+        "name": "Format Notification",
+        "func": "if(msg.payload.affectedRows === 1){\n    msg.payload = \"Tag Successfully Assigned\";\n} else {\n    msg.payload = \"Tag Assignment Failed\";\n}\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 977,
+        "y": 940,
+        "wires": [
+            [
+                "935117ecb8bf86a8"
+            ]
+        ]
+    },
+    {
+        "id": "83b8903c1dc4d49a",
+        "type": "join",
+        "z": "8d243e82e4c35220",
+        "name": "Combine",
+        "mode": "custom",
+        "build": "object",
+        "property": "payload",
+        "propertyType": "msg",
+        "key": "key",
+        "joiner": "\\n",
+        "joinerType": "str",
+        "useparts": false,
+        "accumulate": false,
+        "timeout": "",
+        "count": "2",
+        "reduceRight": false,
+        "reduceExp": "",
+        "reduceInit": "",
+        "reduceInitType": "",
+        "reduceFixup": "",
+        "x": 456,
+        "y": 860,
+        "wires": [
+            [
+                "27d46ba73221b6b3"
+            ]
+        ]
+    },
+    {
+        "id": "a42d89fb0264a92e",
+        "type": "comment",
+        "z": "8d243e82e4c35220",
+        "name": "Create User Flow",
+        "info": "",
+        "x": 206,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "b2be06ba9a7b48a1",
+        "type": "comment",
+        "z": "8d243e82e4c35220",
+        "name": "Delete User Flow",
+        "info": "",
+        "x": 206,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "5a911e6b111a6916",
+        "type": "comment",
+        "z": "8d243e82e4c35220",
+        "name": "Delete Door Flow",
+        "info": "",
+        "x": 206,
+        "y": 460,
+        "wires": []
+    },
+    {
+        "id": "50f7e4490a433221",
+        "type": "comment",
+        "z": "8d243e82e4c35220",
+        "name": "Create Tag Flow",
+        "info": "",
+        "x": 206,
+        "y": 680,
+        "wires": []
+    },
+    {
+        "id": "079c748bc8573a89",
+        "type": "comment",
+        "z": "8d243e82e4c35220",
+        "name": "Assign Tag Flow",
+        "info": "",
+        "x": 206,
+        "y": 820,
+        "wires": []
+    },
+    {
+        "id": "3e5106157e37511a",
+        "type": "comment",
+        "z": "8d243e82e4c35220",
+        "name": "Delete Tag Flow",
+        "info": "",
+        "x": 206,
+        "y": 980,
+        "wires": []
+    },
+    {
+        "id": "7771dd0ff344992c",
+        "type": "mqtt in",
+        "z": "ab7e2b1cba749f1c",
+        "name": "NFC Read",
+        "topic": "nfc/scan",
+        "qos": "2",
+        "datatype": "json",
+        "broker": "033e59d79ea02559",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 140,
+        "y": 140,
+        "wires": [
+            [
+                "ac13532f7f377763"
+            ]
+        ]
+    },
+    {
+        "id": "ac13532f7f377763",
+        "type": "function",
+        "z": "ab7e2b1cba749f1c",
+        "name": "Prepare SQL Query",
+        "func": "msg.tagSecret = msg.payload.tag_secret;\nmsg.doorName = msg.payload.door_name;\n\nmsg.topic = `\n            SELECT \n            TagDoorAccess.*,\n            Users.Firstname\n            FROM TagDoorAccess\n            JOIN Tags ON TagDoorAccess.TagID = Tags.ID\n            JOIN Doors ON TagDoorAccess.DoorID = Doors.ID\n            JOIN Users ON Tags.UserID = Users.ID\n            WHERE Tags.Secret = '${msg.tagSecret}'\n            AND Doors.Name = '${msg.doorName}';\n`;\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 350,
+        "y": 140,
+        "wires": [
+            [
+                "0daaa3a50aca44d7"
+            ]
+        ]
+    },
+    {
+        "id": "0daaa3a50aca44d7",
+        "type": "mysql",
+        "z": "ab7e2b1cba749f1c",
+        "mydb": "ddaa8fa01124a480",
+        "name": "Query DB",
+        "x": 540,
+        "y": 140,
+        "wires": [
+            [
+                "e3eaa0fa84f36394"
+            ]
+        ]
+    },
+    {
+        "id": "e3eaa0fa84f36394",
+        "type": "function",
+        "z": "ab7e2b1cba749f1c",
+        "name": "Check Results",
+        "func": "if (msg.payload.length > 0) {\n  // Access granted\n  msg.unlock= true;\n} else {\n  msg.unlock = false;\n}\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 740,
+        "y": 140,
+        "wires": [
+            [
+                "2b75a6787748dc49",
+                "23c72890633e0284"
+            ]
+        ]
+    },
+    {
+        "id": "f0d8712b4e22cc74",
+        "type": "mqtt out",
+        "z": "ab7e2b1cba749f1c",
+        "name": "Return MQTT",
+        "topic": "nfc/result",
+        "qos": "1",
+        "retain": "false",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "033e59d79ea02559",
+        "x": 1220,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "0c45519008b2b10e",
+        "type": "mysql",
+        "z": "ab7e2b1cba749f1c",
+        "mydb": "ddaa8fa01124a480",
+        "name": "Query DB",
+        "x": 1200,
+        "y": 160,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "2b75a6787748dc49",
+        "type": "function",
+        "z": "ab7e2b1cba749f1c",
+        "name": "Prepare Insert Query",
+        "func": "msg.topic = `INSERT INTO AccessLogs (TagID, DoorID, Granted)\n             SELECT t.ID, d.ID, ${msg.unlock}\n             FROM Tags t\n             JOIN Doors d\n             WHERE t.Secret = '${msg.tagSecret}' AND d.Name = '${msg.doorName}';`;\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 980,
+        "y": 160,
+        "wires": [
+            [
+                "0c45519008b2b10e"
+            ]
+        ]
+    },
+    {
+        "id": "23c72890633e0284",
+        "type": "function",
+        "z": "ab7e2b1cba749f1c",
+        "name": "Prepare MQTT Message",
+        "func": "if (msg.unlock) {\n    msg.payload = `\n    {\n        \"DoorName\": \"${msg.doorName}\",\n        \"Unlock\": ${msg.unlock},\n        \"User\": \"${msg.payload[0].Firstname}\"\n    }`;\n} else {\n    msg.payload = `\n    {\n        \"DoorName\": \"${msg.doorName}\",\n        \"Unlock\": ${msg.unlock}\n    }`;\n}\n\n\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 990,
+        "y": 120,
+        "wires": [
+            [
+                "f0d8712b4e22cc74"
+            ]
+        ]
+    },
+    {
+        "id": "d5fbee8281567eaf",
+        "type": "ui-form",
+        "z": "ab7e2b1cba749f1c",
+        "name": "Write Tag",
+        "group": "aa20771b8718c9c8",
+        "label": "Write Tag Form",
+        "order": 4,
+        "width": 0,
+        "height": 0,
+        "options": [
+            {
+                "label": "Tag Name",
+                "key": "tagsecret",
+                "type": "dropdown",
+                "required": false,
+                "rows": null
+            },
+            {
+                "label": "Door Name",
+                "key": "doorname",
+                "type": "dropdown",
+                "required": false,
+                "rows": null
+            }
+        ],
+        "formValue": {
+            "tagsecret": "",
+            "doorname": ""
+        },
+        "payload": "",
+        "submit": "Write Tag",
+        "cancel": "Clear",
+        "resetOnSubmit": true,
+        "topic": "topic",
+        "topicType": "msg",
+        "splitLayout": true,
+        "className": "",
+        "passthru": false,
+        "dropdownOptions": [],
+        "x": 880,
+        "y": 420,
+        "wires": [
+            [
+                "c134bb2918e484f9",
+                "4376efa69df1f86c"
+            ]
+        ]
+    },
+    {
+        "id": "6af9c9bdf6f90064",
+        "type": "inject",
+        "z": "ab7e2b1cba749f1c",
+        "name": "Set Query",
+        "props": [],
+        "repeat": "5",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "0.3",
+        "topic": "",
+        "x": 150,
+        "y": 320,
+        "wires": [
+            [
+                "3ab7e274e0d4bec1"
+            ]
+        ]
+    },
+    {
+        "id": "3c8f677580292972",
+        "type": "mysql",
+        "z": "ab7e2b1cba749f1c",
+        "mydb": "ddaa8fa01124a480",
+        "name": "Query DB",
+        "x": 520,
+        "y": 320,
+        "wires": [
+            [
+                "55c5e7497c97832f"
+            ]
+        ]
+    },
+    {
+        "id": "62e65427253b1794",
+        "type": "function",
+        "z": "ab7e2b1cba749f1c",
+        "name": "Populate Dropdown",
+        "func": "const tags = msg.payload.Tags || [];\nconst doors = msg.payload.Doors || [];\n\nmsg.ui_update = {\n    dropdownOptions: [\n        ...tags.map(tag => ({\n            dropdown: \"tagsecret\",             // must match the form field key in the form\n            value: tag.Secret,\n            label: tag.Name\n        })),\n        ...doors.map(door => ({\n            dropdown: \"doorname\",            // must match the form field key in the form\n            value: door.Name,\n            label: door.Name\n        }))\n    ]\n};\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 930,
+        "y": 340,
+        "wires": [
+            [
+                "d5fbee8281567eaf"
+            ]
+        ]
+    },
+    {
+        "id": "55c5e7497c97832f",
+        "type": "join",
+        "z": "ab7e2b1cba749f1c",
+        "name": "Merge Results",
+        "mode": "custom",
+        "build": "object",
+        "property": "payload",
+        "propertyType": "msg",
+        "key": "key",
+        "joiner": "\\n",
+        "joinerType": "str",
+        "useparts": false,
+        "accumulate": false,
+        "timeout": "",
+        "count": "2",
+        "reduceRight": false,
+        "reduceExp": "",
+        "reduceInit": "",
+        "reduceInitType": "",
+        "reduceFixup": "",
+        "x": 720,
+        "y": 340,
+        "wires": [
+            [
+                "62e65427253b1794"
+            ]
+        ]
+    },
+    {
+        "id": "3ab7e274e0d4bec1",
+        "type": "function",
+        "z": "ab7e2b1cba749f1c",
+        "name": "Prepare Query",
+        "func": "msg.topic = `SELECT * FROM Tags;`;\nmsg.key = \"Tags\";\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 340,
+        "y": 320,
+        "wires": [
+            [
+                "3c8f677580292972"
+            ]
+        ]
+    },
+    {
+        "id": "0115d78421f4cea3",
+        "type": "inject",
+        "z": "ab7e2b1cba749f1c",
+        "name": "Set Query",
+        "props": [],
+        "repeat": "5",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "0.3",
+        "topic": "",
+        "x": 150,
+        "y": 360,
+        "wires": [
+            [
+                "338f3d07b2cd8fbd"
+            ]
+        ]
+    },
+    {
+        "id": "93927f5ae7376a80",
+        "type": "mysql",
+        "z": "ab7e2b1cba749f1c",
+        "mydb": "ddaa8fa01124a480",
+        "name": "Query DB",
+        "x": 520,
+        "y": 360,
+        "wires": [
+            [
+                "55c5e7497c97832f"
+            ]
+        ]
+    },
+    {
+        "id": "338f3d07b2cd8fbd",
+        "type": "function",
+        "z": "ab7e2b1cba749f1c",
+        "name": "Prepare Query",
+        "func": "msg.topic = `SELECT * FROM Doors;`;\nmsg.key = \"Doors\";\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 340,
+        "y": 360,
+        "wires": [
+            [
+                "93927f5ae7376a80"
+            ]
+        ]
+    },
+    {
+        "id": "c134bb2918e484f9",
+        "type": "function",
+        "z": "ab7e2b1cba749f1c",
+        "name": "Prepare MQTT",
+        "func": "if(msg.payload.tagsecret == \"\" || msg.payload.doorname == \"\"){\n    return null;\n}\n\nmsg.payload = `\n{\n    \"TagSecret\": \"${msg.payload.tagsecret}\",\n    \"DoorName\": \"${msg.payload.doorname}\"\n}`;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1060,
+        "y": 400,
+        "wires": [
+            [
+                "c60a081290fae23f"
+            ]
+        ]
+    },
+    {
+        "id": "c60a081290fae23f",
+        "type": "mqtt out",
+        "z": "ab7e2b1cba749f1c",
+        "name": "NFC Write",
+        "topic": "nfc/write",
+        "qos": "0",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "033e59d79ea02559",
+        "x": 1290,
+        "y": 400,
+        "wires": []
+    },
+    {
+        "id": "b8ac334a6ddef1dc",
+        "type": "ui-notification",
+        "z": "ab7e2b1cba749f1c",
+        "ui": "62fbb3eb93d5c262",
+        "position": "top right",
+        "colorDefault": true,
+        "color": "#000000",
+        "displayTime": "5",
+        "showCountdown": true,
+        "outputs": 1,
+        "allowDismiss": true,
+        "dismissText": "Close",
+        "allowConfirm": false,
+        "confirmText": "Confirm",
+        "raw": false,
+        "className": "",
+        "name": "Write Notification",
+        "x": 1270,
+        "y": 440,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "4376efa69df1f86c",
+        "type": "function",
+        "z": "ab7e2b1cba749f1c",
+        "name": "Prepare Notification",
+        "func": "if(msg.payload.tagsecret == \"\" || msg.payload.doorname == \"\"){\n    msg.payload = \"Write failed.\\nPlease Select a Tag and Door.\";\n} else {\n    msg.payload = \"You can now scan your tag to write to it.\"\n}\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1070,
+        "y": 440,
+        "wires": [
+            [
+                "b8ac334a6ddef1dc"
+            ]
+        ]
+    },
+    {
+        "id": "e3483f72d1fa7ce1",
+        "type": "comment",
+        "z": "ab7e2b1cba749f1c",
+        "name": "NFC Tag Read Flow",
+        "info": "",
+        "x": 230,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "40ab607f1b3a8ddf",
+        "type": "comment",
+        "z": "ab7e2b1cba749f1c",
+        "name": "NFC Tag Write Flow",
+        "info": "",
+        "x": 230,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "8bc26da14f1fedf5",
+        "type": "mqtt in",
+        "z": "d2df568080d60440",
+        "name": "Hallsensor Read",
+        "topic": "hallsensor/read",
+        "qos": "2",
+        "datatype": "json",
+        "broker": "033e59d79ea02559",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 180,
+        "y": 180,
+        "wires": [
+            [
+                "9305992f781a891b",
+                "2756ca900f085d3a"
+            ]
+        ]
+    },
+    {
+        "id": "656335f6082aa85e",
+        "type": "trigger",
+        "z": "d2df568080d60440",
+        "name": "Wait 1 Minute ",
+        "op1": "",
+        "op2": "",
+        "op1type": "nul",
+        "op2type": "pay",
+        "duration": "10",
+        "extend": false,
+        "overrideDelay": false,
+        "units": "s",
+        "reset": "",
+        "bytopic": "all",
+        "topic": "topic",
+        "outputs": 1,
+        "x": 640,
+        "y": 160,
+        "wires": [
+            [
+                "b8ba0a6c74038e80"
+            ]
+        ]
+    },
+    {
+        "id": "9305992f781a891b",
+        "type": "function",
+        "z": "d2df568080d60440",
+        "name": "Parse Message",
+        "func": "if(msg.payload.doorstate === \"Closed\"){\n    msg.reset = true;\n}\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 400,
+        "y": 160,
+        "wires": [
+            [
+                "656335f6082aa85e"
+            ]
+        ]
+    },
+    {
+        "id": "fe9060c73366d48a",
+        "type": "http request",
+        "z": "d2df568080d60440",
+        "name": "Send Telegram Message",
+        "method": "use",
+        "ret": "txt",
+        "paytoqs": "body",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 1150,
+        "y": 160,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "7e47b2ec92ac3ae4",
+        "type": "mysql",
+        "z": "d2df568080d60440",
+        "mydb": "ddaa8fa01124a480",
+        "name": "Update Doors Table",
+        "x": 650,
+        "y": 200,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "2756ca900f085d3a",
+        "type": "function",
+        "z": "d2df568080d60440",
+        "name": "Prepare Update SQL",
+        "func": "msg.topic = `UPDATE Doors\n             SET CurrentState = :doorstate\n             WHERE Name = :doorname AND (CurrentState IS NULL OR CurrentState != :doorstate)`;\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 420,
+        "y": 200,
+        "wires": [
+            [
+                "7e47b2ec92ac3ae4"
+            ]
+        ]
+    },
+    {
+        "id": "b8ba0a6c74038e80",
+        "type": "function",
+        "z": "d2df568080d60440",
+        "name": "Prepare Chat Message",
+        "func": "const token = \"8066249010:AAGXV2AVuq-FWrFAwFf-IvqyhmsJOVsc-xM\";  // Replace with your bot token\nconst baseUrl = `https://api.telegram.org/bot${token}/sendMessage`;\n\nconst chat_ids = [\n    \"7051565171\"\n];  // Add chat id's of users wanting updates\n\nlet text = `Warning: '${msg.payload.doorname}' door has been open for an extended period. \\nPlease close it immediately to maintain security and prevent unauthorized access.`;\n\ntext = encodeURIComponent(text);\n\nconst messages = chat_ids.map(chat_id => {\n    return {\n        method: \"GET\",\n        url: `${baseUrl}?chat_id=${chat_id}&text=${text}`\n    }\n})\n\n\nreturn [messages];",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 890,
+        "y": 160,
+        "wires": [
+            [
+                "fe9060c73366d48a"
+            ]
+        ]
+    },
+    {
+        "id": "50563b9376ffbaae",
+        "type": "comment",
+        "z": "d2df568080d60440",
+        "name": "Hallsensor Read Flow",
+        "info": "",
+        "x": 300,
+        "y": 120,
+        "wires": []
+    }
+]
