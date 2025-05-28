@@ -144,8 +144,8 @@
         ],
         "order": 1,
         "className": "",
-        "visible": "true",
-        "disabled": "false"
+        "visible": true,
+        "disabled": false
     },
     {
         "id": "f917b5e8216741b3",
@@ -256,7 +256,7 @@
     {
         "id": "c4722c39b68615e7",
         "type": "ui-group",
-        "name": "Access CRUD",
+        "name": "Access Table",
         "page": "6847e0cccb4376ee",
         "width": "12",
         "height": 1,
@@ -291,7 +291,6 @@
                 "7a90e6957460103b",
                 "2e218597f4bd593b",
                 "cf461d429fe1825d",
-                "3cef13f01ce4db38",
                 "c2ba8db531b4dfde",
                 "347e8e011c16010b"
             ]
@@ -419,30 +418,6 @@
                 "b1c3bd035cf21f70",
                 "4dc3996f8173c8d5"
             ]
-        ]
-    },
-    {
-        "id": "3cef13f01ce4db38",
-        "type": "ui-template",
-        "z": "9bb89b62326fdc5c",
-        "group": "",
-        "page": "e98a5bbb1ca7592d",
-        "ui": "",
-        "name": "Table Styling",
-        "order": 1,
-        "width": "1",
-        "height": "1",
-        "head": "",
-        "format": "<style>\n  .scroll-group {\n    height: calc(100vh - 90px);\n    overflow-y: auto;\n  }\n</style>",
-        "storeOutMessages": true,
-        "passthru": true,
-        "resendOnRefresh": true,
-        "templateScope": "widget:page",
-        "className": "",
-        "x": 350,
-        "y": 480,
-        "wires": [
-            []
         ]
     },
     {
@@ -582,10 +557,10 @@
         "group": "db085f85b80d814f",
         "page": "",
         "ui": "",
-        "name": "Doors",
+        "name": "Info Doors",
         "order": 2,
         "width": "6",
-        "height": "1",
+        "height": "2",
         "head": "",
         "format": "<template>\n    <div class=\"table-container\">\n        <h3 class=\"table-title\">Doors</h3>\n        <table class=\"custom-table\">\n            <thead>\n                <tr>\n                    <th>Door Name</th>\n                    <th>Current State</th>\n                    <th>Access</th>\n                </tr>\n            </thead>\n            <tbody>\n                <tr v-for=\"door in msg.payload\" :key=\"door.Name\">\n                    <td>{{ door.Name }}</td>\n                    <td>{{ door.CurrentState }}</td>\n                    <td><button class=\"unlock-button\" @click=\"unlockDoor(door)\">Unlock</button></td>\n                </tr>\n            </tbody>\n        </table>\n    </div>\n</template>\n\n<style>\n    .table-container {\n        background-color: #ffffff;\n        padding: 16px;\n        border-radius: 12px;\n        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);\n        overflow-x: auto;\n    }\n\n    /* Table Styling */\n    .custom-table {\n        width: 100%;\n        border-collapse: collapse;\n        font-family: Arial, sans-serif;\n        margin-top: 10px;\n    }\n\n    .custom-table th,\n    .custom-table td {\n        border: 1px solid #ddd;\n        padding: 10px;\n        text-align: center;\n        font-size: 14px;\n        background-color: #fff;\n    }\n\n\n    .custom-table th {\n        color: #333;\n        font-weight: 600;\n        background-color: #76c6e5;\n    }\n\n    .custom-table tbody tr:hover {\n        background-color: #f1f1f1;\n    }\n\n    /* Checkbox Styling */\n    .checkbox {\n        width: 20px;\n        height: 20px;\n        cursor: pointer;\n        accent-color: #007bff;\n    }\n\n    .checkbox:disabled {\n        opacity: 0.5;\n        cursor: not-allowed;\n        background-color: #f0f0f0;\n    }\n\n    /* Tooltip Styling */\n    .tooltip-wrapper {\n        position: relative;\n        display: inline-block;\n        color: #9ca3af;\n        /* Optional: greyed-out look */\n        cursor: not-allowed;\n    }\n\n    .tooltip-wrapper .tooltip {\n        visibility: hidden;\n        background-color: #111;\n        color: #fff;\n        text-align: center;\n        padding: 6px 10px;\n        border-radius: 6px;\n        position: absolute;\n        z-index: 10;\n        bottom: 125%;\n        left: 50%;\n        transform: translateX(-50%);\n        opacity: 0;\n        white-space: nowrap;\n        transition: opacity 0.3s;\n        font-size: 12px;\n    }\n\n    .tooltip-wrapper:hover .tooltip {\n        visibility: visible;\n        opacity: 1;\n    }\n    \n    .unlock-button {\n    background-color: #4CAF50;\n    color: white;\n    padding: 8px 14px;\n    border: none;\n    border-radius: 6px;\n    cursor: pointer;\n    font-size: 14px;\n    transition: background-color 0.2s;\n}\n\n.unlock-button:hover {\n    background-color: #45a049;\n}\n\n.table-title {\n    margin: 0;\n    font-size: 18px;\n    font-weight: 600;\n    color: #333;\n    text-align: center;\n}\n\n\n</style>\n\n<script>\nexport default {\n  methods: {\n    unlockDoor(door) {\n      this.send({\n        topic: 'unlock-door',\n        payload: {\n          DoorID: door.ID,\n          DoorName: door.Name\n        }\n      });\n    }\n  }\n}\n</script>",
         "storeOutMessages": true,
@@ -593,7 +568,7 @@
         "resendOnRefresh": true,
         "templateScope": "local",
         "className": "",
-        "x": 770,
+        "x": 790,
         "y": 140,
         "wires": [
             [
@@ -613,7 +588,7 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 940,
+        "x": 980,
         "y": 140,
         "wires": [
             [
@@ -635,7 +610,7 @@
         "correl": "",
         "expiry": "",
         "broker": "033e59d79ea02559",
-        "x": 1130,
+        "x": 1170,
         "y": 140,
         "wires": []
     },
@@ -646,7 +621,7 @@
         "group": "4b4050bf91ac5ce7",
         "page": "",
         "ui": "",
-        "name": "Doors",
+        "name": "CRUD Doors",
         "order": 2,
         "width": "3",
         "height": "1",
@@ -657,7 +632,7 @@
         "resendOnRefresh": true,
         "templateScope": "local",
         "className": "",
-        "x": 770,
+        "x": 790,
         "y": 180,
         "wires": [
             []
@@ -670,7 +645,7 @@
         "group": "4b4050bf91ac5ce7",
         "page": "",
         "ui": "",
-        "name": "Users",
+        "name": "CRUD Users",
         "order": 1,
         "width": "3",
         "height": "1",
@@ -681,7 +656,7 @@
         "resendOnRefresh": true,
         "templateScope": "local",
         "className": "",
-        "x": 770,
+        "x": 790,
         "y": 40,
         "wires": [
             []
@@ -718,10 +693,10 @@
         "group": "db085f85b80d814f",
         "page": "",
         "ui": "",
-        "name": "Users",
+        "name": "Info Users",
         "order": 1,
         "width": "6",
-        "height": "1",
+        "height": "2",
         "head": "",
         "format": "<template>\n    <div class=\"table-container\">\n        <h3 class=\"table-title\">Users</h3>\n        <table class=\"custom-table\">\n            <thead>\n                <tr>\n                    <th>First Name</th>\n                    <th>Last Name</th>\n                </tr>\n            </thead>\n            <tbody>\n                <tr v-for=\"user in msg.payload\" :key=\"user.Firstname\">\n                    <td>{{ user.Firstname }}</td>\n                    <td>{{ user.Lastname }}</td>\n                </tr>\n            </tbody>\n        </table>\n    </div>\n</template>\n\n<style>\n    .table-container {\n        background-color: #ffffff;\n        padding: 16px;\n        border-radius: 12px;\n        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);\n        overflow-x: auto;\n    }\n\n    /* Table Styling */\n    .custom-table {\n        width: 100%;\n        border-collapse: collapse;\n        font-family: Arial, sans-serif;\n        margin-top: 10px;\n    }\n\n    .custom-table th,\n    .custom-table td {\n        border: 1px solid #ddd;\n        padding: 10px;\n        text-align: center;\n        font-size: 14px;\n        background-color: #fff;\n    }\n\n\n    .custom-table th {\n        color: #333;\n        font-weight: 600;\n        background-color: #76c6e5;\n    }\n\n    .custom-table tbody tr:hover {\n        background-color: #f1f1f1;\n    }\n\n    /* Checkbox Styling */\n    .checkbox {\n        width: 20px;\n        height: 20px;\n        cursor: pointer;\n        accent-color: #007bff;\n    }\n\n    .checkbox:disabled {\n        opacity: 0.5;\n        cursor: not-allowed;\n        background-color: #f0f0f0;\n    }\n\n    /* Tooltip Styling */\n    .tooltip-wrapper {\n        position: relative;\n        display: inline-block;\n        color: #9ca3af;\n        /* Optional: greyed-out look */\n        cursor: not-allowed;\n    }\n\n    .tooltip-wrapper .tooltip {\n        visibility: hidden;\n        background-color: #111;\n        color: #fff;\n        text-align: center;\n        padding: 6px 10px;\n        border-radius: 6px;\n        position: absolute;\n        z-index: 10;\n        bottom: 125%;\n        left: 50%;\n        transform: translateX(-50%);\n        opacity: 0;\n        white-space: nowrap;\n        transition: opacity 0.3s;\n        font-size: 12px;\n    }\n\n    .tooltip-wrapper:hover .tooltip {\n        visibility: visible;\n        opacity: 1;\n    }\n    \n    .unlock-button {\n    background-color: #4CAF50;\n    color: white;\n    padding: 8px 14px;\n    border: none;\n    border-radius: 6px;\n    cursor: pointer;\n    font-size: 14px;\n    transition: background-color 0.2s;\n}\n\n.unlock-button:hover {\n    background-color: #45a049;\n}\n\n.table-title {\n    margin: 0;\n    font-size: 18px;\n    font-weight: 600;\n    color: #333;\n    text-align: center;\n}\n\n\n</style>\n\n<script>\nexport default {\n  methods: {\n    \n  }\n}\n</script>",
         "storeOutMessages": true,
@@ -729,7 +704,7 @@
         "resendOnRefresh": true,
         "templateScope": "local",
         "className": "",
-        "x": 770,
+        "x": 790,
         "y": 80,
         "wires": [
             []
@@ -742,18 +717,18 @@
         "group": "f917b5e8216741b3",
         "page": "",
         "ui": "",
-        "name": "Access Logs",
+        "name": "Info Access Logs",
         "order": 1,
         "width": "6",
-        "height": "1",
+        "height": "4",
         "head": "",
-        "format": "<template>\n    <div class=\"table-container\">\n        <h3 class=\"table-title\">Access Logs</h3>\n        <div class=\"table-wrapper\">\n            <table class=\"custom-table\">\n                <thead>\n                    <tr>\n                        <th>Full Name</th>\n                        <th>Access Time</th>\n                        <th>Access Granted</th>\n                    </tr>\n                </thead>\n                <tbody>\n                    <tr v-for=\"log in msg.payload\" :key=\"log.AccessTime\">\n                        <td>{{ log.FullName }}</td>\n                        <td>{{ log.AccessTime }}</td>\n                        <td>{{ log.Granted }}</td>\n                    </tr>\n                </tbody>\n            </table>\n        </div>\n    </div>\n</template>\n\n<style>\n    .table-container {\n        background-color: #ffffff;\n        padding: 16px;\n        border-radius: 12px;\n        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);\n        overflow-x: auto;\n    }\n\n    /* Table Styling */\n    .custom-table {\n        width: 100%;\n        border-collapse: collapse;\n        font-family: Arial, sans-serif;\n        margin-top: 10px;\n    }\n\n    .custom-table th,\n    .custom-table td {\n        border: 1px solid #ddd;\n        padding: 10px;\n        text-align: center;\n        font-size: 14px;\n        background-color: #fff;\n    }\n\n\n    .custom-table th {\n        color: #333;\n        font-weight: 600;\n        background-color: #76c6e5;\n    }\n\n    .custom-table tbody tr:hover {\n        background-color: #f1f1f1;\n    }\n\n    /* Checkbox Styling */\n    .checkbox {\n        width: 20px;\n        height: 20px;\n        cursor: pointer;\n        accent-color: #007bff;\n    }\n\n    .checkbox:disabled {\n        opacity: 0.5;\n        cursor: not-allowed;\n        background-color: #f0f0f0;\n    }\n\n    /* Tooltip Styling */\n    .tooltip-wrapper {\n        position: relative;\n        display: inline-block;\n        color: #9ca3af;\n        /* Optional: greyed-out look */\n        cursor: not-allowed;\n    }\n\n    .tooltip-wrapper .tooltip {\n        visibility: hidden;\n        background-color: #111;\n        color: #fff;\n        text-align: center;\n        padding: 6px 10px;\n        border-radius: 6px;\n        position: absolute;\n        z-index: 10;\n        bottom: 125%;\n        left: 50%;\n        transform: translateX(-50%);\n        opacity: 0;\n        white-space: nowrap;\n        transition: opacity 0.3s;\n        font-size: 12px;\n    }\n\n    .tooltip-wrapper:hover .tooltip {\n        visibility: visible;\n        opacity: 1;\n    }\n    \n    .unlock-button {\n    background-color: #4CAF50;\n    color: white;\n    padding: 8px 14px;\n    border: none;\n    border-radius: 6px;\n    cursor: pointer;\n    font-size: 14px;\n    transition: background-color 0.2s;\n}\n\n.unlock-button:hover {\n    background-color: #45a049;\n}\n\n.table-title {\n    margin: 0;\n    font-size: 18px;\n    font-weight: 600;\n    color: #333;\n    text-align: center;\n}\n\n.table-container {\n    background-color: #ffffff;\n    padding: 16px;\n    border-radius: 12px;\n    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);\n}\n\n.table-title {\n    margin: 0;\n    font-size: 18px;\n    font-weight: 600;\n    color: #333;\n    text-align: center;\n}\n\n/* Make table scrollable and headers sticky */\n.table-wrapper {\n    max-height: 750px; /* Adjust height as needed */\n    overflow-y: auto;\n}\n\n.custom-table {\n    width: 100%;\n    border-collapse: collapse;\n    font-family: Arial, sans-serif;\n    margin-top: 10px;\n}\n\n.custom-table th,\n.custom-table td {\n    border: 1px solid #ddd;\n    padding: 10px;\n    text-align: center;\n    font-size: 14px;\n    background-color: #fff;\n}\n\n/* Sticky header */\n.custom-table th {\n    position: sticky;\n    top: 0;\n    background-color: #76c6e5;\n    color: #333;\n    font-weight: 600;\n    z-index: 1;\n}\n\n.custom-table tbody tr:hover {\n    background-color: #f1f1f1;\n}\n\n\n\n</style>\n\n<script>\nexport default {\n  methods: {\n    \n  }\n}\n</script>",
+        "format": "<template>\n    <div class=\"table-container\">\n        <h3 class=\"table-title\">Access Logs</h3>\n        <div class=\"table-wrapper\">\n            <table class=\"custom-table\">\n                <thead>\n                    <tr>\n                        <th>Full Name</th>\n                        <th>Access Time</th>\n                        <th>Access Granted</th>\n                    </tr>\n                </thead>\n                <tbody>\n                    <tr v-for=\"log in msg.payload\" :key=\"log.AccessTime\">\n                        <td>{{ log.FullName }}</td>\n                        <td>{{ log.AccessTime }}</td>\n                        <td>{{ log.Granted }}</td>\n                    </tr>\n                </tbody>\n            </table>\n        </div>\n    </div>\n</template>\n\n<style>\n    .table-container {\n        background-color: #ffffff;\n        padding: 16px;\n        border-radius: 12px;\n        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);\n        overflow-x: auto;\n    }\n\n    /* Table Styling */\n    .custom-table {\n        width: 100%;\n        border-collapse: collapse;\n        font-family: Arial, sans-serif;\n        margin-top: 10px;\n    }\n\n    .custom-table th,\n    .custom-table td {\n        border: 1px solid #ddd;\n        padding: 10px;\n        text-align: center;\n        font-size: 14px;\n        background-color: #fff;\n    }\n\n\n    .custom-table th {\n        color: #333;\n        font-weight: 600;\n        background-color: #76c6e5;\n    }\n\n    .custom-table tbody tr:hover {\n        background-color: #f1f1f1;\n    }\n\n    /* Checkbox Styling */\n    .checkbox {\n        width: 20px;\n        height: 20px;\n        cursor: pointer;\n        accent-color: #007bff;\n    }\n\n    .checkbox:disabled {\n        opacity: 0.5;\n        cursor: not-allowed;\n        background-color: #f0f0f0;\n    }\n\n    /* Tooltip Styling */\n    .tooltip-wrapper {\n        position: relative;\n        display: inline-block;\n        color: #9ca3af;\n        /* Optional: greyed-out look */\n        cursor: not-allowed;\n    }\n\n    .tooltip-wrapper .tooltip {\n        visibility: hidden;\n        background-color: #111;\n        color: #fff;\n        text-align: center;\n        padding: 6px 10px;\n        border-radius: 6px;\n        position: absolute;\n        z-index: 10;\n        bottom: 125%;\n        left: 50%;\n        transform: translateX(-50%);\n        opacity: 0;\n        white-space: nowrap;\n        transition: opacity 0.3s;\n        font-size: 12px;\n    }\n\n    .tooltip-wrapper:hover .tooltip {\n        visibility: visible;\n        opacity: 1;\n    }\n    \n    .unlock-button {\n    background-color: #4CAF50;\n    color: white;\n    padding: 8px 14px;\n    border: none;\n    border-radius: 6px;\n    cursor: pointer;\n    font-size: 14px;\n    transition: background-color 0.2s;\n}\n\n.unlock-button:hover {\n    background-color: #45a049;\n}\n\n.table-title {\n    margin: 0;\n    font-size: 18px;\n    font-weight: 600;\n    color: #333;\n    text-align: center;\n}\n\n.table-container {\n    background-color: #ffffff;\n    padding: 16px;\n    border-radius: 12px;\n    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);\n}\n\n.table-title {\n    margin: 0;\n    font-size: 18px;\n    font-weight: 600;\n    color: #333;\n    text-align: center;\n}\n\n/* Make table scrollable and headers sticky */\n.table-wrapper {\n    max-height: 540px; /* Adjust height as needed */\n    overflow-y: auto;\n}\n\n.custom-table {\n    width: 100%;\n    border-collapse: collapse;\n    font-family: Arial, sans-serif;\n    margin-top: 10px;\n}\n\n.custom-table th,\n.custom-table td {\n    border: 1px solid #ddd;\n    padding: 10px;\n    text-align: center;\n    font-size: 14px;\n    background-color: #fff;\n}\n\n/* Sticky header */\n.custom-table th {\n    position: sticky;\n    top: 0;\n    background-color: #76c6e5;\n    color: #333;\n    font-weight: 600;\n    z-index: 1;\n}\n\n.custom-table tbody tr:hover {\n    background-color: #f1f1f1;\n}\n\n\n\n</style>\n\n<script>\nexport default {\n  methods: {\n    \n  }\n}\n</script>",
         "storeOutMessages": true,
         "passthru": true,
         "resendOnRefresh": true,
         "templateScope": "local",
         "className": "",
-        "x": 990,
+        "x": 1010,
         "y": 240,
         "wires": [
             []
@@ -764,7 +739,7 @@
         "type": "function",
         "z": "8d243e82e4c35220",
         "name": "Prepare Insert Users",
-        "func": "let firstname = msg.payload.firstname;\nlet lastname = msg.payload.lastname;\n\nmsg.topic = `INSERT INTO Users (Firstname, Lastname) VALUES ('${firstname}', '${lastname}')`;\n\nreturn msg;\n",
+        "func": "let firstname = msg.payload.firstname;\nlet lastname = msg.payload.lastname;\n\nif(firstname === \"\" || lastname === \"\"){\n    msg.topic = \"SELECT 1\";\n    return msg;\n}\n\nmsg.topic = `INSERT INTO Users (Firstname, Lastname) VALUES ('${firstname}', '${lastname}')`;\n\nreturn msg;\n",
         "outputs": 1,
         "timeout": 0,
         "noerr": 0,
@@ -798,7 +773,7 @@
         "type": "function",
         "z": "8d243e82e4c35220",
         "name": "Format Notificaiton",
-        "func": "if(msg.payload !== null){\n    msg.payload = \"User Creation Successful\";\n} else {\n    msg.payload = \"User Creation Failed\";\n}\nmsg.topic = \"User Creation\";\nreturn msg;",
+        "func": "if(msg.payload.affectedRows === 1){\n    msg.payload = \"User Creation Successful\";\n} else {\n    msg.payload = \"User Creation Failed\";\n}\nmsg.topic = \"User Creation\";\nreturn msg;",
         "outputs": 1,
         "timeout": 0,
         "noerr": 0,
@@ -828,14 +803,14 @@
                 "label": "First Name",
                 "key": "firstname",
                 "type": "text",
-                "required": true,
+                "required": false,
                 "rows": null
             },
             {
                 "label": "Last Name",
                 "key": "lastname",
                 "type": "text",
-                "required": true,
+                "required": false,
                 "rows": null
             }
         ],
@@ -1066,7 +1041,7 @@
         "type": "function",
         "z": "8d243e82e4c35220",
         "name": "Prepare Insert Doors",
-        "func": "let doorname = msg.payload.doorname;\n\nmsg.topic = `INSERT INTO Doors (Name) VALUES ('${doorname}')`;\n\nreturn msg;\n",
+        "func": "let doorname = msg.payload.doorname;\n\nif(doorname === \"\"){\n    msg.topic = \"SELECT 1;\";\n    return msg;\n}\n\nmsg.topic = `INSERT INTO Doors (Name) VALUES ('${doorname}')`;\n\nreturn msg;\n",
         "outputs": 1,
         "timeout": 0,
         "noerr": 0,
@@ -1100,7 +1075,7 @@
         "type": "function",
         "z": "8d243e82e4c35220",
         "name": "Format Notificaiton",
-        "func": "if(msg.payload !== null){\n    msg.payload = \"Door Creation Successful\";\n} else {\n    msg.payload = \"Door Creation Failed\";\n}\nmsg.topic = \"Door Creation\";\nreturn msg;",
+        "func": "if(msg.payload.affectedRows === 1){\n    msg.payload = \"Door Creation Successful\";\n} else {\n    msg.payload = \"Door Creation Failed\";\n}\nmsg.topic = \"Door Creation\";\nreturn msg;",
         "outputs": 1,
         "timeout": 0,
         "noerr": 0,
@@ -1130,7 +1105,7 @@
                 "label": "Door Name",
                 "key": "doorname",
                 "type": "text",
-                "required": true,
+                "required": false,
                 "rows": null
             }
         ],
@@ -1829,7 +1804,7 @@
         "width": "0",
         "height": "0",
         "head": "",
-        "format": "<template>\n  <div class=\"table-container\">\n    <table class=\"custom-table\">\n      <thead>\n        <tr>\n          <th>User</th>\n          <th v-for=\"door in msg.payload?.doors || []\" :key=\"door\">{{ door }}</th>\n        </tr>\n      </thead>\n      <tbody>\n        <tr v-for=\"user in msg.payload.users\" :key=\"user.UserID\" :class=\"{ 'bg-gray-100 text-gray-500': !user.HasTag }\">\n          <td class=\"border p-2 relative\">\n            <span v-if=\"user.HasTag\">{{ user.UserName }}</span>\n            <div v-else class=\"tooltip-wrapper\">\n              {{ user.UserName }}\n              <div class=\"tooltip\">No tag assigned to user</div>\n            </div>\n          </td>\n          <!--           <td v-for=\"door in msg.payload?.doors || []\" :key=\"door\">\n            <input\n              type=\"checkbox\"\n              :checked=\"user.access && user.access[door]\"\n              @change=\"toggleAccess(user.UserID, door, $event.target.checked)\"\n              :disabled=\"!user.HasTag\"\n              class=\"checkbox\"\n            />\n          </td> -->\n          <td v-for=\"door in msg.payload?.doors\" :key=\"door\" class=\"border p-2 text-center\">\n            <div v-if=\"!user.HasTag\" class=\"tooltip-wrapper inline-block\">\n              <input\n                type=\"checkbox\"\n                :checked=\"user.access && user.access[door]\"\n                disabled\n                class=\"checkbox\"\n              />\n              <div class=\"tooltip\">No tag assigned to user</div>\n            </div>\n            <input\n              v-else\n              type=\"checkbox\"\n              :checked=\"user.access && user.access[door]\"\n              @change=\"toggleAccess(user.UserID, door, $event.target.checked)\"\n              :disabled=\"!user.HasTag\"\n              class=\"checkbox\"\n            />\n          </td>\n          </td>\n        </tr>\n      </tbody>\n    </table>\n  </div>\n</template>\n\n<style>\n  .table-container {\n    background-color: #ffffff;\n    padding: 16px;\n    border-radius: 12px;\n    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);\n    overflow-x: auto;\n  }\n\n  /* Table Styling */\n  .custom-table {\n    width: 100%;\n    border-collapse: collapse;\n    font-family: Arial, sans-serif;\n    margin-top: 10px;\n  }\n\n  .custom-table th,\n  .custom-table td {\n    border: 1px solid #ddd;\n    padding: 10px;\n    text-align: center;\n    font-size: 14px;\n    background-color: #fff;\n  }\n\n\n  .custom-table th {\n    color: #333;\n    font-weight: 600;\n    background-color: #76c6e5;\n  }\n\n  .custom-table tbody tr:hover {\n    background-color: #f1f1f1;\n  }\n\n  /* Checkbox Styling */\n  .checkbox {\n    width: 20px;\n    height: 20px;\n    cursor: pointer;\n    accent-color: #007bff;\n  }\n\n  .checkbox:disabled {\n    opacity: 0.5;\n    cursor: not-allowed;\n    background-color: #f0f0f0;\n  }\n\n  /* Tooltip Styling */\n  .tooltip-wrapper {\n    position: relative;\n    display: inline-block;\n    color: #9ca3af;\n    /* Optional: greyed-out look */\n    cursor: not-allowed;\n  }\n\n  .tooltip-wrapper .tooltip {\n    visibility: hidden;\n    background-color: #111;\n    color: #fff;\n    text-align: center;\n    padding: 6px 10px;\n    border-radius: 6px;\n    position: absolute;\n    z-index: 10;\n    bottom: 125%;\n    left: 50%;\n    transform: translateX(-50%);\n    opacity: 0;\n    white-space: nowrap;\n    transition: opacity 0.3s;\n    font-size: 12px;\n  }\n\n  .tooltip-wrapper:hover .tooltip {\n    visibility: visible;\n    opacity: 1;\n  }\n</style>\n\n<script>\n  export default {\n  methods: {\n    toggleAccess(userId, doorName, value) {\n      this.send({\n        topic: 'update-access',\n        payload: {\n          UserID: userId,\n          DoorName: doorName,\n          HasAccess: value ? 1 : 0\n        }\n      });\n    }\n  }\n};\n</script>",
+        "format": "<template>\n  <div class=\"table-container\">\n    <table class=\"custom-table\">\n      <thead>\n        <tr>\n          <th>User</th>\n          <th v-for=\"door in msg.payload?.doors || []\" :key=\"door\">{{ door }}</th>\n        </tr>\n      </thead>\n      <tbody>\n        <tr v-for=\"user in msg.payload?.users || []\" :key=\"user.UserID\"\n          :class=\"{ 'bg-gray-100 text-gray-500': !user.HasTag }\">\n          <td class=\"border p-2 relative\">\n            <span v-if=\"user.HasTag\">{{ user.UserName }}</span>\n            <div v-else class=\"tooltip-wrapper\">\n              {{ user.UserName }}\n              <div class=\"tooltip\">No tag assigned to user</div>\n            </div>\n          </td>\n          <td v-for=\"door in msg.payload?.doors\" :key=\"door\" class=\"border p-2 text-center\">\n            <div v-if=\"!user.HasTag\" class=\"tooltip-wrapper inline-block\">\n              <input\n                type=\"checkbox\"\n                :checked=\"user.access && user.access[door]\"\n                disabled\n                class=\"checkbox\"\n              />\n              <div class=\"tooltip\">No tag assigned to user</div>\n            </div>\n            <input\n              v-else\n              type=\"checkbox\"\n              :checked=\"user.access && user.access[door]\"\n              @change=\"toggleAccess(user.UserID, door, $event.target.checked)\"\n              :disabled=\"!user.HasTag\"\n              class=\"checkbox\"\n            />\n          </td>\n          </td>\n        </tr>\n      </tbody>\n    </table>\n  </div>\n</template>\n\n<style>\n  .table-container {\n    background-color: #ffffff;\n    padding: 16px;\n    border-radius: 12px;\n    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);\n    overflow-x: auto;\n  }\n\n  /* Table Styling */\n  .custom-table {\n    width: 100%;\n    border-collapse: collapse;\n    font-family: Arial, sans-serif;\n    margin-top: 10px;\n  }\n\n  .custom-table th,\n  .custom-table td {\n    border: 1px solid #ddd;\n    padding: 10px;\n    text-align: center;\n    font-size: 14px;\n    background-color: #fff;\n  }\n\n\n  .custom-table th {\n    color: #333;\n    font-weight: 600;\n    background-color: #76c6e5;\n  }\n\n  .custom-table tbody tr:hover {\n    background-color: #f1f1f1;\n  }\n\n  /* Checkbox Styling */\n  .checkbox {\n    width: 20px;\n    height: 20px;\n    cursor: pointer;\n    accent-color: #007bff;\n  }\n\n  .checkbox:disabled {\n    opacity: 0.5;\n    cursor: not-allowed;\n    background-color: #f0f0f0;\n  }\n\n  /* Tooltip Styling */\n  .tooltip-wrapper {\n    position: relative;\n    display: inline-block;\n    color: #9ca3af;\n    /* Optional: greyed-out look */\n    cursor: not-allowed;\n  }\n\n  .tooltip-wrapper .tooltip {\n    visibility: hidden;\n    background-color: #111;\n    color: #fff;\n    text-align: center;\n    padding: 6px 10px;\n    border-radius: 6px;\n    position: absolute;\n    z-index: 10;\n    bottom: 125%;\n    left: 50%;\n    transform: translateX(-50%);\n    opacity: 0;\n    white-space: nowrap;\n    transition: opacity 0.3s;\n    font-size: 12px;\n  }\n\n  .tooltip-wrapper:hover .tooltip {\n    visibility: visible;\n    opacity: 1;\n  }\n</style>\n\n<script>\n  export default {\n  methods: {\n    toggleAccess(userId, doorName, value) {\n      this.send({\n        topic: 'update-access',\n        payload: {\n          UserID: userId,\n          DoorName: doorName,\n          HasAccess: value ? 1 : 0\n        }\n      });\n    }\n  }\n};\n</script>",
         "storeOutMessages": true,
         "passthru": true,
         "resendOnRefresh": true,
@@ -2777,7 +2752,7 @@
         "type": "function",
         "z": "d2df568080d60440",
         "name": "Prepare Chat Message",
-        "func": "const token = \"8066249010:AAGXV2AVuq-FWrFAwFf-IvqyhmsJOVsc-xM\";  // Replace with your bot token\nconst baseUrl = `https://api.telegram.org/bot${token}/sendMessage`;\n\nconst chat_ids = [\n    \"7051565171\"\n];  // Add chat id's of users wanting updates\n\nlet text = `Warning: '${msg.payload.doorname}' door has been open for an extended period. \\nPlease close it immediately to maintain security and prevent unauthorized access.`;\n\ntext = encodeURIComponent(text);\n\nconst messages = chat_ids.map(chat_id => {\n    return {\n        method: \"GET\",\n        url: `${baseUrl}?chat_id=${chat_id}&text=${text}`\n    }\n})\n\n\nreturn [messages];",
+        "func": "const token = \"\";  // Replace with your bot token\nconst baseUrl = `https://api.telegram.org/bot${token}/sendMessage`;\n\nconst chat_ids = [\n    \"\"\n];  // Add chat id's of users wanting updates\n\nlet text = `Warning: '${msg.payload.doorname}' door has been open for an extended period. \\nPlease close it immediately to maintain security and prevent unauthorized access.`;\n\ntext = encodeURIComponent(text);\n\nconst messages = chat_ids.map(chat_id => {\n    return {\n        method: \"GET\",\n        url: `${baseUrl}?chat_id=${chat_id}&text=${text}`\n    }\n})\n\n\nreturn [messages];",
         "outputs": 1,
         "timeout": 0,
         "noerr": 0,
