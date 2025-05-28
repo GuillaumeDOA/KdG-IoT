@@ -1,3 +1,8 @@
+/* Voor deze opdracht heb ik gebruik gemaakt van volgende bronnen:
+  - Mijn vorige opdrachten - https://github.com/GuillaumeDOA/KdG-IoT
+  - Microsoft (2025) - Copilot - https://copilot.microsoft.com/ 
+*/
+
 #include <Arduino.h>
 #include <WiFi.h>
 #include <PubSubClient.h>
