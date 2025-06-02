@@ -395,7 +395,6 @@ void setup()
 
 void loop()
 {
-
   // Check WiFi connection
   if (WiFi.status() != WL_CONNECTED)
   {
