@@ -1,6 +1,6 @@
 /* Voor deze opdracht heb ik gebruik gemaakt van volgende bronnen:
   - Mijn vorige opdrachten - https://github.com/GuillaumeDOA/KdG-IoT
-  - Microsoft (2025) - Copilot - https://copilot.microsoft.com/ 
+  - Microsoft (2025) - Copilot - https://copilot.microsoft.com/
 */
 
 #include <Arduino.h>
@@ -112,6 +112,37 @@ void initWiFi()
   appendToDisplay("WiFi connected!", 0, 32);
 }
 
+// Reconnect to Wifi if disconnected
+void reconnectWiFi()
+{
+  Serial.println("WiFi connection lost. Reconnecting...");
+  writeToDisplay("WiFi disconnected\nReconnecting...");
+
+  WiFi.disconnect();
+  WiFi.mode(WIFI_STA);
+  WiFi.begin(SSID, WIFI_PASSWORD);
+
+  unsigned long startAttemptTime = millis();
+
+  // Attempt to reconnect to WiFi for 20 seconds
+  while (WiFi.status() != WL_CONNECTED && millis() - startAttemptTime < 20000) 
+  {
+    Serial.print(".");
+    delay(500);
+  }
+
+  if (WiFi.status() == WL_CONNECTED)
+  {
+    Serial.println("\nWiFi reconnected!");
+    appendToDisplay("WiFi reconnected!", 0, 32);
+  }
+  else
+  {
+    Serial.println("\nWiFi reconnection failed!");
+    appendToDisplay("WiFi reconnect failed!", 0, 32);
+  }
+}
+
 // MQTT Callback funtion
 void callback(char *topic, byte *payload, unsigned int length)
 {
@@ -165,12 +196,12 @@ void callback(char *topic, byte *payload, unsigned int length)
       Serial.println("Valid card detected. Opening lock...");
       appendToDisplay("Acces granted!", 0, 32);
       appendToDisplay(("Welcome " + String(user)).c_str(), 0, 48);
-      
+
       digitalWrite(LOCK_PIN, HIGH); // Open the lock
       lockActive = true;
       lockStartTime = millis(); // Start the lock timer
       displayTimer = millis();  // Start the display timer
-      displayChanged = true; // Set display changed flag
+      displayChanged = true;    // Set display changed flag
     }
     else
     {
@@ -178,7 +209,7 @@ void callback(char *topic, byte *payload, unsigned int length)
       appendToDisplay("Access denied!", 0, 32);
 
       displayTimer = millis(); // Start the display timer
-      displayChanged = true; // Set display changed flag
+      displayChanged = true;   // Set display changed flag
     }
   }
   // Check if the message is on the MQTT_WRITE topic
@@ -285,9 +316,9 @@ void writeNFC()
       Serial.print("Data written (string): ");
       Serial.println((char *)dataWrite);
       appendToDisplay("Card detected!\nSecret written...", 0, 48);
-      isWriteMode = false; // Reset write mode
+      isWriteMode = false;     // Reset write mode
       displayTimer = millis(); // Start the display timer
-      displayChanged = true; // Set display changed flag
+      displayChanged = true;   // Set display changed flag
     }
   }
 }
@@ -319,7 +350,7 @@ void readHallSensor()
 
     // Clear the top line of the display
     display.fillRect(0, 0, SCREEN_WIDTH, 8, SSD1306_BLACK);
-    
+
     // Write New Door State to the display
     display.setCursor(0, 0);
     display.println((String(DEVICE_NAME) + " - " + doorState).c_str());
@@ -327,7 +358,7 @@ void readHallSensor()
 
     // Sending Json over MQTT
     String payload = "{\"doorstate\":\"" + doorState + "\",\"doorname\":\"" + DEVICE_NAME + "\"}";
-    // mqttClient.publish(MQTT_HALLSENSOR, payload.c_str());
+    mqttClient.publish(MQTT_HALLSENSOR, payload.c_str());
   }
 }
 
@@ -364,6 +395,13 @@ void setup()
 
 void loop()
 {
+
+  // Check WiFi connection
+  if (WiFi.status() != WL_CONNECTED)
+  {
+    reconnectWiFi();
+  }
+
   // Start MQTT Connection
   if (!mqttClient.connected())
   {
@@ -404,7 +442,7 @@ void loop()
   {
     Serial.println("NFC Write mode timed out.");
     isWriteMode = false; // Reset write mode
-    defaultDisplay(); // Reset the display to default state
+    defaultDisplay();    // Reset the display to default state
   }
 
   if (displayChanged && millis() - displayTimer >= DISPLAY_UPDATE_INTERVAL)
