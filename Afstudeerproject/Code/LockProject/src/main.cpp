@@ -510,6 +510,7 @@ void loop()
     defaultDisplay();    // Reset the display to default state
   }
 
+  // Check if the display needs to be updated to default state
   if (displayChanged && millis() - displayTimer >= DISPLAY_UPDATE_INTERVAL)
   {
     displayChanged = false; // Reset the flag
