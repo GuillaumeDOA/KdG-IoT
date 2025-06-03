@@ -385,42 +385,23 @@ void readHallSensor()
 }
 
 // Function to handle exit button press
-void handleExitButton()
-{
-  // Read the current state of the button
-  int reading = digitalRead(EXIT_BUTTON);
+void handleExitButton() {
+  int reading = digitalRead(EXIT_BUTTON); // Read the button state
 
-  // If the button state has changed
-  if (reading != lastButtonState)
-  {
-    // Reset the debouncing timer
-    lastDebounceTime = millis();
-  }
+  if (reading == LOW) { // Button is pressed
+    Serial.println("Exit button pressed. Opening door...");
 
-  // If enough time has passed, check if the button state has really changed
-  if ((millis() - lastDebounceTime) > debounceDelay)
-  {
-    // If the button state has changed
-    if (reading != buttonState)
-    {
-      buttonState = reading;
+    // Open the lock
+    digitalWrite(LOCK_PIN, HIGH);
+    lockActive = true;
+    lockStartTime = millis();
 
-      // Only activate when the button is pressed (LOW due to INPUT_PULLUP)
-      if (buttonState == LOW)
-      {
-        Serial.println("Exit button pressed. Opening door...");
+    // Update display
+    writeToDisplay("Exit requested\nDoor unlocked");
+    displayTimer = millis();
+    displayChanged = true;
 
-        // Open the lock
-        digitalWrite(LOCK_PIN, HIGH);
-        lockActive = true;
-        lockStartTime = millis();
-
-        // Update display
-        writeToDisplay("Exit requested\nDoor unlocked");
-        displayTimer = millis();
-        displayChanged = true;
-      }
-    }
+    delay(500); // Add a small delay to avoid multiple triggers
   }
 }
 
