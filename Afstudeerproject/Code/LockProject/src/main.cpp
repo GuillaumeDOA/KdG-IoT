@@ -17,6 +17,7 @@
 // Pin Definitions
 #define LOCK_PIN 12
 #define HALL_SENSOR A5
+#define EXIT_BUTTON 14
 
 // OLED Display Object
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
@@ -36,6 +37,10 @@ bool lockActive = false;
 bool isWriteMode = false;
 bool displayChanged = false;
 String doorState = "Closed", previousDoorState = "Closed";
+unsigned long lastDebounceTime = 0; // Last time the button state changed
+unsigned long debounceDelay = 50;   // Debounce time in milliseconds
+int lastButtonState = HIGH;         // Previous reading from the button
+int buttonState = HIGH;             // Current stable state of the button
 
 // Initialise the OLED display
 void initDisplay()
@@ -118,29 +123,39 @@ void reconnectWiFi()
   Serial.println("WiFi connection lost. Reconnecting...");
   writeToDisplay("WiFi disconnected\nReconnecting...");
 
-  WiFi.disconnect();
-  WiFi.mode(WIFI_STA);
-  WiFi.begin(SSID, WIFI_PASSWORD);
-
-  unsigned long startAttemptTime = millis();
-
-  // Attempt to reconnect to WiFi for 20 seconds
-  while (WiFi.status() != WL_CONNECTED && millis() - startAttemptTime < 20000) 
+  // Open lock during reconnection
+  digitalWrite(LOCK_PIN, HIGH);
+  // Keep trying until connected
+  while (WiFi.status() != WL_CONNECTED)
   {
-    Serial.print(".");
-    delay(500);
+    Serial.println("Attempting to reconnect...");
+    
+    WiFi.disconnect();
+    WiFi.mode(WIFI_STA);
+    WiFi.begin(SSID, WIFI_PASSWORD);
+
+    // Wait for 20 seconds for this connection attempt
+    unsigned long startAttemptTime = millis();
+    while (WiFi.status() != WL_CONNECTED && millis() - startAttemptTime < 20000)
+    {
+      Serial.print(".");
+      delay(500);
+    }
+
+    // If still not connected after 20 seconds, start a new attempt
+    if (WiFi.status() != WL_CONNECTED)
+    {
+      Serial.println("\nConnection attempt failed, retrying...");
+      appendToDisplay("Reconnect failed\nRetrying...", 0, 32);
+    }
   }
 
-  if (WiFi.status() == WL_CONNECTED)
-  {
-    Serial.println("\nWiFi reconnected!");
-    appendToDisplay("WiFi reconnected!", 0, 32);
-  }
-  else
-  {
-    Serial.println("\nWiFi reconnection failed!");
-    appendToDisplay("WiFi reconnect failed!", 0, 32);
-  }
+  // Connected successfully
+  Serial.println("\nWiFi reconnected!");
+  appendToDisplay("WiFi reconnected!", 0, 32);
+
+  // Close the lock after reconnection completes
+  digitalWrite(LOCK_PIN, LOW);
 }
 
 // MQTT Callback funtion
@@ -248,12 +263,19 @@ void reconnect()
   while (!mqttClient.connected())
   {
     Serial.print("Attempting MQTT connection...");
+
+    // Open the lock during reconnection
+    digitalWrite(LOCK_PIN, HIGH);
+
     // Attempt to connect
     if (mqttClient.connect("SmartLock", MQTT_USERNAME, MQTT_PASSWORD))
     {
       Serial.println("connected");
       mqttClient.subscribe(MQTT_RESULT);
       mqttClient.subscribe(MQTT_WRITE);
+
+      // Close the lock after reconnection completes
+      digitalWrite(LOCK_PIN, LOW);
     }
     else
     {
@@ -362,6 +384,46 @@ void readHallSensor()
   }
 }
 
+// Function to handle exit button press
+void handleExitButton()
+{
+  // Read the current state of the button
+  int reading = digitalRead(EXIT_BUTTON);
+
+  // If the button state has changed
+  if (reading != lastButtonState)
+  {
+    // Reset the debouncing timer
+    lastDebounceTime = millis();
+  }
+
+  // If enough time has passed, check if the button state has really changed
+  if ((millis() - lastDebounceTime) > debounceDelay)
+  {
+    // If the button state has changed
+    if (reading != buttonState)
+    {
+      buttonState = reading;
+
+      // Only activate when the button is pressed (LOW due to INPUT_PULLUP)
+      if (buttonState == LOW)
+      {
+        Serial.println("Exit button pressed. Opening door...");
+
+        // Open the lock
+        digitalWrite(LOCK_PIN, HIGH);
+        lockActive = true;
+        lockStartTime = millis();
+
+        // Update display
+        writeToDisplay("Exit requested\nDoor unlocked");
+        displayTimer = millis();
+        displayChanged = true;
+      }
+    }
+  }
+}
+
 void setup()
 {
   // Start Serial Communication
@@ -381,6 +443,7 @@ void setup()
   // Set Pin Modes
   pinMode(LOCK_PIN, OUTPUT);
   pinMode(HALL_SENSOR, INPUT);
+  pinMode(EXIT_BUTTON, INPUT_PULLUP);
 
   // Lock the door by default
   digitalWrite(LOCK_PIN, LOW);
@@ -407,6 +470,9 @@ void loop()
     reconnect();
   }
   mqttClient.loop();
+
+  // Handle exit button press
+  handleExitButton();
 
   // Read NFC
   if (!isWriteMode && millis() - nfcReadTimer >= NFC_READ_DELAY)
