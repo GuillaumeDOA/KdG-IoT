@@ -354,7 +354,7 @@ void readHallSensor()
   Serial.println(hallValue);
 
   // Determine the door state based on the Hall sensor value
-  if (hallValue > 2800) // Adjust threshold based on your sensor's behavior
+  if (hallValue > 1900) // Adjust threshold based on your sensor's behavior
   {
     doorState = "Closed";
   }
